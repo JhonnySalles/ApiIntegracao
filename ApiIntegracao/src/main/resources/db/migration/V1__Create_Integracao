@@ -1,8 +1,0 @@
-CREATE TABLE Atualizacao (
-  id VARCHAR (36) NOT NULL,
-  Computador VARCHAR (250),
-  Ip VARCHAR (250),
-  UltimaConsulta DATETIME,
-  PRIMARY KEY (id)
-);
-

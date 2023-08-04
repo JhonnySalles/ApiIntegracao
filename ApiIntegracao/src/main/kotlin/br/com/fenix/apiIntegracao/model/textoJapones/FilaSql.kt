@@ -1,4 +1,4 @@
-package br.com.fenix.apiIntegracao.model.textoJapones
+package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable

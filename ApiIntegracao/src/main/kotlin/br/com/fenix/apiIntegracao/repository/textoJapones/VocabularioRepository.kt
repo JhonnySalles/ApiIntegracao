@@ -1,6 +1,6 @@
-package br.com.fenix.apiIntegracao.repository.textoJapones
+package br.com.fenix.apiIntegracao.repository.textojapones
 
-import br.com.fenix.apiIntegracao.model.textoJapones.Vocabulario
+import br.com.fenix.apiIntegracao.model.textojapones.Vocabulario
 import org.springframework.stereotype.Repository
 
 @Repository
