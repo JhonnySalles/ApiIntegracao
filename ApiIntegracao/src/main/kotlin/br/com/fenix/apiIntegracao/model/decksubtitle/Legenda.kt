@@ -1,31 +1,22 @@
 package br.com.fenix.apiIntegracao.model.decksubtitle
 
-import jakarta.persistence.*
+import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
+import java.util.*
 
-@Entity
-@Table(name = "")
-data class Legendas(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val sequencial: Long,
-    @Column(nullable = false)
+
+data class Legenda(
+    private val id: UUID?,
     var episodio: Int,
-    @Column(length = 10, nullable = false)
     var linguagem: String,
-    @Column(length = 15, nullable = false)
     var tempoInicial: String,
-    @Column(length = 15)
     var tempoFinal: String?,
-    @Column(nullable = false)
     var texto: String,
-    @Column(nullable = false)
     var traducao: String,
-    @Column
     var vocabulario: String?
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Legendas, Long> {
+) : Serializable, Entity<Legenda, UUID?> {
 
-    override fun merge(source: Legendas) {
+    override fun merge(source: Legenda) {
         this.episodio = source.episodio
         this.tempoInicial = source.tempoInicial
         this.tempoFinal = source.tempoFinal
@@ -35,26 +26,26 @@ data class Legendas(
         this.texto = source.texto
     }
 
-    override fun getId(): Long {
-        return sequencial
+    override fun getId(): UUID? {
+        return id
     }
 
-    override fun create(id: Long): Legendas {
-        return Legendas(id, 0, "", "", null, "", "", null)
+    override fun create(id: UUID?): Legenda {
+        return Legenda(id, 0, "", "", null, "", "", null)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Legendas
+        other as Legenda
 
-        if (sequencial != other.sequencial) return false
+        if (id != other.id) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return sequencial.hashCode()
+        return id?.hashCode() ?: 0
     }
 }

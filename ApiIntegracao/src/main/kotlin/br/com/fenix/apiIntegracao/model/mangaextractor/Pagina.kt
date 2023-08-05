@@ -2,9 +2,10 @@ package br.com.fenix.apiIntegracao.model.mangaextractor
 
 import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
+import java.util.*
 
 data class Pagina(
-    private val id: Long?,
+    private val id: UUID?,
     var nome: String,
     var numero: Int,
     var nomePagina: String,
@@ -12,7 +13,7 @@ data class Pagina(
     var isProcessado: Boolean,
     var textos: List<Texto> = listOf(),
     var vocabulario: Set<Vocabulario> = setOf()
-) : Serializable, Entity<Pagina, Long?> {
+) : Serializable, Entity<Pagina, UUID?> {
 
     override fun merge(source: Pagina) {
         this.nome = source.nome
@@ -23,11 +24,11 @@ data class Pagina(
         this.vocabulario = source.vocabulario
     }
 
-    override fun getId(): Long? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: Long?): Pagina {
+    override fun create(id: UUID?): Pagina {
         return Pagina(id, "", 0, "", "",false)
     }
 
@@ -38,18 +39,12 @@ data class Pagina(
         other as Pagina
 
         if (id != other.id) return false
-        if (nome != other.nome) return false
-        if (numero != other.numero) return false
-        if (hashPagina != other.hashPagina) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + nome.hashCode()
-        result = 31 * result + numero
-        result = 31 * result + hashPagina.hashCode()
-        return result
+        return id?.hashCode() ?: 0
     }
+
 }

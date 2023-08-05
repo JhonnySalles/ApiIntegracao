@@ -3,9 +3,10 @@ package br.com.fenix.apiIntegracao.model.mangaextractor
 import br.com.fenix.apiIntegracao.enums.Linguagens
 import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
+import java.util.*
 
 data class Capitulo(
-    private val id: Long?,
+    private val id: UUID?,
     var manga: String,
     var volume: Int,
     var capitulo: Double,
@@ -16,7 +17,7 @@ data class Capitulo(
     var isProcessado: Boolean,
     var paginas: List<Pagina> = listOf(),
     var vocabulario: Set<Vocabulario> = setOf()
-) : Serializable, Entity<Capitulo, Long?> {
+) : Serializable, Entity<Capitulo, UUID?> {
 
     override fun merge(source: Capitulo) {
         this.manga = source.manga
@@ -30,11 +31,11 @@ data class Capitulo(
         this.vocabulario = source.vocabulario
     }
 
-    override fun getId(): Long? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: Long?): Capitulo {
+    override fun create(id: UUID?): Capitulo {
         return Capitulo(id, "", 0, 0.0, Linguagens.PORTUGUESE, "", false, false, false)
     }
 
@@ -45,29 +46,12 @@ data class Capitulo(
         other as Capitulo
 
         if (id != other.id) return false
-        if (manga != other.manga) return false
-        if (volume != other.volume) return false
-        if (capitulo != other.capitulo) return false
-        if (linguagem != other.linguagem) return false
-        if (scan != other.scan) return false
-        if (isExtra != other.isExtra) return false
-        if (isRaw != other.isRaw) return false
-        if (isProcessado != other.isProcessado) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + manga.hashCode()
-        result = 31 * result + volume
-        result = 31 * result + capitulo.hashCode()
-        result = 31 * result + linguagem.hashCode()
-        result = 31 * result + scan.hashCode()
-        result = 31 * result + isExtra.hashCode()
-        result = 31 * result + isRaw.hashCode()
-        result = 31 * result + isProcessado.hashCode()
-        return result
+        return id?.hashCode() ?: 0
     }
 
 }

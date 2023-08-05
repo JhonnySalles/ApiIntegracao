@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.database.dao
 
 import br.com.fenix.apiIntegracao.exceptions.ExceptionDb
 import br.com.fenix.apiIntegracao.model.mangaextractor.*
+import java.util.*
 
 interface MangaExtractorDao {
 
@@ -24,53 +25,53 @@ interface MangaExtractorDao {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun insertVolume(base: String, obj: Volume): Long
+    fun insertVolume(base: String, obj: Volume): UUID?
 
     @Throws(ExceptionDb::class)
-    fun insertCapitulo(base: String, idVolume: Long, obj: Capitulo): Long
+    fun insertCapitulo(base: String, idVolume: UUID, obj: Capitulo): UUID?
 
     @Throws(ExceptionDb::class)
-    fun insertPagina(base: String, idCapitulo: Long, obj: Pagina): Long
+    fun insertPagina(base: String, idCapitulo: UUID, obj: Pagina): UUID?
 
     @Throws(ExceptionDb::class)
-    fun insertTexto(base: String, idPagina: Long, obj: Texto): Long
+    fun insertTexto(base: String, idPagina: UUID, obj: Texto): UUID?
 
     @Throws(ExceptionDb::class)
     fun insertVocabulario(
-        base: String, idVolume: Long?, idCapitulo: Long?, idPagina: Long?, vocabulario: Set<Vocabulario>
+        base: String, idVolume: UUID?, idCapitulo: UUID?, idPagina: UUID?, vocabulario: Set<Vocabulario>
     )
 
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun selectVolume(base: String, id: Long): Volume?
+    fun selectVolume(base: String, id: UUID): Volume?
 
     @Throws(ExceptionDb::class)
-    fun selectCapitulo(base: String, id: Long): Capitulo?
+    fun selectCapitulo(base: String, id: UUID): Capitulo?
 
     @Throws(ExceptionDb::class)
-    fun selectPagina(base: String, id: Long): Pagina?
+    fun selectPagina(base: String, id: UUID): Pagina?
 
     @Throws(ExceptionDb::class)
-    fun selectTexto(base: String, id: Long): Texto?
+    fun selectTexto(base: String, id: UUID): Texto?
 
     @Throws(ExceptionDb::class)
-    fun selectVocabulario(base: String, id: Long): Vocabulario?
+    fun selectVocabulario(base: String, id: UUID): Vocabulario?
 
     @Throws(ExceptionDb::class)
     fun selectAllVolumes(base: String): List<Volume>
 
     @Throws(ExceptionDb::class)
-    fun selectAllCapitulos(base: String, idVolume: Long): List<Capitulo>
+    fun selectAllCapitulos(base: String, idVolume: UUID): List<Capitulo>
 
     @Throws(ExceptionDb::class)
-    fun selectAllPaginas(base: String, idCapitulo: Long): List<Pagina>
+    fun selectAllPaginas(base: String, idCapitulo: UUID): List<Pagina>
 
     @Throws(ExceptionDb::class)
-    fun selectAllTextos(base: String, idPagina: Long): List<Texto>
+    fun selectAllTextos(base: String, idPagina: UUID): List<Texto>
 
     @Throws(ExceptionDb::class)
-    fun selectAllVocabularios(base: String, idVolume: Long?, idCapitulo: Long?, idPagina: Long?): Set<Vocabulario>
+    fun selectAllVocabularios(base: String, idVolume: UUID?, idCapitulo: UUID?, idPagina: UUID?, comObj : Boolean = false): Set<Vocabulario>
 
     // -------------------------------------------------------------------------------------------------------------  //
 
@@ -78,24 +79,24 @@ interface MangaExtractorDao {
     fun deleteVolume(base: String, obj: Volume)
 
     @Throws(ExceptionDb::class)
-    fun deleteCapitulo(base: String, obj: Capitulo)
+    fun deleteCapitulo(base: String, obj: Capitulo, transaction : Boolean = true)
 
     @Throws(ExceptionDb::class)
-    fun deletePagina(base: String, obj: Pagina)
+    fun deletePagina(base: String, obj: Pagina, transaction : Boolean = true)
 
     @Throws(ExceptionDb::class)
-    fun deleteTexto(base: String, obj: Texto)
+    fun deleteTexto(base: String, obj: Texto, transaction : Boolean = true)
 
     @Throws(ExceptionDb::class)
-    fun deleteVocabulario(base: String, idVolume: Long?, idCapitulo: Long?, idPagina: Long?)
+    fun deleteVocabulario(base: String, idVolume: UUID?, idCapitulo: UUID?, idPagina: UUID?, transaction : Boolean = true)
 
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun createDatabase(nome: String)
+    fun createTabela(nome: String)
 
     @Throws(ExceptionDb::class)
-    fun existDatabase(nome: String):Boolean
+    fun existTabela(nome: String):Boolean
 
     @Throws(ExceptionDb::class)
     fun selectAllTabelas() : List<Tabela>

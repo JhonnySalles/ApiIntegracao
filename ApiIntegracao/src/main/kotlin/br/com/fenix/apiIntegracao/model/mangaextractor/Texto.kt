@@ -2,9 +2,10 @@ package br.com.fenix.apiIntegracao.model.mangaextractor
 
 import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
+import java.util.*
 
 data class Texto(
-    private val id: Long?,
+    private val id: UUID?,
     var sequencia: Int,
     var texto: String,
     var posicao_x1: Int,
@@ -12,7 +13,7 @@ data class Texto(
     var posicao_y1: Int,
     var posicao_y2: Int,
     var versaoApp: Int
-) : Serializable, Entity<Texto, Long?> {
+) : Serializable, Entity<Texto, UUID?> {
 
     override fun merge(source: Texto) {
         this.sequencia = source.sequencia
@@ -24,16 +25,31 @@ data class Texto(
         this.versaoApp = source.versaoApp
     }
 
-    override fun getId(): Long? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: Long?): Texto {
+    override fun create(id: UUID?): Texto {
         return Texto(id, 0, "", 0, 0, 0, 0, 0)
     }
 
     override fun toString(): String {
         return "MangaTexto [id=$id, texto=$texto, sequencia=$sequencia]"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Texto
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
     }
 
 }

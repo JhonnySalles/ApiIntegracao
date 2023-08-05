@@ -3,10 +3,11 @@ package br.com.fenix.apiIntegracao.model.mangaextractor
 import br.com.fenix.apiIntegracao.enums.Linguagens
 import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
+import java.util.*
 
 
 data class Volume(
-    private val id: Long?,
+    private val id: UUID?,
     var manga: String,
     var volume: Int,
     var linguagem: Linguagens?,
@@ -15,7 +16,7 @@ data class Volume(
     var isProcessado: Boolean,
     var capitulos: List<Capitulo> = listOf(),
     var vocabulario: Set<Vocabulario> = setOf()
-) : Serializable, Entity<Volume, Long?> {
+) : Serializable, Entity<Volume, UUID?> {
 
     override fun merge(source: Volume) {
         this.manga = source.manga
@@ -27,11 +28,11 @@ data class Volume(
         this.vocabulario = source.vocabulario
     }
 
-    override fun getId(): Long? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: Long?): Volume {
+    override fun create(id: UUID?): Volume {
         return Volume(id, "", 0, Linguagens.PORTUGUESE, "", "",false)
     }
 
@@ -41,7 +42,6 @@ data class Volume(
 
         other as Volume
 
-        if (id != other.id) return false
         if (manga != other.manga) return false
         if (volume != other.volume) return false
         if (linguagem != other.linguagem) return false
@@ -50,10 +50,10 @@ data class Volume(
     }
 
     override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + manga.hashCode()
+        var result = manga.hashCode()
         result = 31 * result + volume
-        result = 31 * result + linguagem.hashCode()
+        result = 31 * result + (linguagem?.hashCode() ?: 0)
         return result
     }
+
 }
