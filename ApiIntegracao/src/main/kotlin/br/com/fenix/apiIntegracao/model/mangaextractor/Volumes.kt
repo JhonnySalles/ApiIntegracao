@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.model.mangaextractor
 
+import br.com.fenix.apiIntegracao.enums.Linguagens
 import java.io.Serializable
 
 
@@ -7,24 +8,20 @@ data class Volumes(
     val id: Long,
     var manga: String,
     var volume: Int,
-    var capitulo: Double,
-    var linguagem: String,
+    var linguagem: Linguagens?,
+    var arquivo: String,
     var scan: String,
-    var isExtra: Boolean,
-    var isRaw: Boolean,
     var isProcessado: Boolean,
-    var vocabulario: String,
+    var vocabulario: Set<Vocabulario> = setOf(),
     var capitulos: List<Capitulos> = listOf()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Volumes, Long> {
 
     override fun merge(source: Volumes) {
         this.manga = source.manga
         this.volume = source.volume
-        this.capitulo = source.capitulo
         this.linguagem = source.linguagem
         this.scan = source.scan
-        this.isExtra = source.isExtra
-        this.isRaw = source.isRaw
+        this.arquivo = source.arquivo
         this.isProcessado = source.isProcessado
         this.vocabulario = source.vocabulario
     }
@@ -34,7 +31,7 @@ data class Volumes(
     }
 
     override fun create(id: Long): Volumes {
-        return Volumes(id, "", 0, 0.0, "", "", false, false, false, "", listOf())
+        return Volumes(id, "", 0, Linguagens.PORTUGUESE, "", "",false, setOf(), listOf())
     }
 
     override fun equals(other: Any?): Boolean {

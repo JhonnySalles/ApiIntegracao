@@ -11,15 +11,17 @@ data class Paginas(
     val id: Long,
     var nome: String,
     var numero: Int,
+    var nomePagina: String,
     var hashPagina: String,
     var isProcessado: Boolean,
-    var vocabulario: String,
-    var textos: List<Textos> = listOf()
+    var textos: List<Textos> = listOf(),
+    var vocabulario: Set<Vocabulario> = setOf()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Paginas, Long> {
 
     override fun merge(source: Paginas) {
         this.nome = source.nome
         this.numero = source.numero
+        this.nomePagina = source.nomePagina
         this.hashPagina = source.hashPagina
         this.isProcessado = source.isProcessado
         this.vocabulario = source.vocabulario
@@ -30,7 +32,7 @@ data class Paginas(
     }
 
     override fun create(id: Long): Paginas {
-        return Paginas(id, "", 0, "", false, "", listOf())
+        return Paginas(id, "", 0, "", "",false, listOf(), setOf())
     }
 
     override fun equals(other: Any?): Boolean {

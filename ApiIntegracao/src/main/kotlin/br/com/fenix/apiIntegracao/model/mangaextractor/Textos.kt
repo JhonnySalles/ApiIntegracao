@@ -6,10 +6,10 @@ data class Textos(
     val id: Long,
     var sequencia: Int,
     var texto: String,
-    var posicao_x1: Double,
-    var posicao_x2: Double,
-    var posicao_y1: Double,
-    var posicao_y2: Double,
+    var posicao_x1: Int,
+    var posicao_x2: Int,
+    var posicao_y1: Int,
+    var posicao_y2: Int,
     var versaoApp: Int
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Textos, Long> {
 
@@ -28,7 +28,7 @@ data class Textos(
     }
 
     override fun create(id: Long): Textos {
-        return Textos(id, 0, "", 0.0, 0.0, 0.0, 0.0, 0)
+        return Textos(id, 0, "", 0, 0, 0, 0, 0)
     }
 
     override fun toString(): String {

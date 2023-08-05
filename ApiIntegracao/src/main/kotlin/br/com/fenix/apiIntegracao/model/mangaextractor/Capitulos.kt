@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.model.mangaextractor
 
+import br.com.fenix.apiIntegracao.enums.Linguagens
 import java.io.Serializable
 
 data class Capitulos(
@@ -7,12 +8,12 @@ data class Capitulos(
     var manga: String,
     var volume: Int,
     var capitulo: Double,
-    var linguagem: String,
+    var linguagem: Linguagens?,
     var scan: String,
     var isExtra: Boolean,
     var isRaw: Boolean,
     var isProcessado: Boolean,
-    var vocabulario: String,
+    var vocabulario: Set<Vocabulario> = setOf(),
     var paginas: List<Paginas> = listOf()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Capitulos, Long> {
 
@@ -33,7 +34,7 @@ data class Capitulos(
     }
 
     override fun create(id: Long): Capitulos {
-        return Capitulos(id, "", 0, 0.0, "", "", false, false, false, "", listOf())
+        return Capitulos(id, "", 0, 0.0, Linguagens.PORTUGUESE, "", false, false, false, setOf(), listOf())
     }
 
     override fun equals(other: Any?): Boolean {

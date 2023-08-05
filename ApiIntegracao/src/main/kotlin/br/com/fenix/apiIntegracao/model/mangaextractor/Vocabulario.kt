@@ -5,17 +5,19 @@ import java.io.Serializable
 data class Vocabulario(
     val id: Long,
     var palavra: String,
-    var significado: String,
+    var portugues: String,
+    var ingles: String,
     var leitura: String,
     var isRevisado: Boolean,
-    var volumes: Volumes?,
-    var capitulos: Capitulos?,
-    var paginas: Paginas?
+    var volumes: Volumes? = null,
+    var capitulos: Capitulos? = null,
+    var paginas: Paginas? = null
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Vocabulario, Long> {
 
     override fun merge(source: Vocabulario) {
         this.palavra = source.palavra
-        this.significado = source.significado
+        this.portugues = source.portugues
+        this.ingles = source.ingles
         this.leitura = source.leitura
         this.isRevisado = source.isRevisado
         this.volumes = source.volumes
@@ -28,7 +30,7 @@ data class Vocabulario(
     }
 
     override fun create(id: Long): Vocabulario {
-        return Vocabulario(id, "", "", "", false, null, null, null)
+        return Vocabulario(id, "", "", "", "", false, null, null, null)
     }
 
     override fun equals(other: Any?): Boolean {
