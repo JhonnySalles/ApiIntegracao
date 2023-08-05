@@ -1,24 +1,20 @@
 package br.com.fenix.apiIntegracao.model.mangaextractor
 
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
 
-data class Paginas(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+data class Pagina(
+    private val id: Long?,
     var nome: String,
     var numero: Int,
     var nomePagina: String,
     var hashPagina: String,
     var isProcessado: Boolean,
-    var textos: List<Textos> = listOf(),
+    var textos: List<Texto> = listOf(),
     var vocabulario: Set<Vocabulario> = setOf()
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Paginas, Long> {
+) : Serializable, Entity<Pagina, Long?> {
 
-    override fun merge(source: Paginas) {
+    override fun merge(source: Pagina) {
         this.nome = source.nome
         this.numero = source.numero
         this.nomePagina = source.nomePagina
@@ -27,19 +23,19 @@ data class Paginas(
         this.vocabulario = source.vocabulario
     }
 
-    override fun getId(): Long {
+    override fun getId(): Long? {
         return id
     }
 
-    override fun create(id: Long): Paginas {
-        return Paginas(id, "", 0, "", "",false, listOf(), setOf())
+    override fun create(id: Long?): Pagina {
+        return Pagina(id, "", 0, "", "",false)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Paginas
+        other as Pagina
 
         if (id != other.id) return false
         if (nome != other.nome) return false

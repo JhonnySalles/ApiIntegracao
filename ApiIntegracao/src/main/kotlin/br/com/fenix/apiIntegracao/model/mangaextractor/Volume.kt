@@ -1,22 +1,23 @@
 package br.com.fenix.apiIntegracao.model.mangaextractor
 
 import br.com.fenix.apiIntegracao.enums.Linguagens
+import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
 
 
-data class Volumes(
-    val id: Long,
+data class Volume(
+    private val id: Long?,
     var manga: String,
     var volume: Int,
     var linguagem: Linguagens?,
     var arquivo: String,
     var scan: String,
     var isProcessado: Boolean,
-    var vocabulario: Set<Vocabulario> = setOf(),
-    var capitulos: List<Capitulos> = listOf()
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Volumes, Long> {
+    var capitulos: List<Capitulo> = listOf(),
+    var vocabulario: Set<Vocabulario> = setOf()
+) : Serializable, Entity<Volume, Long?> {
 
-    override fun merge(source: Volumes) {
+    override fun merge(source: Volume) {
         this.manga = source.manga
         this.volume = source.volume
         this.linguagem = source.linguagem
@@ -26,19 +27,19 @@ data class Volumes(
         this.vocabulario = source.vocabulario
     }
 
-    override fun getId(): Long {
+    override fun getId(): Long? {
         return id
     }
 
-    override fun create(id: Long): Volumes {
-        return Volumes(id, "", 0, Linguagens.PORTUGUESE, "", "",false, setOf(), listOf())
+    override fun create(id: Long?): Volume {
+        return Volume(id, "", 0, Linguagens.PORTUGUESE, "", "",false)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Volumes
+        other as Volume
 
         if (id != other.id) return false
         if (manga != other.manga) return false

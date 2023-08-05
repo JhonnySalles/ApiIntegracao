@@ -1,9 +1,10 @@
 package br.com.fenix.apiIntegracao.model.mangaextractor
 
+import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
 
-data class Textos(
-    val id: Long,
+data class Texto(
+    private val id: Long?,
     var sequencia: Int,
     var texto: String,
     var posicao_x1: Int,
@@ -11,9 +12,9 @@ data class Textos(
     var posicao_y1: Int,
     var posicao_y2: Int,
     var versaoApp: Int
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Textos, Long> {
+) : Serializable, Entity<Texto, Long?> {
 
-    override fun merge(source: Textos) {
+    override fun merge(source: Texto) {
         this.sequencia = source.sequencia
         this.texto = source.texto
         this.posicao_x1 = source.posicao_x1
@@ -23,12 +24,12 @@ data class Textos(
         this.versaoApp = source.versaoApp
     }
 
-    override fun getId(): Long {
+    override fun getId(): Long? {
         return id
     }
 
-    override fun create(id: Long): Textos {
-        return Textos(id, 0, "", 0, 0, 0, 0, 0)
+    override fun create(id: Long?): Texto {
+        return Texto(id, 0, "", 0, 0, 0, 0, 0)
     }
 
     override fun toString(): String {

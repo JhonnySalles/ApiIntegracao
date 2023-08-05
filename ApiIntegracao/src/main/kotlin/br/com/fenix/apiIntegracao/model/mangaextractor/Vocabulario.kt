@@ -1,18 +1,19 @@
 package br.com.fenix.apiIntegracao.model.mangaextractor
 
+import br.com.fenix.apiIntegracao.model.Entity
 import java.io.Serializable
 
 data class Vocabulario(
-    val id: Long,
+    private val id: Long?,
     var palavra: String,
     var portugues: String,
     var ingles: String,
     var leitura: String,
     var isRevisado: Boolean,
-    var volumes: Volumes? = null,
-    var capitulos: Capitulos? = null,
-    var paginas: Paginas? = null
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Vocabulario, Long> {
+    var volumes: Volume? = null,
+    var capitulos: Capitulo? = null,
+    var paginas: Pagina? = null
+) : Serializable, Entity<Vocabulario, Long?> {
 
     override fun merge(source: Vocabulario) {
         this.palavra = source.palavra
@@ -25,12 +26,12 @@ data class Vocabulario(
         this.paginas = source.paginas
     }
 
-    override fun getId(): Long {
+    override fun getId(): Long? {
         return id
     }
 
-    override fun create(id: Long): Vocabulario {
-        return Vocabulario(id, "", "", "", "", false, null, null, null)
+    override fun create(id: Long?): Vocabulario {
+        return Vocabulario(id, "", "", "", "", false)
     }
 
     override fun equals(other: Any?): Boolean {

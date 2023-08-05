@@ -7,16 +7,16 @@ interface MangaExtractorDao {
 
     // -------------------------------------------------------------------------------------------------------------  //
     @Throws(ExceptionDb::class)
-    fun updateVolume(base: String, obj: Volumes)
+    fun updateVolume(base: String, obj: Volume)
 
     @Throws(ExceptionDb::class)
-    fun updateCapitulo(base: String, obj: Capitulos)
+    fun updateCapitulo(base: String, obj: Capitulo)
 
     @Throws(ExceptionDb::class)
-    fun updatePagina(base: String, obj: Paginas)
+    fun updatePagina(base: String, obj: Pagina)
 
     @Throws(ExceptionDb::class)
-    fun updateTexto(base: String, obj: Textos)
+    fun updateTexto(base: String, obj: Texto)
 
     @Throws(ExceptionDb::class)
     fun updateVocabulario(base: String, obj: Vocabulario)
@@ -24,16 +24,16 @@ interface MangaExtractorDao {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun insertVolume(base: String, obj: Volumes): Long
+    fun insertVolume(base: String, obj: Volume): Long
 
     @Throws(ExceptionDb::class)
-    fun insertCapitulo(base: String, idVolume: Long, obj: Capitulos): Long
+    fun insertCapitulo(base: String, idVolume: Long, obj: Capitulo): Long
 
     @Throws(ExceptionDb::class)
-    fun insertPagina(base: String, idCapitulo: Long, obj: Paginas): Long
+    fun insertPagina(base: String, idCapitulo: Long, obj: Pagina): Long
 
     @Throws(ExceptionDb::class)
-    fun insertTexto(base: String, idPagina: Long, obj: Textos): Long
+    fun insertTexto(base: String, idPagina: Long, obj: Texto): Long
 
     @Throws(ExceptionDb::class)
     fun insertVocabulario(
@@ -43,48 +43,51 @@ interface MangaExtractorDao {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun selectVolume(base: String, id: Long): Volumes
+    fun selectVolume(base: String, id: Long): Volume?
 
     @Throws(ExceptionDb::class)
-    fun selectCapitulo(base: String, id: Long): Capitulos
+    fun selectCapitulo(base: String, id: Long): Capitulo?
 
     @Throws(ExceptionDb::class)
-    fun selectPagina(base: String, id: Long): Paginas
+    fun selectPagina(base: String, id: Long): Pagina?
 
     @Throws(ExceptionDb::class)
-    fun selectTexto(base: String, id: Long): Textos
+    fun selectTexto(base: String, id: Long): Texto?
 
     @Throws(ExceptionDb::class)
-    fun selectVocabuario(base: String, id: Long): Vocabulario
+    fun selectVocabulario(base: String, id: Long): Vocabulario?
 
     @Throws(ExceptionDb::class)
-    fun selectAllCapitulo(base: String, idVolume: Long): List<Capitulos>
+    fun selectAllVolumes(base: String): List<Volume>
 
     @Throws(ExceptionDb::class)
-    fun selectAllPagina(base: String, idCapitulo: Long): List<Vocabulario>
+    fun selectAllCapitulos(base: String, idVolume: Long): List<Capitulo>
 
     @Throws(ExceptionDb::class)
-    fun selectAllText(base: String, idPagina: Long): List<Paginas>
+    fun selectAllPaginas(base: String, idCapitulo: Long): List<Pagina>
 
     @Throws(ExceptionDb::class)
-    fun selectAllVocabuario(base: String, idVolume: Long?, idCapitulo: Long?, idPagina: Long?): Set<Vocabulario>
+    fun selectAllTextos(base: String, idPagina: Long): List<Texto>
+
+    @Throws(ExceptionDb::class)
+    fun selectAllVocabularios(base: String, idVolume: Long?, idCapitulo: Long?, idPagina: Long?): Set<Vocabulario>
 
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun deleteVolume(base: String, obj: Volumes)
+    fun deleteVolume(base: String, obj: Volume)
 
     @Throws(ExceptionDb::class)
-    fun deleteCapitulo(base: String, obj: Capitulos)
+    fun deleteCapitulo(base: String, obj: Capitulo)
 
     @Throws(ExceptionDb::class)
-    fun deletePagina(base: String, obj: Paginas)
+    fun deletePagina(base: String, obj: Pagina)
 
     @Throws(ExceptionDb::class)
-    fun deleteTexto(base: String, obj: Textos)
+    fun deleteTexto(base: String, obj: Texto)
 
     @Throws(ExceptionDb::class)
-    fun deletarVocabulario(base: String, idVolume: Long?, idCapitulo: Long?, idPagina: Long?)
+    fun deleteVocabulario(base: String, idVolume: Long?, idCapitulo: Long?, idPagina: Long?)
 
     // -------------------------------------------------------------------------------------------------------------  //
 
@@ -95,7 +98,7 @@ interface MangaExtractorDao {
     fun existDatabase(nome: String):Boolean
 
     @Throws(ExceptionDb::class)
-    fun selectAllTabela() : List<Tabelas>
+    fun selectAllTabelas() : List<Tabela>
 
     @get:Throws(ExceptionDb::class)
     val tabelas: List<String>
