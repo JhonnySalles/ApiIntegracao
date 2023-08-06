@@ -1,7 +1,7 @@
 CREATE TABLE decksubtitle (
   id VARCHAR (36) NOT NULL,
   tabela VARCHAR (900),
-  UltimaSincronizacao DATETIME DEFAULT NOW(),
+  sincronizacao DATETIME DEFAULT NOW(),
   isSqls tinyint(1) DEFAULT '0',
   PRIMARY KEY (id)
 );

@@ -63,42 +63,13 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             "SELECT id, id_volume, id_capitulo, id_pagina, palavra, portugues, ingles, leitura, revisado FROM %s_vocabulario WHERE %s "
 
 
-        private const val CREATE_VOLUMES =
-            ("CREATE TABLE %s_volumes (id VARCHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL, manga varchar(250) DEFAULT NULL, "
-                    + "  volume int(4) DEFAULT NULL, linguagem varchar(4) DEFAULT NULL, arquivo varchar(250) DEFAULT NULL, vocabulario longtext, "
-                    + "  is_processado tinyint(1) DEFAULT '0', PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8")
-        private const val CREATE_CAPITULOS =
-            ("CREATE TABLE %s_capitulos (id VARCHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL, id_volume VARCHAR(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL, "
-                    + "  manga LONGTEXT COLLATE utf8mb4_unicode_ci NOT NULL, volume INT(4) NOT NULL, "
-                    + "  capitulo DOUBLE NOT NULL, linguagem VARCHAR(4) COLLATE utf8mb4_unicode_ci DEFAULT NULL, scan VARCHAR(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL, "
-                    + "  is_extra TINYINT(1) DEFAULT NULL, is_raw TINYINT(1) DEFAULT NULL, is_processado TINYINT(1) DEFAULT '0', vocabulario LONGTEXT COLLATE utf8mb4_unicode_ci, "
-                    + "  PRIMARY KEY (id), KEY %s_volumes_fk (id_volume), "
-                    + "  CONSTRAINT %s_volumes_capitulos_fk FOREIGN KEY (id_volume) REFERENCES %s_volumes (id) ON DELETE CASCADE ON UPDATE CASCADE "
-                    + ") ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci")
-        private const val CREATE_PAGINAS =
-            ("CREATE TABLE %s_paginas (id VARCHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL, id_capitulo VARCHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL, "
-                    + "  nome VARCHAR(250) DEFAULT NULL, numero INT(11) DEFAULT NULL, hash_pagina VARCHAR(250) DEFAULT NULL, is_processado TINYINT(1) DEFAULT '0', "
-                    + "  vocabulario LONGTEXT, PRIMARY KEY (id), KEY %s_capitulos_fk (id_capitulo), "
-                    + "  CONSTRAINT %s_capitulos_paginas_fk FOREIGN KEY (id_capitulo) REFERENCES %s_capitulos (id) ON DELETE CASCADE ON UPDATE CASCADE "
-                    + ") ENGINE=INNODB DEFAULT CHARSET=utf8")
-        private const val CREATE_TEXTO =
-            ("CREATE TABLE %s_textos (id VARCHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL, id_pagina VARCHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL, "
-                    + "  sequencia INT(4) DEFAULT NULL, texto LONGTEXT COLLATE utf8mb4_unicode_ci, posicao_x1 DOUBLE DEFAULT NULL, "
-                    + "  posicao_y1 DOUBLE DEFAULT NULL, posicao_x2 DOUBLE DEFAULT NULL, posicao_y2 DOUBLE DEFAULT NULL, versao_app INT(11) DEFAULT '0', PRIMARY KEY (id), "
-                    + "  KEY %s_paginas_fk (id_pagina), "
-                    + "  CONSTRAINT %s_paginas_textos_fk FOREIGN KEY (id_pagina) REFERENCES %s_paginas (id) ON DELETE CASCADE ON UPDATE CASCADE "
-                    + ") ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci")
-        private const val CREATE_VOCABULARIO =
-            ("CREATE TABLE %s_vocabulario (" + "  id VARCHAR(36) COLLATE utf8mb4_unicode_ci NOT NULL,"
-                    + "  id_volume VARCHAR(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL," + "  id_capitulo VARCHAR(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,"
-                    + "  id_pagina VARCHAR(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL," + "  palavra VARCHAR(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,"
-                    + "  portugues LONGTEXT COLLATE utf8mb4_unicode_ci," + "  ingles LONGTEXT COLLATE utf8mb4_unicode_ci,"
-                    + "  leitura LONGTEXT COLLATE utf8mb4_unicode_ci," + "  revisado tinyint(1) DEFAULT 1," + "  PRIMARY KEY (id),"
-                    + "  KEY %s_vocab_volume_fk (id_volume)," + "  KEY %s_vocab_capitulo_fk (id_capitulo)," + "  KEY %s_vocab_pagina_fk (id_pagina),"
-                    + "  CONSTRAINT %s_vocab_capitulo_fk FOREIGN KEY (id_capitulo) REFERENCES %s_capitulos (id),"
-                    + "  CONSTRAINT %s_vocab_pagina_fk FOREIGN KEY (id_pagina) REFERENCES %s_paginas (id),"
-                    + "  CONSTRAINT %s_vocab_volume_fk FOREIGN KEY (id_volume) REFERENCES %s_volumes (id)"
-                    + ") ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci")
+        private const val CREATE_TABELA = "CALL create_table('%s');"
+        private const val TABELA_VOLUME = "_volumes"
+        private const val TABELA_CAPITULO = "_capitulos"
+        private const val TABELA_PAGINA = "_paginas"
+        private const val TABELA_TEXTO = "_textos"
+        private const val TABELA_VOCABULARIO = "_vocabularios"
+
 
         private const val CREATE_TRIGGER_INSERT = "DELIMITER $$" +
                 "CREATE TRIGGER tr_%s_insert BEFORE UPDATE ON %s" +
@@ -112,7 +83,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         private const val CREATE_TRIGGER_UPDATE = "DELIMITER $$" +
                 "CREATE TRIGGER tr_%s_update BEFORE UPDATE ON %s" +
                 "  FOR EACH ROW BEGIN" +
-                "    SET new.Atualizacao = NOW();" +
+                "    SET new.atualizacao = NOW();" +
                 "  END$$" +
                 "DELIMITER ;"
 
@@ -938,7 +909,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
     override fun createTabela(nome: String) {
         var st: PreparedStatement? = null
         try {
-            st = conn.prepareStatement(String.format(CREATE_VOLUMES, nome))
+            st = conn.prepareStatement(String.format(CREATE_TABELA, nome))
             st.execute()
         } catch (e: SQLException) {
             e.printStackTrace()
@@ -948,64 +919,12 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             closeStatement(st)
         }
 
-        createTriggers(nome + "_volumes")
+        createTriggers(nome + TABELA_VOLUME)
+        createTriggers(nome + TABELA_CAPITULO)
+        createTriggers(nome + TABELA_PAGINA)
+        createTriggers(nome + TABELA_TEXTO)
+        createTriggers(nome + TABELA_VOCABULARIO)
 
-        try {
-            st = conn.prepareStatement(String.format(CREATE_CAPITULOS, nome, nome, nome, nome))
-            st.execute()
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
-            throw ExceptionDb(Mensagens.BD_ERRO_CREATE_DATABASE)
-        } finally {
-            closeStatement(st)
-        }
-
-        createTriggers(nome + "_capitulos")
-
-        try {
-            st = conn.prepareStatement(String.format(CREATE_PAGINAS, nome, nome, nome, nome))
-            st.execute()
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
-            throw ExceptionDb(Mensagens.BD_ERRO_CREATE_DATABASE)
-        } finally {
-            closeStatement(st)
-        }
-
-        createTriggers(nome + "_paginas")
-
-        try {
-            st = conn.prepareStatement(String.format(CREATE_TEXTO, nome, nome, nome, nome))
-            st.execute()
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
-            throw ExceptionDb(Mensagens.BD_ERRO_CREATE_DATABASE)
-        } finally {
-            closeStatement(st)
-        }
-
-        createTriggers(nome + "_textos")
-
-        try {
-            st = conn.prepareStatement(
-                String.format(
-                    CREATE_VOCABULARIO, nome, nome, nome, nome, nome,
-                    nome, nome, nome, nome, nome
-                )
-            )
-            st.execute()
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
-            throw ExceptionDb(Mensagens.BD_ERRO_CREATE_DATABASE)
-        } finally {
-            closeStatement(st)
-        }
-
-        createTriggers(nome + "_vocabularios")
     }
 
     override fun existTabela(nome: String): Boolean {

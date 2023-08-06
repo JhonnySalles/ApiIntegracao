@@ -1,7 +1,7 @@
 CREATE TABLE manga_extractor (
   id VARCHAR (36) NOT NULL,
   tabela VARCHAR (900),
-  UltimaSincronizacao DATETIME DEFAULT NOW(),
+  sincronizacao DATETIME DEFAULT NOW(),
    isVocabulario tinyint(1) DEFAULT '0',
   PRIMARY KEY (id)
 );

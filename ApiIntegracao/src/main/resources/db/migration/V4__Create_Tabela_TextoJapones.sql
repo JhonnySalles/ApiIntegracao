@@ -1,7 +1,7 @@
 CREATE TABLE texto_japones (
   id VARCHAR (36) NOT NULL,
   tabela VARCHAR (900),
-  UltimaSincronizacao DATETIME DEFAULT NOW(),
+  sincronizacao DATETIME DEFAULT NOW(),
   PRIMARY KEY (id)
 );
 

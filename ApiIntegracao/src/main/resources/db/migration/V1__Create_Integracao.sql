@@ -1,17 +1,27 @@
-CREATE TABLE Atualizacao (
-  id VARCHAR (36) NOT NULL,
-  Computador VARCHAR (250),
-  Ip VARCHAR (250),
-  UltimaConsulta DATETIME,
+CREATE TABLE atualizacoes (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  base VARCHAR (100),
+  tabela VARCHAR (250),
+  atualizacao DATETIME,
   PRIMARY KEY (id)
 );
 
+CREATE TABLE consultas (
+    id VARCHAR (36) NOT NULL,
+    computador VARCHAR (250),
+    ip VARCHAR (250),
+    consulta DATETIME,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE tabelas (
-  tenant VARCHAR (100) NOT NULL,
+  id int(11) NOT NULL AUTO_INCREMENT,
   url VARCHAR (250),
   username VARCHAR (250),
-  PASSWORD VARCHAR (250),
-  driver VARCHAR (250),
+  password VARCHAR (250),
+  base VARCHAR (100),
+  driver enum('MYSQL') DEFAULT 'MYSQL',
+  tipo enum('MANGA_EXTRACTOR','TEXTO_INGLES','DECKSUBTITLE') DEFAULT NULL,
   PRIMARY KEY (tenant)
 );
 
