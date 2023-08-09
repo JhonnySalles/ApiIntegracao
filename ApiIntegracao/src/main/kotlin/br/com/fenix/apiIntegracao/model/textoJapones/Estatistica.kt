@@ -8,7 +8,10 @@ import java.io.Serializable
 data class Estatistica(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val sequencial: Long,
+    @Column(length = 36)
+    private var id: String?,
+    @Column
+    var sequencial: Long?,
     @Column(length = 10, nullable = false)
     var kanji: String,
     @Column(length = 10, nullable = false)
@@ -25,9 +28,10 @@ data class Estatistica(
     var percMedia: Float,
     @Column(name = "CorSequencial", nullable = false)
     var corSequencial: Int
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Estatistica, Long> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Estatistica, String?> {
 
     override fun merge(source: Estatistica) {
+        this.sequencial = source.sequencial
         this.kanji = source.kanji
         this.leitura = source.leitura
         this.tipo = source.tipo
@@ -38,12 +42,12 @@ data class Estatistica(
         this.corSequencial = source.corSequencial
     }
 
-    override fun getId(): Long {
-        return sequencial
+    override fun getId(): String? {
+        return id
     }
 
-    override fun create(id: Long): Estatistica {
-        return Estatistica(id, "", "", "", 0.0, 0f, 0.0, 0f, 0)
+    override fun create(id: String?): Estatistica {
+        return Estatistica(id, 0, "", "", "", 0.0, 0f, 0.0, 0f, 0)
     }
 
     override fun equals(other: Any?): Boolean {

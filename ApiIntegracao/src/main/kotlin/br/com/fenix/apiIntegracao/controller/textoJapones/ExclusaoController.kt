@@ -4,10 +4,13 @@ import br.com.fenix.apiIntegracao.controller.Controller
 import br.com.fenix.apiIntegracao.controller.Endpoints.Companion.TEXTO_JAPONES_VOCABULARIO
 import br.com.fenix.apiIntegracao.model.textojapones.Exclusao
 import br.com.fenix.apiIntegracao.repository.Repository
+import br.com.fenix.apiIntegracao.repository.textojapones.ExclusaoRepository
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
-class ExclusaoController(repository: Repository<Exclusao, String>) : Controller<Exclusao, String>(repository) {
+@Tag(name = "Exclusão", description = "Endpoint para tabela de exclusões de vocabulários")
+class ExclusaoController(repository: ExclusaoRepository) : Controller<Exclusao, String?>(repository) {
 
 }

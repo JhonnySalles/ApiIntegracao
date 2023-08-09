@@ -7,4 +7,4 @@ CREATE TABLE texto_japones (
 
 INSERT INTO texto_japones (id, tabela)
 SELECT UUID(), Table_Name FROM information_schema.tables
-WHERE table_schema = "texto_japones" GROUP BY Tabela
+WHERE table_schema = "texto_japones" GROUP BY Table_Name

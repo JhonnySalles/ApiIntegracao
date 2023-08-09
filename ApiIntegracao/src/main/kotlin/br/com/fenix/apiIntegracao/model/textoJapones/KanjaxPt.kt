@@ -1,16 +1,18 @@
 package br.com.fenix.apiIntegracao.model.textojapones
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "kanjax_pt")
 data class KanjaxPt(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 36)
+    private var id: String?,
     @Column(name = "Sequencia", nullable = false)
-    val sequencia: Long,
+    var sequencia: Long,
     @Column(length = 10, nullable = false)
     var kanji: String,
     @Column(length = 100, nullable = false)
@@ -67,9 +69,10 @@ data class KanjaxPt(
     var palavra: String,
     @Column(length = 250, nullable = false)
     var significado: String
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjaxPt, Long> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjaxPt, String?> {
 
     override fun merge(source: KanjaxPt) {
+        this.sequencia = source.sequencia
         this.kanji = source.kanji
         this.keyword = source.keyword
         this.meaning = source.meaning
@@ -100,13 +103,14 @@ data class KanjaxPt(
         this.significado = source.significado
     }
 
-    override fun getId(): Long {
-        return sequencia
+    override fun getId(): String? {
+        return id
     }
 
-    override fun create(id: Long): KanjaxPt {
+    override fun create(id: String?): KanjaxPt {
         return KanjaxPt(
             id,
+            0,
             "",
             "",
             "",

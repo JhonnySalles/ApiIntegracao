@@ -8,8 +8,10 @@ import java.io.Serializable
 data class Revisar(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 36)
+    private var id: String?,
     @Column(length = 250, nullable = false)
-    val vocabulario: String,
+    var vocabulario: String,
     @Column(length = 250, nullable = false)
     var formaBasica: String,
     @Column(length = 250, nullable = false)
@@ -26,9 +28,10 @@ data class Revisar(
     var isAnime: Boolean,
     @Column(nullable = false)
     var isManga: Boolean
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Revisar, String> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Revisar, String?> {
 
     override fun merge(source: Revisar) {
+        this.vocabulario = source.vocabulario
         this.formaBasica = source.formaBasica
         this.leitura = source.leitura
         this.traducao = source.traducao
@@ -39,12 +42,12 @@ data class Revisar(
         this.isManga = source.isManga
     }
 
-    override fun getId(): String {
-        return vocabulario
+    override fun getId(): String? {
+        return id
     }
 
-    override fun create(id: String): Revisar {
-        return Revisar(id, "", "", "", "", false, 0, isAnime = false, isManga = false)
+    override fun create(id: String?): Revisar {
+        return Revisar(id, "", "", "", "", "", false, 0, isAnime = false, isManga = false)
     }
 
     override fun equals(other: Any?): Boolean {

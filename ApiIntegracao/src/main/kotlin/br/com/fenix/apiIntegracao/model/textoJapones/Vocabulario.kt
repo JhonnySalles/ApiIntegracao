@@ -8,6 +8,8 @@ import java.io.Serializable
 data class Vocabulario(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 36)
+    private var id: String?,
     @Column(length = 250, nullable = false)
     val vocabulario: String,
     @Column(length = 250, nullable = false)
@@ -16,7 +18,7 @@ data class Vocabulario(
     var leitura: String,
     @Column(nullable = false)
     var traducao: String
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Vocabulario, String> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Vocabulario, String?> {
 
     override fun merge(source: Vocabulario) {
         this.formaBasica = source.formaBasica
@@ -24,12 +26,12 @@ data class Vocabulario(
         this.traducao = source.traducao
     }
 
-    override fun getId(): String {
-        return vocabulario
+    override fun getId(): String? {
+        return id
     }
 
-    override fun create(id: String): Vocabulario {
-        return Vocabulario(id, "", "", "")
+    override fun create(id: String?): Vocabulario {
+        return Vocabulario(id, "", "", "", "")
     }
 
     override fun equals(other: Any?): Boolean {

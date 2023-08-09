@@ -22,6 +22,6 @@ CREATE TABLE tabelas (
   base VARCHAR (100),
   driver enum('MYSQL') DEFAULT 'MYSQL',
   tipo enum('MANGA_EXTRACTOR','TEXTO_INGLES','DECKSUBTITLE') DEFAULT NULL,
-  PRIMARY KEY (tenant)
+  PRIMARY KEY (id)
 );
 

@@ -8,7 +8,10 @@ import java.io.Serializable
 data class KanjiInfo(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val sequencia: Long,
+    @Column(length = 36)
+    private var id: String?,
+    @Column
+    var sequencia: Long,
     @Column(length = 100, nullable = false)
     var word: String,
     @Column(length = 350, nullable = false)
@@ -17,21 +20,22 @@ data class KanjiInfo(
     var frequency: Int,
     @Column(nullable = false)
     var tabela: String
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjiInfo, Long> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjiInfo, String?> {
 
     override fun merge(source: KanjiInfo) {
+        this.sequencia = source.sequencia
         this.word = source.word
         this.readInfo = source.readInfo
         this.frequency = source.frequency
         this.tabela = source.tabela
     }
 
-    override fun getId(): Long {
-        return sequencia
+    override fun getId(): String? {
+        return id
     }
 
-    override fun create(id: Long): KanjiInfo {
-        return KanjiInfo(id, "", "", 0, "")
+    override fun create(id: String?): KanjiInfo {
+        return KanjiInfo(id, 0, "", "", 0, "")
     }
 
     override fun equals(other: Any?): Boolean {

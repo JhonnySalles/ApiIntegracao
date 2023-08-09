@@ -8,7 +8,10 @@ import java.io.Serializable
 data class FilaSql(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val sequencial: Long,
+    @Column(length = 36)
+    private var id: String?,
+    @Column
+    var sequencial: Long,
     @Column(nullable = false)
     var selectSQL: String,
     @Column(nullable = false)
@@ -21,9 +24,10 @@ data class FilaSql(
     var isExporta: Boolean,
     @Column(nullable = false)
     var isLimpeza: Boolean
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<FilaSql, Long> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<FilaSql, String?> {
 
     override fun merge(source: FilaSql) {
+        this.sequencial = source.sequencial
         this.selectSQL = source.selectSQL
         this.updateSQL = source.updateSQL
         this.deleteSQL = source.deleteSQL
@@ -32,12 +36,12 @@ data class FilaSql(
         this.isLimpeza = source.isLimpeza
     }
 
-    override fun getId(): Long {
-        return sequencial
+    override fun getId(): String? {
+        return id
     }
 
-    override fun create(id: Long): FilaSql {
-        return FilaSql(id, "", "", "", "", false, false)
+    override fun create(id: String?): FilaSql {
+        return FilaSql(id, 0, "", "", "", "", false, false)
     }
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

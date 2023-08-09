@@ -1,8 +1,9 @@
 package br.com.fenix.apiIntegracao.repository.textojapones
 
 import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
-interface EstatisticaRepository : JpaRepository<Estatistica, String> {
+@Repository
+interface EstatisticaRepository : br.com.fenix.apiIntegracao.repository.Repository<Estatistica, String?> {
 
 }

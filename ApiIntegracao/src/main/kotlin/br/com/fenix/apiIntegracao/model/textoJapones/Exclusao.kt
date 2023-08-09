@@ -8,21 +8,24 @@ import java.io.Serializable
 @Table(name = "exclusao")
 data class Exclusao(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 36)
+    private var id: String?,
     @Column(length = 250, nullable = false)
     val exclusao: String
-): Serializable, br.com.fenix.apiIntegracao.model.Entity<Exclusao, String> {
+): Serializable, br.com.fenix.apiIntegracao.model.Entity<Exclusao, String?> {
 
     override fun merge(source: Exclusao) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
 
-    override fun getId(): String {
-        return exclusao
+    override fun getId(): String? {
+        return id
     }
 
-    override fun create(id: String): Exclusao {
-        return Exclusao(id)
+    override fun create(id: String?): Exclusao {
+        return Exclusao(id, "" +
+                "")
     }
 
     override fun equals(other: Any?): Boolean {

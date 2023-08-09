@@ -6,9 +6,9 @@ CREATE TABLE decksubtitle (
   PRIMARY KEY (id)
 );
 
-INSERT INTO decsubtitle (id, tabela, isSqls)
+INSERT INTO decksubtitle (id, tabela, isSqls)
 SELECT UUID(), Table_Name, 1 FROM information_schema.tables
-WHERE table_schema = "decksubtitle" AND Table_Name = "_sql" GROUP BY Tabela
+WHERE table_schema = "decksubtitle" AND Table_Name = "_sql" GROUP BY Table_Name
 UNION ALL
 SELECT UUID(), Table_Name, 0 FROM information_schema.tables
-WHERE table_schema = "decksubtitle" AND Table_Name <> "_sql" GROUP BY Tabela
+WHERE table_schema = "decksubtitle" AND Table_Name <> "_sql" GROUP BY Table_Name

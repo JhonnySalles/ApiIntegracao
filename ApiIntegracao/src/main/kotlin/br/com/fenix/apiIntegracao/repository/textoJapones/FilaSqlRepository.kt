@@ -1,8 +1,9 @@
 package br.com.fenix.apiIntegracao.repository.textojapones
 
 import br.com.fenix.apiIntegracao.model.textojapones.FilaSql
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
-interface FilaSqlRepository : JpaRepository<FilaSql, String> {
+@Repository
+interface FilaSqlRepository : br.com.fenix.apiIntegracao.repository.Repository<FilaSql, String?> {
 
 }

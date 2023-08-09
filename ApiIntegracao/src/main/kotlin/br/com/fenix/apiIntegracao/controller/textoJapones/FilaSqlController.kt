@@ -4,10 +4,13 @@ import br.com.fenix.apiIntegracao.controller.Controller
 import br.com.fenix.apiIntegracao.controller.Endpoints.Companion.TEXTO_JAPONES_VOCABULARIO
 import br.com.fenix.apiIntegracao.model.textojapones.FilaSql
 import br.com.fenix.apiIntegracao.repository.Repository
+import br.com.fenix.apiIntegracao.repository.textojapones.FilaSqlRepository
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
-class FilaSqlController(repository: Repository<FilaSql, Long>) : Controller<FilaSql, Long>(repository) {
+@Tag(name = "Fila SQL", description = "Endpoint para tabela de filas de SQL")
+class FilaSqlController(repository: FilaSqlRepository) : Controller<FilaSql, String?>(repository) {
 
 }

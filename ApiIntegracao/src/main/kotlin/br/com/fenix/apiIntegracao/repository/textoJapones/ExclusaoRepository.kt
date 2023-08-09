@@ -1,8 +1,9 @@
 package br.com.fenix.apiIntegracao.repository.textojapones
 
 import br.com.fenix.apiIntegracao.model.textojapones.Exclusao
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
-interface ExclusaoRepository : JpaRepository<Exclusao, String> {
+@Repository
+interface ExclusaoRepository : br.com.fenix.apiIntegracao.repository.Repository<Exclusao, String?> {
 
 }
