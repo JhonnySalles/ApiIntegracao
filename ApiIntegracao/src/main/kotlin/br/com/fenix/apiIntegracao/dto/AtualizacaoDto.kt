@@ -1,21 +1,16 @@
-package br.com.fenix.apiIntegracao.model
+package br.com.fenix.apiIntegracao.dto
 
-import jakarta.persistence.*
 import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import java.io.Serializable
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "atualizacoes")
-data class Atualizacao(
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+data class AtualizacaoDto(
     val id: String,
-    @Column(name = "Computador", length = 250, nullable = false)
     val computador: String,
-    @Column(name = "Ip", length = 250, nullable = false)
     var ip: String,
-    @Column(nullable = false)
     var UltimaConsulta: LocalDateTime
 ) : Serializable {
 
@@ -23,7 +18,7 @@ data class Atualizacao(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Atualizacao
+        other as AtualizacaoDto
 
         if (id != other.id) return false
 

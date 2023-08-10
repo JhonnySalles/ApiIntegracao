@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.util.*
 
 @Entity
 @Table(name = "fila_sql")
@@ -9,7 +10,7 @@ data class FilaSql(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
-    private var id: String?,
+    private var id: UUID?,
     @Column
     var sequencial: Long,
     @Column(nullable = false)
@@ -24,7 +25,7 @@ data class FilaSql(
     var isExporta: Boolean,
     @Column(nullable = false)
     var isLimpeza: Boolean
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<FilaSql, String?> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<FilaSql, UUID?> {
 
     override fun merge(source: FilaSql) {
         this.sequencial = source.sequencial
@@ -36,13 +37,14 @@ data class FilaSql(
         this.isLimpeza = source.isLimpeza
     }
 
-    override fun getId(): String? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: String?): FilaSql {
+    override fun create(id: UUID?): FilaSql {
         return FilaSql(id, 0, "", "", "", "", false, false)
     }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

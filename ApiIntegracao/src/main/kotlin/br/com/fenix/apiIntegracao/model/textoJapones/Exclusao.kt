@@ -3,6 +3,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 import br.com.fenix.apiIntegracao.exceptions.ResourceNonUpgradeableException
 import jakarta.persistence.*
 import java.io.Serializable
+import java.util.*
 
 @Entity
 @Table(name = "exclusao")
@@ -10,22 +11,21 @@ data class Exclusao(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
-    private var id: String?,
+    private var id: UUID?,
     @Column(length = 250, nullable = false)
     val exclusao: String
-): Serializable, br.com.fenix.apiIntegracao.model.Entity<Exclusao, String?> {
+): Serializable, br.com.fenix.apiIntegracao.model.Entity<Exclusao, UUID?> {
 
     override fun merge(source: Exclusao) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
 
-    override fun getId(): String? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: String?): Exclusao {
-        return Exclusao(id, "" +
-                "")
+    override fun create(id: UUID?): Exclusao {
+        return Exclusao(id, "" + "")
     }
 
     override fun equals(other: Any?): Boolean {

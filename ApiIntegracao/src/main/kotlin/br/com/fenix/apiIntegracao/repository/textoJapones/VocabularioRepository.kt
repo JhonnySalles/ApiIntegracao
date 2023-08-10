@@ -1,9 +1,10 @@
 package br.com.fenix.apiIntegracao.repository.textojapones
 
-import br.com.fenix.apiIntegracao.model.textojapones.Vocabulario
+import br.com.fenix.apiIntegracao.model.textojapones.FilaSql
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
-interface VocabularioRepository : br.com.fenix.apiIntegracao.repository.Repository<Vocabulario, String?> {
+interface VocabularioRepository : br.com.fenix.apiIntegracao.repository.Repository<FilaSql, UUID?> {
 
 }

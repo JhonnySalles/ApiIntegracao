@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.util.*
 
 @Entity
 @Table(name = "words_kanji_info")
@@ -9,7 +10,7 @@ data class KanjiInfo(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
-    private var id: String?,
+    private var id: UUID?,
     @Column
     var sequencia: Long,
     @Column(length = 100, nullable = false)
@@ -20,7 +21,7 @@ data class KanjiInfo(
     var frequency: Int,
     @Column(nullable = false)
     var tabela: String
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjiInfo, String?> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjiInfo, UUID?> {
 
     override fun merge(source: KanjiInfo) {
         this.sequencia = source.sequencia
@@ -30,11 +31,11 @@ data class KanjiInfo(
         this.tabela = source.tabela
     }
 
-    override fun getId(): String? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: String?): KanjiInfo {
+    override fun create(id: UUID?): KanjiInfo {
         return KanjiInfo(id, 0, "", "", 0, "")
     }
 

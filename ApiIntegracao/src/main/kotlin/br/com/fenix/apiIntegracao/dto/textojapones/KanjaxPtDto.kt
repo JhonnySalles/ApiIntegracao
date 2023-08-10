@@ -1,78 +1,42 @@
-package br.com.fenix.apiIntegracao.model.textojapones
+package br.com.fenix.apiIntegracao.dto.textojapones
 
-import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
-import java.util.*
 
-@Entity
-@Table(name = "kanjax_pt")
-data class KanjaxPt(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 36)
-    private var id: UUID?,
-    @Column(name = "Sequencia", nullable = false)
+data class KanjaxPtDto(
+    private var id: String?,
     var sequencia: Long,
-    @Column(length = 10, nullable = false)
     var kanji: String,
-    @Column(length = 100, nullable = false)
     var keyword: String,
-    @Column(length = 250, nullable = false)
     var meaning: String,
-    @Column(nullable = false)
     var koohii1: String,
-    @Column(nullable = false)
     var koohii2: String,
-    @Column(length = 100, nullable = false)
     var onyomi: String,
-    @Column(length = 100, nullable = false)
     var kunyomi: String,
-    @Column(nullable = false)
     var onwords: String,
-    @Column(nullable = false)
     var kunwords: String,
-    @Column(nullable = false)
     var jlpt: Int,
-    @Column(nullable = false)
     var grade: Int,
-    @Column(nullable = false)
     var freq: Int,
-    @Column(nullable = false)
     var strokes: Int,
-    @Column(length = 100, nullable = false)
     var variants: String,
-    @Column(length = 100, nullable = false)
     var radical: String,
-    @Column(length = 100, nullable = false)
     var parts: String,
-    @Column(length = 10, nullable = false)
     var utf8: String,
-    @Column(length = 5, nullable = false)
     var sjis: String,
-    @Column(name = "traduzido")
     var isTraduzido: Boolean,
-    @Column(name = "checado")
     var isChecado: Boolean,
-    @Column(name = "revisado")
     var isRevisado: Boolean,
-    @Column(name = "sinalizado")
     var isSinaliza: Boolean,
-    @Column(name = "data_traducao")
     var dataTraducao: LocalDateTime,
-    @Column(name = "data_correcao")
     var dataCorrecao: LocalDateTime,
-    @Column(name = "obs", length = 100)
     var observacao: String,
-    @Column(nullable = false)
     var kanjaxOriginal: Boolean,
-    @Column(length = 100, nullable = false)
     var palavra: String,
-    @Column(length = 250, nullable = false)
     var significado: String
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjaxPt, UUID?> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjaxPtDto, String?> {
 
-    override fun merge(source: KanjaxPt) {
+    override fun merge(source: KanjaxPtDto) {
         this.sequencia = source.sequencia
         this.kanji = source.kanji
         this.keyword = source.keyword
@@ -104,12 +68,12 @@ data class KanjaxPt(
         this.significado = source.significado
     }
 
-    override fun getId(): UUID? {
+    override fun getId(): String? {
         return id
     }
 
-    override fun create(id: UUID?): KanjaxPt {
-        return KanjaxPt(
+    override fun create(id: String?): KanjaxPtDto {
+        return KanjaxPtDto(
             id,
             0,
             "",
@@ -147,7 +111,7 @@ data class KanjaxPt(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as KanjaxPt
+        other as KanjaxPtDto
 
         if (kanji != other.kanji) return false
 

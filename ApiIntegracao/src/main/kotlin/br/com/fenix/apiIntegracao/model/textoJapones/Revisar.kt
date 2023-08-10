@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.util.*
 
 @Entity
 @Table(name = "revisar")
@@ -9,7 +10,7 @@ data class Revisar(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
-    private var id: String?,
+    private var id: UUID?,
     @Column(length = 250, nullable = false)
     var vocabulario: String,
     @Column(length = 250, nullable = false)
@@ -28,7 +29,7 @@ data class Revisar(
     var isAnime: Boolean,
     @Column(nullable = false)
     var isManga: Boolean
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Revisar, String?> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Revisar, UUID?> {
 
     override fun merge(source: Revisar) {
         this.vocabulario = source.vocabulario
@@ -42,11 +43,11 @@ data class Revisar(
         this.isManga = source.isManga
     }
 
-    override fun getId(): String? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: String?): Revisar {
+    override fun create(id: UUID?): Revisar {
         return Revisar(id, "", "", "", "", "", false, 0, isAnime = false, isManga = false)
     }
 

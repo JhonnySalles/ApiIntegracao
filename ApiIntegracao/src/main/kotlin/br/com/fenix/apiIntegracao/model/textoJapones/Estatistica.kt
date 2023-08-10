@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.util.*
 
 @Entity
 @Table(name = "estatistica")
@@ -9,7 +10,7 @@ data class Estatistica(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
-    private var id: String?,
+    private var id: UUID?,
     @Column
     var sequencial: Long?,
     @Column(length = 10, nullable = false)
@@ -28,7 +29,7 @@ data class Estatistica(
     var percMedia: Float,
     @Column(name = "CorSequencial", nullable = false)
     var corSequencial: Int
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Estatistica, String?> {
+) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Estatistica, UUID?> {
 
     override fun merge(source: Estatistica) {
         this.sequencial = source.sequencial
@@ -42,11 +43,11 @@ data class Estatistica(
         this.corSequencial = source.corSequencial
     }
 
-    override fun getId(): String? {
+    override fun getId(): UUID? {
         return id
     }
 
-    override fun create(id: String?): Estatistica {
+    override fun create(id: UUID?): Estatistica {
         return Estatistica(id, 0, "", "", "", 0.0, 0f, 0.0, 0f, 0)
     }
 
