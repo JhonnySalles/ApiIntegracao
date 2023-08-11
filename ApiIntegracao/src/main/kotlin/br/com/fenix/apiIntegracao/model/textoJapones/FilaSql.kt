@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -24,7 +25,9 @@ data class FilaSql(
     @Column(nullable = false)
     var isExporta: Boolean,
     @Column(nullable = false)
-    var isLimpeza: Boolean
+    var isLimpeza: Boolean,
+    @Column
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<FilaSql, UUID?> {
 
     override fun merge(source: FilaSql) {

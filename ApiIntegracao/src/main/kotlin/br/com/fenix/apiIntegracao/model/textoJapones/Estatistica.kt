@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -28,7 +29,9 @@ data class Estatistica(
     @Column(nullable = false)
     var percMedia: Float,
     @Column(name = "CorSequencial", nullable = false)
-    var corSequencial: Int
+    var corSequencial: Int,
+    @Column
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Estatistica, UUID?> {
 
     override fun merge(source: Estatistica) {

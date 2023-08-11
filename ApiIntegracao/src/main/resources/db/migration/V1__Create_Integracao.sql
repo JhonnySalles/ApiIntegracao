@@ -1,4 +1,4 @@
-CREATE TABLE atualizacoes (
+CREATE TABLE IF NOT EXISTS atualizacoes (
   id int(11) NOT NULL AUTO_INCREMENT,
   base VARCHAR (100),
   tabela VARCHAR (250),
@@ -6,7 +6,7 @@ CREATE TABLE atualizacoes (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE consultas (
+CREATE TABLE IF NOT EXISTS consultas (
     id VARCHAR (36) NOT NULL,
     computador VARCHAR (250),
     ip VARCHAR (250),
@@ -14,7 +14,7 @@ CREATE TABLE consultas (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE tabelas (
+CREATE TABLE IF NOT EXISTS tabelas (
   id int(11) NOT NULL AUTO_INCREMENT,
   url VARCHAR (250),
   username VARCHAR (250),

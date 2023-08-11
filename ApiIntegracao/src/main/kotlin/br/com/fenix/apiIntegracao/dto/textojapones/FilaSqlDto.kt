@@ -1,6 +1,8 @@
 package br.com.fenix.apiIntegracao.dto.textojapones
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class FilaSqlDto(
@@ -11,7 +13,9 @@ data class FilaSqlDto(
     var deleteSQL: String,
     var vocabulario: String,
     var isExporta: Boolean,
-    var isLimpeza: Boolean
+    var isLimpeza: Boolean,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable {
 
     override fun equals(other: Any?): Boolean {

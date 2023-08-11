@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -28,7 +29,9 @@ data class Revisar(
     @Column(nullable = false)
     var isAnime: Boolean,
     @Column(nullable = false)
-    var isManga: Boolean
+    var isManga: Boolean,
+    @Column
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Revisar, UUID?> {
 
     override fun merge(source: Revisar) {

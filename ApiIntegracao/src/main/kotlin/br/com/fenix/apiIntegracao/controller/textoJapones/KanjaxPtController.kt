@@ -12,6 +12,6 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Kanjax", description = "Endpoint para tabela do Kanjax")
-class KanjaxPtController(repository: KanjaxPtRepository) : Controller<UUID?, KanjaxPt, KanjaxPtDto>(repository, KanjaxPt::class.java, KanjaxPtDto::class.java) {
+class KanjaxPtController(repository: KanjaxPtRepository) : Controller<UUID?, KanjaxPt, KanjaxPtDto>(repository) {
 
 }

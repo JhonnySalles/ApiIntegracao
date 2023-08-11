@@ -12,6 +12,6 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Exclusão", description = "Endpoint para tabela de exclusões de vocabulários")
-class ExclusaoController(repository: ExclusaoRepository) : Controller<UUID?, Exclusao, ExclusaoDto>(repository, Exclusao::class.java, ExclusaoDto::class.java) {
+class ExclusaoController(repository: ExclusaoRepository) : Controller<UUID?, Exclusao, ExclusaoDto>(repository) {
 
 }

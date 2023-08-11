@@ -12,6 +12,6 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Revisar", description = "Endpoint para tabela de revisão")
-class RevisarController(repository: RevisarRepository) : Controller<UUID?, Revisar, RevisarDto>(repository, Revisar::class.java, RevisarDto::class.java) {
+class RevisarController(repository: RevisarRepository) : Controller<UUID?, Revisar, RevisarDto>(repository) {
 
 }

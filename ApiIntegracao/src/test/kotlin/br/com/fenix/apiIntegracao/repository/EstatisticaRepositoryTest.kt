@@ -1,7 +1,7 @@
 package br.com.fenix.apiIntegracao.repository
 
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
-import br.com.fenix.apiIntegracao.exceptions.ResourceNotFoundException
+import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
 import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
 import br.com.fenix.apiIntegracao.repository.textojapones.EstatisticaRepository
@@ -27,7 +27,7 @@ class EstatisticaRepositoryTest {
     lateinit var repository: EstatisticaRepository
 
     @InjectMocks
-    var service: Service<Estatistica, UUID?, EstatisticaDto> = object : Service<Estatistica, UUID?, EstatisticaDto>(repository, Estatistica::class.java, EstatisticaDto::class.java) {}
+    var service: Service<UUID?, Estatistica, EstatisticaDto> = object : Service<UUID?, Estatistica, EstatisticaDto>(repository) {}
 
     @BeforeEach
     @Throws(Exception::class)
@@ -56,6 +56,16 @@ class EstatisticaRepositoryTest {
     }
 
     @Test
+    fun testCreateWithNullObject() {
+        val exception: Exception = Assertions.assertThrows(RequiredObjectIsNullException::class.java) {
+            service.create(null)
+        }
+        val expectedMessage = "Its required inform a object"
+        val actualMessage = exception.message
+        Assertions.assertTrue(actualMessage!!.contains(expectedMessage))
+    }
+
+    @Test
     fun testUpdate() {
         val id = UUID.fromString("1")
         val entity = input.mockEntity(id)
@@ -70,16 +80,11 @@ class EstatisticaRepositoryTest {
 
 
     @Test
-    fun testUpdateWithNullPerson() {
-        val id = UUID.fromString("1")
-        val entity = input.mockEntity(id)
-        Mockito.`when`(repository.findById(id)).thenReturn(Optional.of(entity))
-
-        val idAux = "999"
-        val exception: Exception = Assertions.assertThrows(ResourceNotFoundException::class.java) {
-            service.get(UUID.fromString(idAux))
+    fun testUpdateWithNullObject() {
+        val exception: Exception = Assertions.assertThrows(RequiredObjectIsNullException::class.java) {
+            service.update(null)
         }
-        val expectedMessage = "Recurso de $idAux não encontrado."
+        val expectedMessage = "Its required inform a object"
         val actualMessage = exception.message
         Assertions.assertTrue(actualMessage!!.contains(expectedMessage))
     }
@@ -97,6 +102,7 @@ class EstatisticaRepositoryTest {
         val list: List<Estatistica> = input.mockEntityList()
         Mockito.`when`(repository.findAll()).thenReturn(list)
         val dtos = service.getAll()
+
         Assertions.assertNotNull(dtos)
 
         input.assertsToDto(list[0], dtos[0])

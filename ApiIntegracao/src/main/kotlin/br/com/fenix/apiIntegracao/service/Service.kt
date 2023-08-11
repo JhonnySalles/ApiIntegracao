@@ -1,51 +1,68 @@
 package br.com.fenix.apiIntegracao.service
 
-import br.com.fenix.apiIntegracao.exceptions.ResourceNotFoundException
+import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
+import br.com.fenix.apiIntegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiIntegracao.mapper.Mapper
 import br.com.fenix.apiIntegracao.model.Entity
 import br.com.fenix.apiIntegracao.repository.Repository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
+import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
 
-abstract class Service<E : Entity<E, ID>, ID, D>(var repository: Repository<E, ID>, var entityClass: Class<E>, var dtoClass: Class<D>) {
+abstract class Service<ID, E : Entity<E, ID>, D>(var repository: Repository<E, ID>) {
 
-    fun getPage(pageable: Pageable): Page<D> {
-        return Mapper.parse(repository.findAll(pageable), dtoClass)
+    private val clazzEntity: Class<E>
+    private val clazzDto: Class<D>
+
+    init {
+        clazzEntity = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<E>
+        clazzDto = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[2] as Class<D>
     }
 
-    fun getPage(sync : LocalDateTime, pageable: Pageable): Page<D> {
-        return Mapper.parse(repository.lastSync(sync, pageable), dtoClass)
+    fun getPage(pageable: Pageable?): Page<D> {
+        if (pageable == null)
+            throw RequiredObjectIsNullException("Its necessary inform a pageable")
+
+        return toDto(repository.findAll(pageable))
+    }
+
+    fun getPage(sync: LocalDateTime, pageable: Pageable): Page<D> {
+        return toDto(repository.lastSync(sync, pageable))
     }
 
     private fun getById(id: ID): E {
-        return repository.findById(id).orElseThrow { ResourceNotFoundException("Recurso de $id não encontrado.") }
+        return repository.findById(id).orElseThrow { InvalidAuthenticationException("Recurso de $id não encontrado.") }
     }
 
     operator fun get(id: ID): D {
-        return Mapper.parse(getById(id), dtoClass)
+        return toDto(getById(id))
     }
 
-    fun getAll(): List<D> = Mapper.parse(repository.findAll(), dtoClass)
+    fun getAll(): List<D> = toDto(repository.findAll())
 
-    fun getAll(sync : LocalDateTime): List<D> = Mapper.parse(repository.lastSync(sync), dtoClass)
+    fun getAll(sync: LocalDateTime): List<D> = toDto(repository.lastSync(sync))
 
     @Transactional
-    fun update(dto: D): D {
-        val entity = Mapper.parse(dto, entityClass)
+    fun update(dto: D?): D {
+        if (dto == null)
+            throw RequiredObjectIsNullException()
+        val entity = toEntity(dto)
         val dbEntity = getById((entity as Entity<E, ID>).getId())
         (dbEntity as Entity<E, ID>).merge(entity)
-        return Mapper.parse(repository.save(dbEntity), dtoClass)
+        return toDto(repository.save(dbEntity))
     }
 
     @Transactional
-    fun create(dto: D): D {
-        val entity = Mapper.parse(dto, entityClass)
+    fun create(dto: D?): D {
+        if (dto == null)
+            throw RequiredObjectIsNullException()
+        val entity = toEntity(dto)
         val dbEntity: E = (entity as Entity<E, ID>).create(entity.getId())
         (dbEntity as Entity<E, ID>).merge(entity)
-        return Mapper.parse(repository.save(dbEntity), dtoClass)
+        return toDto(repository.save(dbEntity))
     }
 
     @Transactional
@@ -53,4 +70,12 @@ abstract class Service<E : Entity<E, ID>, ID, D>(var repository: Repository<E, I
         get(id)
         repository.deleteById(id)
     }
+
+    fun toDto(obj: E): D = Mapper.parse(obj, clazzDto)
+    fun toDto(obj: Page<E>): Page<D> = Mapper.parse(obj, clazzDto)
+    fun toDto(obj: List<E>): List<D> = Mapper.parse(obj, clazzDto)
+
+    fun toEntity(obj: D): E = Mapper.parse(obj, clazzEntity)
+    fun toEntity(obj: Page<D>): Page<E> = Mapper.parse(obj, clazzEntity)
+    fun toEntity(obj: List<D>): List<E> = Mapper.parse(obj, clazzEntity)
 }

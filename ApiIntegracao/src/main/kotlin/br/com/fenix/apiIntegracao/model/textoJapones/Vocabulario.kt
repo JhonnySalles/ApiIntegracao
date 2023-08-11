@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -18,7 +19,9 @@ data class Vocabulario(
     @Column(length = 250, nullable = false)
     var leitura: String,
     @Column(nullable = false)
-    var traducao: String
+    var traducao: String,
+    @Column
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Vocabulario, UUID?> {
 
     override fun merge(source: Vocabulario) {

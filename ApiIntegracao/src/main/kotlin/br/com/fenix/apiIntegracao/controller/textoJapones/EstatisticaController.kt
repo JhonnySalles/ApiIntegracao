@@ -12,6 +12,6 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Estatistica", description = "Endpoint para tabela de estatisticas dos kanjis")
-class EstatisticaController(repository: EstatisticaRepository) : Controller<UUID?, Estatistica, EstatisticaDto>(repository, Estatistica::class.java, EstatisticaDto::class.java) {
+class EstatisticaController(repository: EstatisticaRepository) : Controller<UUID?, Estatistica, EstatisticaDto>(repository) {
 
 }

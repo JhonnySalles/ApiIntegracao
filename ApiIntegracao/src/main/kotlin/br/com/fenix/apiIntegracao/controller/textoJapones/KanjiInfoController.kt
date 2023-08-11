@@ -12,6 +12,6 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Kanji Info", description = "Endpoint para tabela de informações do kanji")
-class KanjiInfoController(repository: KanjiInfoRepository) : Controller<UUID?, KanjiInfo, KanjiInfoDto>(repository, KanjiInfo::class.java, KanjiInfoDto::class.java) {
+class KanjiInfoController(repository: KanjiInfoRepository) : Controller<UUID?, KanjiInfo, KanjiInfoDto>(repository) {
 
 }

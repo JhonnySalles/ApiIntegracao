@@ -2,6 +2,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 
 import jakarta.persistence.*
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -20,7 +21,9 @@ data class KanjiInfo(
     @Column(nullable = false)
     var frequency: Int,
     @Column(nullable = false)
-    var tabela: String
+    var tabela: String,
+    @Column
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjiInfo, UUID?> {
 
     override fun merge(source: KanjiInfo) {

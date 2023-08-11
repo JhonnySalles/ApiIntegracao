@@ -12,6 +12,6 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Fila SQL", description = "Endpoint para tabela de filas de SQL")
-class FilaSqlController(repository: FilaSqlRepository) : Controller<UUID?, FilaSql, VocabularioDto>(repository, FilaSql::class.java, VocabularioDto::class.java) {
+class FilaSqlController(repository: FilaSqlRepository) : Controller<UUID?, FilaSql, VocabularioDto>(repository) {
 
 }

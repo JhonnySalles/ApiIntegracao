@@ -69,7 +69,9 @@ data class KanjaxPt(
     @Column(length = 100, nullable = false)
     var palavra: String,
     @Column(length = 250, nullable = false)
-    var significado: String
+    var significado: String,
+    @Column
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjaxPt, UUID?> {
 
     override fun merge(source: KanjaxPt) {

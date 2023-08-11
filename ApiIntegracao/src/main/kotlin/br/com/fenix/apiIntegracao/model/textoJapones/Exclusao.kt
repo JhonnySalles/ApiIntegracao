@@ -3,6 +3,7 @@ package br.com.fenix.apiIntegracao.model.textojapones
 import br.com.fenix.apiIntegracao.exceptions.ResourceNonUpgradeableException
 import jakarta.persistence.*
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -13,7 +14,9 @@ data class Exclusao(
     @Column(length = 36)
     private var id: UUID?,
     @Column(length = 250, nullable = false)
-    val exclusao: String
+    val exclusao: String,
+    @Column
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ): Serializable, br.com.fenix.apiIntegracao.model.Entity<Exclusao, UUID?> {
 
     override fun merge(source: Exclusao) {

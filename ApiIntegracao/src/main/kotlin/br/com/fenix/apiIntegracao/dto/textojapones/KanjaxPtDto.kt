@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.dto.textojapones
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -33,79 +34,10 @@ data class KanjaxPtDto(
     var observacao: String,
     var kanjaxOriginal: Boolean,
     var palavra: String,
-    var significado: String
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjaxPtDto, String?> {
-
-    override fun merge(source: KanjaxPtDto) {
-        this.sequencia = source.sequencia
-        this.kanji = source.kanji
-        this.keyword = source.keyword
-        this.meaning = source.meaning
-        this.koohii1 = source.koohii1
-        this.koohii2 = source.koohii2
-        this.onyomi = source.onyomi
-        this.kunyomi = source.kunyomi
-        this.onwords = source.onwords
-        this.kunwords = source.kunwords
-        this.jlpt = source.jlpt
-        this.grade = source.grade
-        this.freq = source.freq
-        this.strokes = source.strokes
-        this.variants = source.variants
-        this.radical = source.radical
-        this.parts = source.parts
-        this.utf8 = source.utf8
-        this.sjis = source.sjis
-        this.isTraduzido = source.isTraduzido
-        this.isChecado = source.isChecado
-        this.isRevisado = source.isRevisado
-        this.isSinaliza = source.isSinaliza
-        this.dataTraducao = source.dataTraducao
-        this.dataCorrecao = source.dataCorrecao
-        this.observacao = source.observacao
-        this.kanjaxOriginal = source.kanjaxOriginal
-        this.palavra = source.palavra
-        this.significado = source.significado
-    }
-
-    override fun getId(): String? {
-        return id
-    }
-
-    override fun create(id: String?): KanjaxPtDto {
-        return KanjaxPtDto(
-            id,
-            0,
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            0,
-            0,
-            0,
-            0,
-            "",
-            "",
-            "",
-            "",
-            "",
-            false,
-            false,
-            false,
-            false,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            "",
-            false,
-            "",
-            ""
-        )
-    }
+    var significado: String,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
+    var atualizacao: LocalDateTime = LocalDateTime.now()
+) : Serializable{
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

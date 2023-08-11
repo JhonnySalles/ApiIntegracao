@@ -1,10 +1,12 @@
-CREATE TABLE decksubtitle (
+CREATE TABLE IF NOT EXISTS decksubtitle (
   id VARCHAR (36) NOT NULL,
   tabela VARCHAR (900),
   sincronizacao DATETIME DEFAULT NOW(),
   isSqls tinyint(1) DEFAULT '0',
   PRIMARY KEY (id)
 );
+
+DELETE FROM decksubtitle;
 
 INSERT INTO decksubtitle (id, tabela, isSqls)
 SELECT UUID(), Table_Name, 1 FROM information_schema.tables

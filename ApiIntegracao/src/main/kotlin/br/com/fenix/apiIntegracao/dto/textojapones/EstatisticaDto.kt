@@ -1,6 +1,8 @@
 package br.com.fenix.apiIntegracao.dto.textojapones
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class EstatisticaDto(
@@ -13,7 +15,9 @@ data class EstatisticaDto(
     var percentual: Float,
     var media: Double,
     var percMedia: Float,
-    var corSequencial: Int
+    var corSequencial: Int,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
+    var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable {
 
     override fun equals(other: Any?): Boolean {

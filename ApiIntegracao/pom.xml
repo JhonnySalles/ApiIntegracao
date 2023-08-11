@@ -19,6 +19,8 @@
         <flyway.version>9.16.0</flyway.version>
         <springdoc.version>2.1.0</springdoc.version>
         <modelMapper.version>3.1.1</modelMapper.version>
+        <modelMapper.version>3.1.1</modelMapper.version>
+        <java-jwt.version>3.18.3</java-jwt.version>
     </properties>
     <dependencies>
         <dependency>
@@ -28,6 +30,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>

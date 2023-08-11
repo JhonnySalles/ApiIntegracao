@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.controller
 
+import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.model.Entity
 import br.com.fenix.apiIntegracao.repository.Repository
 import br.com.fenix.apiIntegracao.service.Service
@@ -9,19 +10,24 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
 
-abstract class Controller<ID, E : Entity<E, ID>, D>(repository: Repository<E, ID>, entityClass: Class<E>, dtoClass: Class<D>) {
-    private val service: Service<E, ID, D>
+abstract class Controller<ID, E : Entity<E, ID>, D>(repository: Repository<E, ID>) {
+    private val service: Service<ID, E, D>
+    private val clazzEntity: Class<*>
+    private val clazzDto: Class<*>
 
     init {
-        service = object : Service<E, ID, D>(repository, entityClass, dtoClass) {}
+        clazzEntity = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<E?>
+        clazzDto = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[2] as Class<D?>
+        service = object : Service<ID, E, D>(repository) {}
     }
 
     @Operation(summary = "Pesquisa paginada", description = "Pesquisa paginada")
     @GetMapping("", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun getPage(pageable: Pageable): ResponseEntity<Page<D>> {
+    fun getPage(pageable: Pageable?): ResponseEntity<Page<D>> {
         return ResponseEntity.ok(service.getPage(pageable))
     }
 
@@ -56,7 +62,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D>(repository: Repository<E, ID
         "", consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE),
         produces = arrayOf(MediaType.APPLICATION_JSON_VALUE)
     )
-    fun update(@RequestBody updated: D): ResponseEntity<D> {
+    fun update(@RequestBody updated: D?): ResponseEntity<D> {
         return ResponseEntity.ok(service.update(updated))
     }
 
@@ -65,7 +71,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D>(repository: Repository<E, ID
         "", consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE),
         produces = arrayOf(MediaType.APPLICATION_JSON_VALUE)
     )
-    fun create(@RequestBody created: D): ResponseEntity<D> {
+    fun create(@RequestBody created: D?): ResponseEntity<D> {
         return ResponseEntity.ok(service.create(created))
     }
 
