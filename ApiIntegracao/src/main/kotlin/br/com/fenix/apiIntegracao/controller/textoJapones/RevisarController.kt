@@ -1,6 +1,7 @@
 package br.com.fenix.apiIntegracao.controller.textojapones
 
 import br.com.fenix.apiIntegracao.controller.Controller
+import br.com.fenix.apiIntegracao.controller.Endpoints.Companion.TEXTO_JAPONES_REVISAR
 import br.com.fenix.apiIntegracao.controller.Endpoints.Companion.TEXTO_JAPONES_VOCABULARIO
 import br.com.fenix.apiIntegracao.dto.textojapones.RevisarDto
 import br.com.fenix.apiIntegracao.model.textojapones.Revisar
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping(TEXTO_JAPONES_VOCABULARIO)
+@RequestMapping(TEXTO_JAPONES_REVISAR)
 @Tag(name = "Revisar", description = "Endpoint para tabela de revisão")
 class RevisarController(repository: RevisarRepository) : Controller<UUID?, Revisar, RevisarDto>(repository) {
 

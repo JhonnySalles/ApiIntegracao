@@ -16,13 +16,14 @@ import java.time.LocalDateTime
 
 abstract class Controller<ID, E : Entity<E, ID>, D>(repository: Repository<E, ID>) {
     private val service: Service<ID, E, D>
-    private val clazzEntity: Class<*>
-    private val clazzDto: Class<*>
+    private val clazzEntity: Class<E>
+    private val clazzDto: Class<D>
 
     init {
-        clazzEntity = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<E?>
-        clazzDto = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[2] as Class<D?>
-        service = object : Service<ID, E, D>(repository) {}
+        val superclass = (javaClass.genericSuperclass as ParameterizedType)
+        clazzEntity = superclass.actualTypeArguments[1] as Class<E>
+        clazzDto = superclass.actualTypeArguments[2] as Class<D>
+        service = object : Service<ID, E, D>(repository, clazzEntity, clazzDto) {}
     }
 
     @Operation(summary = "Pesquisa paginada", description = "Pesquisa paginada")
@@ -32,10 +33,9 @@ abstract class Controller<ID, E : Entity<E, ID>, D>(repository: Repository<E, ID
     }
 
     @Operation(summary = "Pesquisa paginada apartir da data informada", description = "Pesquisa paginada apartir da data informada")
-    @GetMapping("/{dateSync}", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun getLastSyncPage(@PathVariable dateSync: String, pageable: Pageable): ResponseEntity<Page<D>> {
-        val date = LocalDateTime.parse(dateSync)
-        return ResponseEntity.ok(service.getPage(date, pageable))
+    @GetMapping("/{atualizacao}", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun getLastSyncPage(@PathVariable atualizacao: String, pageable: Pageable): ResponseEntity<Page<D>> {
+        return ResponseEntity.ok(service.getPage(LocalDateTime.parse(atualizacao), pageable))
     }
 
     @Operation(summary = "Pesquisa por id", description = "Pesquisa por id")
@@ -51,10 +51,9 @@ abstract class Controller<ID, E : Entity<E, ID>, D>(repository: Repository<E, ID
     }
 
     @Operation(summary = "Pesquisar todos apartir da data informada", description = "Pesquisar todos apartir da data informada")
-    @GetMapping("/findAll/{dateSync}", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
-    fun getAllLastSync(@PathVariable dateSync: String): ResponseEntity<List<D>> {
-        val date = LocalDateTime.parse(dateSync)
-        return ResponseEntity.ok(service.getAll(date))
+    @GetMapping("/findAll/{atualizacao}", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun getAllLastSync(@PathVariable atualizacao: String): ResponseEntity<List<D>> {
+        return ResponseEntity.ok(service.getAll(LocalDateTime.parse(atualizacao)))
     }
 
     @Operation(summary = "Atualizar registro", description = "Atualizar registro")

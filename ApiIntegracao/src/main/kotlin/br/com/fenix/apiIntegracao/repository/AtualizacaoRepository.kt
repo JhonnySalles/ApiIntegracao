@@ -11,5 +11,4 @@ interface AtualizacaoRepository : JpaRepository<Atualizacao, String> {
 
     @Query(value = "SELECT c FROM Atualizacao c WHERE c.computador = ?1")
     fun findByComputador(computador: String): Optional<Atualizacao>
-
 }

@@ -1,16 +1,16 @@
 CREATE TABLE IF NOT EXISTS usuarios (
     id bigint(20) NOT NULL AUTO_INCREMENT,
-    login varchar(255) DEFAULT NULL,
     nome varchar(255) DEFAULT NULL,
+    username varchar(255) DEFAULT NULL,
     password varchar(255) DEFAULT NULL,
     conta_nao_expirada bit(1) DEFAULT NULL,
     conta_nao_travada bit(1) DEFAULT NULL,
     credencial_nao_expirado bit(1) DEFAULT NULL,
     ativo bit(1) DEFAULT NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_usuario_login (login)
+    UNIQUE KEY uk_usuario_username (username)
 );
 
-INSERT INTO users (login, nome, password, conta_nao_expirada, conta_nao_travada, credencial_nao_expirado, ativo) VALUES
-('admin', 'Admin', '19bbf735b27066f2f145e602624e1b24a3fbc54cd5dfd3143fc5feea6bdee9e139ca7332d4806b9f', b'1', b'1', b'1', b'1'),
-('jhonny', 'Jhonny', '75ec349c1b0ef4ee7b249d0b83ae4861853f3aa77bce8c4b15f28cd43c6424ab4f29df431831bb0d', b'1', b'1', b'1', b'1');
+INSERT INTO usuarios (username, nome, password, conta_nao_expirada, conta_nao_travada, credencial_nao_expirado, ativo) VALUES
+('admin', 'Admin', 'c579dd4bffe3efccd56540baf9b5743cd9ae61b9ee5a1f03eacfa49cbe26c65b3194eb32290d9ed5', b'1', b'1', b'1', b'1'),
+('jhonny', 'Jhonny', '098344719160725f7c5e7448053cfe1b828b34be1942e6b97aa8f4e177912668df48c2df19681072', b'1', b'1', b'1', b'1');

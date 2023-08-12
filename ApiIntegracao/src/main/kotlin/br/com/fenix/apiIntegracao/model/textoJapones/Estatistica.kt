@@ -32,7 +32,7 @@ data class Estatistica(
     var corSequencial: Int,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Estatistica, UUID?> {
+) : br.com.fenix.apiIntegracao.model.Entity<Estatistica, UUID?>, Serializable {
 
     override fun merge(source: Estatistica) {
         this.sequencial = source.sequencial

@@ -12,11 +12,11 @@ data class Usuario(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long,
     @Column(unique = true)
-    val login: String,
+    private val username: String,
     @Column
     val nome: String,
     @Column
-    val password: String,
+    private val password: String,
     @Column(name = "conta_nao_expirada")
     val contaNaoExpirada: Boolean,
     @Column(name = "conta_nao_travada")

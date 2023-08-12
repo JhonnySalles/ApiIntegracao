@@ -1,12 +1,8 @@
 package br.com.fenix.apiIntegracao.dto
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
 import java.io.Serializable
 import java.time.LocalDateTime
 
-@Entity
-@Table(name = "atualizacoes")
 data class AtualizacaoDto(
     val id: String,
     val computador: String,

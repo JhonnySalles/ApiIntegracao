@@ -10,7 +10,7 @@ import java.util.*
 @Repository
 interface UsuarioRepository : JpaRepository<Usuario, Long> {
 
-    @Query("SELECT u FROM usuarios u WHERE u.login =:login")
-    fun findByUsername(@Param("login") login: String): Optional<Usuario>
+    @Query("SELECT u FROM Usuario u WHERE u.username =:username")
+    fun findByUsername(@Param("username") username: String): Optional<Usuario>
 
 }

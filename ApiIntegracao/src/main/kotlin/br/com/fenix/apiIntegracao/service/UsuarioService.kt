@@ -11,9 +11,9 @@ class UsuarioService(var repository: UsuarioRepository) {
     private val LOGGER = Logger.getLogger(UsuarioService::class.java.name)
 
     @Throws(InvalidNotFoundException::class)
-    fun loadUserByUsername(login: String): UserDetails? {
-        LOGGER.info("Find one user by login $login!")
-        val usuario = repository.findByUsername(login)
-        return usuario.orElseThrow { throw InvalidNotFoundException("Login $login not found!") }
+    fun loadUserByUsername(username: String): UserDetails {
+        LOGGER.info("Find one user by username $username!")
+        val usuario = repository.findByUsername(username)
+        return usuario.orElseThrow { throw InvalidNotFoundException("Username $username not found!") }
     }
 }

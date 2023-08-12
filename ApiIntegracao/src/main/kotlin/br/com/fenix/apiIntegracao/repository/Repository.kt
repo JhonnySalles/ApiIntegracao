@@ -11,6 +11,6 @@ import java.time.LocalDateTime
 
 @NoRepositoryBean
 interface Repository<E : Entity<E, ID>, ID> : JpaRepository<E, ID> {
-    fun lastSync(sync : LocalDateTime, pageable: Pageable) : Page<E>
-    fun lastSync(sync : LocalDateTime) : List<E>
+    fun findAllByAtualizacaoGreaterThanEqual(atualizacao : LocalDateTime, pageable: Pageable) : Page<E>
+    fun findAllByAtualizacaoGreaterThanEqual(atualizacao : LocalDateTime) : List<E>
 }

@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.dto.textojapones
 
+import br.com.fenix.apiIntegracao.dto.Dto
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -18,7 +19,7 @@ data class EstatisticaDto(
     var corSequencial: Int,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable {
+) : Dto, Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
