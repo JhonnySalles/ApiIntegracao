@@ -18,9 +18,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
       show-sql: true
+server:
+  port: 8080
 springdoc:
   pathsToMatch:
     - /auth/**
     - /api/**
   swagger-ui:
     use-root-path: true
+logging:
+  file:
+    name: api.log
