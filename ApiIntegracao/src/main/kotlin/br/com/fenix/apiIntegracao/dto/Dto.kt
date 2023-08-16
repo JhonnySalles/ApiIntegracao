@@ -1,5 +1,5 @@
 package br.com.fenix.apiIntegracao.dto
 
-interface Dto {
-
+interface Dto<ID> {
+    fun getId(): ID
 }

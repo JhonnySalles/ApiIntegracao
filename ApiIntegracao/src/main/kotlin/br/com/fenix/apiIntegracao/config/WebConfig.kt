@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.config
 
+import br.com.fenix.apiIntegracao.converters.MediaTypes
 import br.com.fenix.apiIntegracao.converters.YamlJackson2HttpMesageConverter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
@@ -12,8 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class WebConfig : WebMvcConfigurer {
-
-    private val MEDIA_TYPE_APPLICATION_YML: MediaType = MediaType.valueOf("application/x-yaml")
 
     @Value("\${cors.originPatterns:default}")
     private val corsOriginPatterns = ""
@@ -37,7 +36,7 @@ class WebConfig : WebMvcConfigurer {
             .defaultContentType(MediaType.APPLICATION_JSON)
             .mediaType("json", MediaType.APPLICATION_JSON)
             .mediaType("xml", MediaType.APPLICATION_XML)
-            .mediaType("x-yaml", MEDIA_TYPE_APPLICATION_YML)
+            .mediaType("x-yaml", MediaTypes.MEDIA_TYPE_APPLICATION_YML)
     }
 
 }

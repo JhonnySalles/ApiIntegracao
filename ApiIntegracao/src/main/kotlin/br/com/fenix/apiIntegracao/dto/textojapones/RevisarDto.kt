@@ -1,12 +1,12 @@
 package br.com.fenix.apiIntegracao.dto.textojapones
 
+import br.com.fenix.apiIntegracao.dto.BaseDto
 import com.fasterxml.jackson.annotation.JsonFormat
-import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
 data class RevisarDto(
-    var id: UUID?,
+    private var id: UUID?,
     var vocabulario: String,
     var formaBasica: String,
     var leitura: String,
@@ -18,7 +18,11 @@ data class RevisarDto(
     var isManga: Boolean,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable {
+) : BaseDto<UUID?>() {
+
+    override fun getId(): UUID? {
+        return id
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

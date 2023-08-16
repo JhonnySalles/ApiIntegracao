@@ -2,7 +2,6 @@ package br.com.fenix.apiIntegracao.mapper.mock
 
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import java.util.*
@@ -62,7 +61,7 @@ class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
     }
 
     override fun assertsToDto(input: Estatistica, output: EstatisticaDto) {
-        assertEquals(input.getId().toString(), output.id.toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.kanji, output.kanji)
         assertEquals(input.leitura, output.leitura)
@@ -70,12 +69,12 @@ class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
         assertEquals(input.quantidade, output.quantidade)
         assertEquals(input.percentual, output.percentual)
         assertEquals(input.media, output.media)
-        assertEquals(input.percMedia, output.percMedia)
+        assertEquals(input.percentualMedio, output.percentualMedio)
         assertEquals(input.corSequencial, output.corSequencial)
     }
 
     override fun assertsFromDto(input: EstatisticaDto, output: Estatistica) {
-        assertEquals(input.id.toString(), output.getId().toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.kanji, output.kanji)
         assertEquals(input.leitura, output.leitura)
@@ -83,7 +82,7 @@ class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
         assertEquals(input.quantidade, output.quantidade)
         assertEquals(input.percentual, output.percentual)
         assertEquals(input.media, output.media)
-        assertEquals(input.percMedia, output.percMedia)
+        assertEquals(input.percentualMedio, output.percentualMedio)
         assertEquals(input.corSequencial, output.corSequencial)
     }
 
@@ -100,7 +99,7 @@ class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
         assertEquals(input.quantidade, aux.quantidade)
         assertEquals(input.percentual, aux.percentual)
         assertEquals(input.media, aux.media)
-        assertEquals(input.percMedia, aux.percMedia)
+        assertEquals(input.percentualMedio, aux.percentualMedio)
         assertEquals(input.corSequencial, aux.corSequencial)
     }
 

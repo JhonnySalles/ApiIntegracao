@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.repository
 
+import br.com.fenix.apiIntegracao.controller.textojapones.EstatisticaController
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
@@ -27,7 +28,7 @@ class EstatisticaRepositoryTest {
     lateinit var repository: EstatisticaRepository
 
     @InjectMocks
-    var service: Service<UUID?, Estatistica, EstatisticaDto> = object : Service<UUID?, Estatistica, EstatisticaDto>(repository) {}
+    var service = object : Service<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, Estatistica::class.java, EstatisticaDto::class.java, EstatisticaController::class.java) {}
 
     @BeforeEach
     @Throws(Exception::class)

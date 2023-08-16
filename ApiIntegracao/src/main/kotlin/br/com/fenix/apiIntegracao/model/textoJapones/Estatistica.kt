@@ -27,7 +27,7 @@ data class Estatistica(
     @Column(nullable = false)
     var media: Double,
     @Column(nullable = false)
-    var percMedia: Float,
+    var percentualMedio: Float,
     @Column(name = "CorSequencial", nullable = false)
     var corSequencial: Int,
     @Column
@@ -42,7 +42,7 @@ data class Estatistica(
         this.quantidade = source.quantidade
         this.percentual = source.percentual
         this.media = source.media
-        this.percMedia = source.percMedia
+        this.percentualMedio = source.percentualMedio
         this.corSequencial = source.corSequencial
     }
 

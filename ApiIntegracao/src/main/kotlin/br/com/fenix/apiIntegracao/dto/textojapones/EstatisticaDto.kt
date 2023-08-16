@@ -1,13 +1,12 @@
 package br.com.fenix.apiIntegracao.dto.textojapones
 
-import br.com.fenix.apiIntegracao.dto.Dto
+import br.com.fenix.apiIntegracao.dto.BaseDto
 import com.fasterxml.jackson.annotation.JsonFormat
-import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
 data class EstatisticaDto(
-    var id: UUID?,
+    private var id: UUID?,
     var sequencial: Long?,
     var kanji: String,
     var leitura: String,
@@ -15,11 +14,15 @@ data class EstatisticaDto(
     var quantidade: Double,
     var percentual: Float,
     var media: Double,
-    var percMedia: Float,
+    var percentualMedio: Float,
     var corSequencial: Int,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Dto, Serializable {
+) : BaseDto<UUID?>() {
+
+    override fun getId(): UUID? {
+        return id
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -36,3 +39,5 @@ data class EstatisticaDto(
         return kanji.hashCode()
     }
 }
+
+

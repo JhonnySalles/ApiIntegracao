@@ -44,7 +44,7 @@ class MockKanjiInfo : Mock<UUID, KanjiInfo, KanjiInfoDto> {
     }
 
     override fun assertsToDto(input: KanjiInfo, output: KanjiInfoDto) {
-        assertEquals(input.getId().toString(), output.id.toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencia, output.sequencia)
         assertEquals(input.word, output.word)
         assertEquals(input.readInfo, output.readInfo)
@@ -53,7 +53,7 @@ class MockKanjiInfo : Mock<UUID, KanjiInfo, KanjiInfoDto> {
     }
 
     override fun assertsFromDto(input: KanjiInfoDto, output: KanjiInfo) {
-        assertEquals(input.id.toString(), output.getId().toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencia, output.sequencia)
         assertEquals(input.word, output.word)
         assertEquals(input.readInfo, output.readInfo)

@@ -7,9 +7,6 @@ import org.springframework.http.converter.json.AbstractJackson2HttpMessageConver
 
 
 class YamlJackson2HttpMesageConverter : AbstractJackson2HttpMessageConverter(
-    YAMLMapper()
-        .setSerializationInclusion(
-            JsonInclude.Include.NON_NULL
-        ),
-    MediaType.parseMediaType("application/x-yaml")
+    YAMLMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL),
+    MediaType.parseMediaType(MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE)
 )

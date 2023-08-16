@@ -46,7 +46,7 @@ class MockFilaSql : Mock<UUID, FilaSql, FilaSqlDto> {
     }
 
     override fun assertsToDto(input: FilaSql, output: FilaSqlDto) {
-        assertEquals(input.getId().toString(), output.id.toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.selectSQL, output.selectSQL)
         assertEquals(input.updateSQL, output.updateSQL)
@@ -57,7 +57,7 @@ class MockFilaSql : Mock<UUID, FilaSql, FilaSqlDto> {
     }
 
     override fun assertsFromDto(input: FilaSqlDto, output: FilaSql) {
-        assertEquals(input.id.toString(), output.getId().toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.selectSQL, output.selectSQL)
         assertEquals(input.updateSQL, output.updateSQL)

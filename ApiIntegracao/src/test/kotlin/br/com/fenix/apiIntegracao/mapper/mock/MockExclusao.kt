@@ -46,12 +46,12 @@ class MockExclusao : Mock<UUID, Exclusao, ExclusaoDto> {
     }
 
     override fun assertsToDto(input: Exclusao, output: ExclusaoDto) {
-        assertEquals(input.getId().toString(), output.id.toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.exclusao, output.exclusao)
     }
 
     override fun assertsFromDto(input: ExclusaoDto, output: Exclusao) {
-        assertEquals(input.id.toString(), output.getId().toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.exclusao, output.exclusao)
     }
 

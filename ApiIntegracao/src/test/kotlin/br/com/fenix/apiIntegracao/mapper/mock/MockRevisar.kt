@@ -62,7 +62,7 @@ class MockRevisar : Mock<UUID, Revisar, RevisarDto> {
     }
 
     override fun assertsToDto(input: Revisar, output: RevisarDto) {
-        assertEquals(input.getId().toString(), output.id.toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.vocabulario, output.vocabulario)
         assertEquals(input.formaBasica, output.formaBasica)
         assertEquals(input.leitura, output.leitura)
@@ -75,7 +75,7 @@ class MockRevisar : Mock<UUID, Revisar, RevisarDto> {
     }
 
     override fun assertsFromDto(input: RevisarDto, output: Revisar) {
-        assertEquals(input.id.toString(), output.getId().toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.vocabulario, output.vocabulario)
         assertEquals(input.formaBasica, output.formaBasica)
         assertEquals(input.leitura, output.leitura)

@@ -51,7 +51,7 @@ class MockVocabulario : Mock<UUID, Vocabulario, VocabularioDto> {
     }
 
     override fun assertsToDto(input: Vocabulario, output: VocabularioDto) {
-        assertEquals(input.getId().toString(), output.id.toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.vocabulario, output.vocabulario)
         assertEquals(input.formaBasica, output.formaBasica)
         assertEquals(input.leitura, output.leitura)
@@ -59,7 +59,7 @@ class MockVocabulario : Mock<UUID, Vocabulario, VocabularioDto> {
     }
 
     override fun assertsFromDto(input: VocabularioDto, output: Vocabulario) {
-        assertEquals(input.id.toString(), output.getId().toString())
+        assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.vocabulario, output.vocabulario)
         assertEquals(input.formaBasica, output.formaBasica)
         assertEquals(input.leitura, output.leitura)
