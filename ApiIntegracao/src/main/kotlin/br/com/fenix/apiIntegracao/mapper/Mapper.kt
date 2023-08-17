@@ -3,8 +3,10 @@ package br.com.fenix.apiIntegracao.mapper
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.stereotype.Component
 
 
+@Component
 class Mapper {
     companion object {
         @Autowired

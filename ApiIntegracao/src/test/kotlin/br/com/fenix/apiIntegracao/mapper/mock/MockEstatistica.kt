@@ -9,24 +9,24 @@ import java.util.*
 class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
 
     override fun mockEntity(): Estatistica {
-        return mockEntity(UUID.fromString("0"))
+        return mockEntity(UUID.fromString("6cd56de7-0f4d-4f18-ab0d-2bd3e4fc40bd"))
     }
 
     override fun mockDto(): EstatisticaDto {
-        return mockDto(UUID.fromString("0"))
+        return mockDto(UUID.fromString("6cd56de7-0f4d-4f18-ab0d-2bd3e4fc40bd"))
     }
 
     override fun mockEntityList(): List<Estatistica> {
         val list: MutableList<Estatistica> = ArrayList<Estatistica>()
-        for (i in 0..13)
-            list.add(mockEntity(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockEntity(UUID.randomUUID()))
         return list
     }
 
     override fun mockDtoList(): List<EstatisticaDto> {
         val list: MutableList<EstatisticaDto> = ArrayList<EstatisticaDto>()
-        for (i in 0..13)
-            list.add(mockDto(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockDto(UUID.randomUUID()))
         return list
     }
 

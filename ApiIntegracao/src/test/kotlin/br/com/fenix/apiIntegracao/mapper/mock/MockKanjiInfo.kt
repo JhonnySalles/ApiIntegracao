@@ -10,24 +10,24 @@ import kotlin.random.Random
 class MockKanjiInfo : Mock<UUID, KanjiInfo, KanjiInfoDto> {
 
     override fun mockEntity(): KanjiInfo {
-        return mockEntity(UUID.fromString("0"))
+        return mockEntity(UUID.fromString("9e0d941e-7510-4fae-8e8f-cdc96be86bde"))
     }
 
     override fun mockDto(): KanjiInfoDto {
-        return mockDto(UUID.fromString("0"))
+        return mockDto(UUID.fromString("9e0d941e-7510-4fae-8e8f-cdc96be86bde"))
     }
 
     override fun mockEntityList(): List<KanjiInfo> {
         val list: MutableList<KanjiInfo> = ArrayList<KanjiInfo>()
-        for (i in 0..13)
-            list.add(mockEntity(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockEntity(UUID.randomUUID()))
         return list
     }
 
     override fun mockDtoList(): List<KanjiInfoDto> {
         val list: MutableList<KanjiInfoDto> = ArrayList<KanjiInfoDto>()
-        for (i in 0..13)
-            list.add(mockDto(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockDto(UUID.randomUUID()))
         return list
     }
 

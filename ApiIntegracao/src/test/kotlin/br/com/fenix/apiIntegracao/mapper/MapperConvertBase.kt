@@ -31,7 +31,7 @@ abstract class MapperConvertBase<ID, E, D>(var entity: Class<E>, var dto: Class<
     }
 
     @Test
-    fun parserVOListToEntityListTest() {
+    fun parserDtoListToEntityListTest() {
         val inputList = mock().mockDtoList()
         val outputList: List<E> = Mapper.parse(inputList, entity)
         mock().assertsFromDto(inputList[0], outputList[0])

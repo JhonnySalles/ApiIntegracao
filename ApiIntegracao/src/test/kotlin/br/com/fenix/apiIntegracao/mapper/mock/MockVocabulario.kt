@@ -9,24 +9,24 @@ import java.util.*
 class MockVocabulario : Mock<UUID, Vocabulario, VocabularioDto> {
 
     override fun mockEntity(): Vocabulario {
-        return mockEntity(UUID.fromString("0"))
+        return mockEntity(UUID.fromString("29344618-0c89-4439-adee-ec9529a426c6"))
     }
 
     override fun mockDto(): VocabularioDto {
-        return mockDto(UUID.fromString("0"))
+        return mockDto(UUID.fromString("29344618-0c89-4439-adee-ec9529a426c6"))
     }
 
     override fun mockEntityList(): List<Vocabulario> {
         val list: MutableList<Vocabulario> = ArrayList()
-        for (i in 0..13)
-            list.add(mockEntity(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockEntity(UUID.randomUUID()))
         return list
     }
 
     override fun mockDtoList(): List<VocabularioDto> {
         val list: MutableList<VocabularioDto> = ArrayList()
-        for (i in 0..13)
-            list.add(mockDto(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockDto(UUID.randomUUID()))
         return list
     }
 

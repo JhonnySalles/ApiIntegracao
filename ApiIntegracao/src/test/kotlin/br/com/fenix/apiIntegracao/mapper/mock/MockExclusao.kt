@@ -10,24 +10,24 @@ import java.util.*
 class MockExclusao : Mock<UUID, Exclusao, ExclusaoDto> {
 
     override fun mockEntity(): Exclusao {
-        return mockEntity(UUID.fromString("0"))
+        return mockEntity(UUID.fromString("a3b75d19-aeb9-459d-85ed-5b2f5d003ff9"))
     }
 
     override fun mockDto(): ExclusaoDto {
-        return mockDto(UUID.fromString("0"))
+        return mockDto(UUID.fromString("a3b75d19-aeb9-459d-85ed-5b2f5d003ff9"))
     }
 
     override fun mockEntityList(): List<Exclusao> {
         val list: MutableList<Exclusao> = ArrayList<Exclusao>()
-        for (i in 0..13)
-            list.add(mockEntity(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockEntity(UUID.randomUUID()))
         return list
     }
 
     override fun mockDtoList(): List<ExclusaoDto> {
         val list: MutableList<ExclusaoDto> = ArrayList<ExclusaoDto>()
-        for (i in 0..13)
-            list.add(mockDto(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockDto(UUID.randomUUID()))
         return list
     }
 

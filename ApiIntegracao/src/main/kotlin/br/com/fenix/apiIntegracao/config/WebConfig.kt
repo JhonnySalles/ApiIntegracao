@@ -23,7 +23,7 @@ class WebConfig : WebMvcConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
         val allowedOrigins = corsOriginPatterns.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        registry.addMapping("/**") //.allowedMethods("GET", "POST", "PUT")
+        registry.addMapping("/**")
             .allowedMethods("*")
             .allowedOrigins(*allowedOrigins)
             .allowCredentials(true)

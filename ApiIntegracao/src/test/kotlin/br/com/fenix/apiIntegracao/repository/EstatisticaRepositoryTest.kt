@@ -21,11 +21,8 @@ import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension::class)
-class EstatisticaRepositoryTest {
+class EstatisticaRepositoryTest(@Mock var repository: EstatisticaRepository) {
     lateinit var input: MockEstatistica
-
-    @Mock
-    lateinit var repository: EstatisticaRepository
 
     @InjectMocks
     var service = object : Service<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, Estatistica::class.java, EstatisticaDto::class.java, EstatisticaController::class.java) {}

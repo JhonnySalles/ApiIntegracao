@@ -10,24 +10,24 @@ import kotlin.random.Random
 class MockFilaSql : Mock<UUID, FilaSql, FilaSqlDto> {
 
     override fun mockEntity(): FilaSql {
-        return mockEntity(UUID.fromString("0"))
+        return mockEntity(UUID.fromString("f9b0e6e3-8b2d-4399-8a48-81c055a9d4d2"))
     }
 
     override fun mockDto(): FilaSqlDto {
-        return mockDto(UUID.fromString("0"))
+        return mockDto(UUID.fromString("f9b0e6e3-8b2d-4399-8a48-81c055a9d4d2"))
     }
 
     override fun mockEntityList(): List<FilaSql> {
         val list: MutableList<FilaSql> = ArrayList<FilaSql>()
-        for (i in 0..13)
-            list.add(mockEntity(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockEntity(UUID.randomUUID()))
         return list
     }
 
     override fun mockDtoList(): List<FilaSqlDto> {
         val list: MutableList<FilaSqlDto> = ArrayList<FilaSqlDto>()
-        for (i in 0..13)
-            list.add(mockDto(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockDto(UUID.randomUUID()))
         return list
     }
 

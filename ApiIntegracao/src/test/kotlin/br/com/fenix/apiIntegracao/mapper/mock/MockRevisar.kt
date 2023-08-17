@@ -10,24 +10,24 @@ import kotlin.random.Random
 class MockRevisar : Mock<UUID, Revisar, RevisarDto> {
 
     override fun mockEntity(): Revisar {
-        return mockEntity(UUID.fromString("0"))
+        return mockEntity(UUID.fromString("b4822003-8f53-4c22-a272-5392c1c68c5e"))
     }
 
     override fun mockDto(): RevisarDto {
-        return mockDto(UUID.fromString("0"))
+        return mockDto(UUID.fromString("b4822003-8f53-4c22-a272-5392c1c68c5e"))
     }
 
     override fun mockEntityList(): List<Revisar> {
         val list: MutableList<Revisar> = ArrayList()
-        for (i in 0..13)
-            list.add(mockEntity(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockEntity(UUID.randomUUID()))
         return list
     }
 
     override fun mockDtoList(): List<RevisarDto> {
         val list: MutableList<RevisarDto> = ArrayList()
-        for (i in 0..13)
-            list.add(mockDto(UUID.fromString("$i")))
+        for (i in 1..13)
+            list.add(mockDto(UUID.randomUUID()))
         return list
     }
 
