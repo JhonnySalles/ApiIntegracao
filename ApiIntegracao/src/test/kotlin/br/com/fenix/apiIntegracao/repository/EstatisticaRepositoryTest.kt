@@ -17,15 +17,16 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.data.web.PagedResourcesAssembler
 import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension::class)
-class EstatisticaRepositoryTest(@Mock var repository: EstatisticaRepository) {
+class EstatisticaRepositoryTest(@Mock var repository: EstatisticaRepository, assembler: PagedResourcesAssembler<EstatisticaDto>) {
     lateinit var input: MockEstatistica
 
     @InjectMocks
-    var service = object : Service<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, Estatistica::class.java, EstatisticaDto::class.java, EstatisticaController::class.java) {}
+    var service = object : Service<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, assembler, Estatistica::class.java, EstatisticaDto::class.java, EstatisticaController::class.java) {}
 
     @BeforeEach
     @Throws(Exception::class)
@@ -39,7 +40,7 @@ class EstatisticaRepositoryTest(@Mock var repository: EstatisticaRepository) {
         val id = UUID.fromString("1")
         val entity = input.mockEntity(id)
         Mockito.`when`(repository.findById(id)).thenReturn(Optional.of(entity))
-        val result: EstatisticaDto = service.get(id)
+        val result: EstatisticaDto = service[id]
         input.assertsService(result)
     }
 

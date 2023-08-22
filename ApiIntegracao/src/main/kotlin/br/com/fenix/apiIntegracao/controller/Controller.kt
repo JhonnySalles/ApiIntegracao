@@ -6,8 +6,13 @@ import br.com.fenix.apiIntegracao.model.Entity
 import br.com.fenix.apiIntegracao.repository.Repository
 import br.com.fenix.apiIntegracao.service.Service
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,7 +20,7 @@ import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
 
-abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID, E, D, C>>(repository: Repository<E, ID>) {
+abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID, E, D, C>>(repository: Repository<E, ID>, @Autowired var assembler: PagedResourcesAssembler<D>) {
     private val service: Service<ID, E, D, C>
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
@@ -26,7 +31,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : Service<ID, E, D, C>(repository, clazzEntity, clazzDto, clazzController) {}
+        service = object : Service<ID, E, D, C>(repository, assembler, clazzEntity, clazzDto, clazzController) {}
     }
 
     @Operation(summary = "Pesquisa paginada", description = "Pesquisa paginada com retorno em JSON, XMl, YML e CSV.")
@@ -43,7 +48,12 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
         )
     )
-    fun getPage(pageable: Pageable?): ResponseEntity<Page<D>> {
+    fun getPage(
+        @RequestParam(value = "page", defaultValue = "0") page: Int, @RequestParam(value = "size", defaultValue = "1000") size: Int,
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String
+    ): ResponseEntity<PagedModel<EntityModel<D>>> {
+        val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+        val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
         return ResponseEntity.ok(service.getPage(pageable))
     }
 
@@ -63,8 +73,15 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
             )
     )
-    fun getLastSyncPage(@PathVariable atualizacao: String, pageable: Pageable): ResponseEntity<Page<D>> {
-        return ResponseEntity.ok(service.getPage(LocalDateTime.parse(atualizacao), pageable))
+    fun getLastSyncPage(
+        @PathVariable atualizacao: String,
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "size", defaultValue = "1000") size: Int,
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String
+    ): ResponseEntity<PagedModel<EntityModel<D>>> {
+        val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+        val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
+        return ResponseEntity.ok(service.getPage(atualizacao, pageable))
     }
 
     @Operation(summary = "Pesquisa por id", description = "Pesquisa por id")
@@ -89,7 +106,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
     @Operation(summary = "Pesquisar todos", description = "Pesquisar todos")
     @GetMapping(
-        "/findAll",
+        "/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -109,7 +126,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
     @Operation(summary = "Pesquisar todos apartir da data informada", description = "Pesquisar todos apartir da data informada")
     @GetMapping(
-        "/findAll/{atualizacao}",
+        "/lista/{atualizacao}",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -149,7 +166,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
     @Operation(summary = "Atualizar vários registros", description = "Atualizar vários registros")
     @PutMapping(
-        "/updateAll/",
+        "/lista/",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -189,7 +206,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
     @Operation(summary = "Inserir vários registros", description = "Inserir vários registros")
     @PostMapping(
-        "/createAll/",
+        "/lista/",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -230,7 +247,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
     @Operation(summary = "Deletar vários registros", description = "Deletar vários registros")
     @DeleteMapping(
-        "/deleteAll/",
+        "/lista/",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,

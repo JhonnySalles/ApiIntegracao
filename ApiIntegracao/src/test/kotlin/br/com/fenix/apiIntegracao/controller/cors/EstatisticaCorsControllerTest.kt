@@ -1,6 +1,8 @@
-package br.com.fenix.apiIntegracao.controller
+package br.com.fenix.apiIntegracao.controller.cors
 
 import br.com.fenix.apiIntegracao.TestConfigs
+import br.com.fenix.apiIntegracao.dto.AccountCredentialDto
+import br.com.fenix.apiIntegracao.dto.TokenDto
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
 import com.fasterxml.jackson.core.JsonProcessingException
@@ -20,7 +22,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 
-class EstatisticaControllerTest {
+class EstatisticaCorsControllerTest {
 
     private lateinit var specification: RequestSpecification
     private lateinit var objectMapper: ObjectMapper
@@ -35,16 +37,37 @@ class EstatisticaControllerTest {
     }
 
     @Test
-    @Order(1)
+    @Order(0)
     @Throws(JsonMappingException::class, JsonProcessingException::class)
-    fun testCreate() {
+    fun authorization() {
+        val user = AccountCredentialDto("admin", "admin")
+        val accessToken = RestAssured.given()
+            .basePath("/auth/signin")
+            .port(TestConfigs.SERVER_PORT)
+            .contentType(TestConfigs.CONTENT_TYPE_JSON)
+            .body(user)
+            .`when`()
+            .post()
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .`as`(TokenDto::class.java)
+            .accessToken
+
         specification = RequestSpecBuilder()
-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
+            .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer $accessToken")
             .setBasePath("/api/estatistica")
             .setPort(TestConfigs.SERVER_PORT)
             .addFilter(RequestLoggingFilter(LogDetail.ALL))
             .addFilter(ResponseLoggingFilter(LogDetail.ALL))
             .build()
+    }
+
+    @Test
+    @Order(1)
+    @Throws(JsonMappingException::class, JsonProcessingException::class)
+    fun testCreate() {
         val content: String = RestAssured.given().spec(specification)
             .contentType(TestConfigs.CONTENT_TYPE_JSON)
             .body(estatistica)
@@ -69,13 +92,6 @@ class EstatisticaControllerTest {
     @Order(2)
     @Throws(JsonMappingException::class, JsonProcessingException::class)
     fun testCreateWithWrongOrigin() {
-        specification = RequestSpecBuilder()
-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SEMERU)
-            .setBasePath("/api/estatistica")
-            .setPort(TestConfigs.SERVER_PORT)
-            .addFilter(RequestLoggingFilter(LogDetail.ALL))
-            .addFilter(ResponseLoggingFilter(LogDetail.ALL))
-            .build()
         val content: String = RestAssured.given().spec(specification)
             .contentType(TestConfigs.CONTENT_TYPE_JSON)
             .body(estatistica)
@@ -94,13 +110,6 @@ class EstatisticaControllerTest {
     @Order(3)
     @Throws(JsonMappingException::class, JsonProcessingException::class)
     fun testFindById() {
-        specification = RequestSpecBuilder()
-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
-            .setBasePath("/api/estatistica")
-            .setPort(TestConfigs.SERVER_PORT)
-            .addFilter(RequestLoggingFilter(LogDetail.ALL))
-            .addFilter(ResponseLoggingFilter(LogDetail.ALL))
-            .build()
         val content: String = RestAssured.given().spec(specification)
             .contentType(TestConfigs.CONTENT_TYPE_JSON)
             .pathParam("id", estatistica.getId())
@@ -126,13 +135,6 @@ class EstatisticaControllerTest {
     @Order(4)
     @Throws(JsonMappingException::class, JsonProcessingException::class)
     fun testFindByIdWithWrongOrigin() {
-        specification = RequestSpecBuilder()
-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SEMERU)
-            .setBasePath("/api/estatistica")
-            .setPort(TestConfigs.SERVER_PORT)
-            .addFilter(RequestLoggingFilter(LogDetail.ALL))
-            .addFilter(ResponseLoggingFilter(LogDetail.ALL))
-            .build()
         val content: String = RestAssured.given().spec(specification)
             .contentType(TestConfigs.CONTENT_TYPE_JSON)
             .pathParam("id", estatistica.getId())
@@ -145,6 +147,19 @@ class EstatisticaControllerTest {
             .asString()
         Assert.assertNotNull(content)
         assertEquals("Invalid CORS request", content)
+    }
+
+    @Test
+    @Order(5)
+    @Throws(JsonMappingException::class, JsonProcessingException::class)
+    fun testDelete() {
+        RestAssured.given().spec(specification)
+            .contentType(TestConfigs.CONTENT_TYPE_JSON)
+            .pathParam("id", estatistica.getId())
+            .`when`()
+            .delete("{id}")
+            .then()
+            .statusCode(204)
     }
 
 }

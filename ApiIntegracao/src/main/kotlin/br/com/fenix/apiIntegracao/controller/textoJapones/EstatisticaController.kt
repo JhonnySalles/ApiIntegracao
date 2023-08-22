@@ -6,12 +6,14 @@ import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
 import br.com.fenix.apiIntegracao.repository.textojapones.EstatisticaRepository
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
 @RequestMapping(TEXTO_JAPONES_ESTATISTICA)
 @Tag(name = "Estatistica", description = "Endpoint para tabela de estatisticas dos kanjis")
-class EstatisticaController(repository: EstatisticaRepository) : Controller<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository) {
+class EstatisticaController(repository: EstatisticaRepository, assembler: PagedResourcesAssembler<EstatisticaDto>) : Controller<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, assembler) {
 
 }

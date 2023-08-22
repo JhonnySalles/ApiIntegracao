@@ -9,23 +9,32 @@ import br.com.fenix.apiIntegracao.model.Entity
 import br.com.fenix.apiIntegracao.repository.Repository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.Link
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 
-abstract class Service<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID, E, D, C>>(var repository: Repository<E, ID>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class Service<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID, E, D, C>>(var repository: Repository<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
 
-    fun getPage(pageable: Pageable?): Page<D> {
+    fun getPage(pageable: Pageable?): PagedModel<EntityModel<D>> {
         if (pageable == null)
             throw RequiredObjectIsNullException("Its necessary inform a pageable")
 
-        return addLink(toDto(repository.findAll(pageable)))
+        val list = repository.findAll(pageable).map { addLink(toDto(it)) }
+        val link = linkTo(methodOn(clazzController).getPage(list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+        return assembler.toModel(list, link)
     }
 
-    fun getPage(atualizacao: LocalDateTime, pageable: Pageable): Page<D> {
-        return addLink(toDto(repository.findAllByAtualizacaoGreaterThanEqual(atualizacao, pageable)))
+    fun getPage(atualizacao: String, pageable: Pageable): PagedModel<EntityModel<D>> {
+        val dateTime = LocalDateTime.parse(atualizacao)
+        val list = repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable).map { addLink(toDto(it)) }
+        val link = linkTo(methodOn(clazzController).getLastSyncPage(atualizacao, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+        return assembler.toModel(list, link)
     }
 
     private fun getById(id: ID): E {
@@ -92,7 +101,6 @@ abstract class Service<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID
 
     private fun addLink(obj : D) : D = obj.let { it.add(linkTo(methodOn(clazzController).getOne(it.getId())).withSelfRel()); it}
     private fun addLink(list : List<D>) : List<D> = list.let { l -> l.parallelStream().forEach{ addLink(it) }; l }
-    fun addLink(list : Page<D>) : Page<D> = list.let { l -> l.get().forEach{ addLink(it) }; l }
 
     fun toDto(obj: E): D = Mapper.parse(obj, clazzDto)
     fun toDto(list: Page<E>): Page<D> = Mapper.parse(list, clazzDto)
