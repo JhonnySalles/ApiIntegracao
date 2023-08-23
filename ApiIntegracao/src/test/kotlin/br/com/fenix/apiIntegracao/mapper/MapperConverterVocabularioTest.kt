@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
 
-class MapperConverterVocabularioTest() : MapperConvertBase<UUID, Vocabulario, VocabularioDto>(Vocabulario::class.java, VocabularioDto::class.java) {
+class MapperConverterVocabularioTest() : MapperConvertBase<UUID?, Vocabulario, VocabularioDto>(Vocabulario::class.java, VocabularioDto::class.java) {
 
     lateinit var inputObject: MockVocabulario
 
@@ -17,7 +17,7 @@ class MapperConverterVocabularioTest() : MapperConvertBase<UUID, Vocabulario, Vo
         inputObject = MockVocabulario()
     }
 
-    override fun mock(): Mock<UUID, Vocabulario, VocabularioDto> {
+    override fun mock(): Mock<UUID?, Vocabulario, VocabularioDto> {
         return inputObject
     }
 

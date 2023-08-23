@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
 
-class MapperConverterFilaSqlTest() : MapperConvertBase<UUID, FilaSql, FilaSqlDto>(FilaSql::class.java, FilaSqlDto::class.java) {
+class MapperConverterFilaSqlTest() : MapperConvertBase<UUID?, FilaSql, FilaSqlDto>(FilaSql::class.java, FilaSqlDto::class.java) {
 
     lateinit var inputObject: MockFilaSql
 
@@ -17,7 +17,7 @@ class MapperConverterFilaSqlTest() : MapperConvertBase<UUID, FilaSql, FilaSqlDto
         inputObject = MockFilaSql()
     }
 
-    override fun mock(): Mock<UUID, FilaSql, FilaSqlDto> {
+    override fun mock(): Mock<UUID?, FilaSql, FilaSqlDto> {
         return inputObject
     }
 

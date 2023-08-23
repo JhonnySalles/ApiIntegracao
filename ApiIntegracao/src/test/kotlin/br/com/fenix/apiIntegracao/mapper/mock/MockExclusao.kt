@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.util.*
 
-class MockExclusao : Mock<UUID, Exclusao, ExclusaoDto> {
+class MockExclusao : Mock<UUID?, Exclusao, ExclusaoDto> {
 
     override fun mockEntity(): Exclusao {
         return mockEntity(UUID.fromString("a3b75d19-aeb9-459d-85ed-5b2f5d003ff9"))
@@ -31,14 +31,14 @@ class MockExclusao : Mock<UUID, Exclusao, ExclusaoDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID): Exclusao {
+    override fun mockEntity(id: UUID?): Exclusao {
         return Exclusao(
             id,
             "Teste exclusao"
         )
     }
 
-    override fun mockDto(id: UUID): ExclusaoDto {
+    override fun mockDto(id: UUID?): ExclusaoDto {
         return ExclusaoDto(
             id,
             "Teste exclusao"

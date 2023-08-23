@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
 
-class MapperConverterExclusaoTest() : MapperConvertBase<UUID, Exclusao, ExclusaoDto>(Exclusao::class.java, ExclusaoDto::class.java) {
+class MapperConverterExclusaoTest() : MapperConvertBase<UUID?, Exclusao, ExclusaoDto>(Exclusao::class.java, ExclusaoDto::class.java) {
 
     lateinit var inputObject: MockExclusao
 
@@ -17,7 +17,7 @@ class MapperConverterExclusaoTest() : MapperConvertBase<UUID, Exclusao, Exclusao
         inputObject = MockExclusao()
     }
 
-    override fun mock(): Mock<UUID, Exclusao, ExclusaoDto> {
+    override fun mock(): Mock<UUID?, Exclusao, ExclusaoDto> {
         return inputObject
     }
 

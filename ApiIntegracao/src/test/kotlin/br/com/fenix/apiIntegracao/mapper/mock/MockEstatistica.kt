@@ -4,9 +4,10 @@ import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import java.time.LocalDateTime
 import java.util.*
 
-class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
+class MockEstatistica : Mock<UUID?, Estatistica, EstatisticaDto> {
 
     override fun mockEntity(): Estatistica {
         return mockEntity(UUID.fromString("6cd56de7-0f4d-4f18-ab0d-2bd3e4fc40bd"))
@@ -30,7 +31,7 @@ class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID): Estatistica {
+    override fun mockEntity(id: UUID?): Estatistica {
         return Estatistica(
             id,
             1,
@@ -45,7 +46,7 @@ class MockEstatistica : Mock<UUID, Estatistica, EstatisticaDto> {
         )
     }
 
-    override fun mockDto(id: UUID): EstatisticaDto {
+    override fun mockDto(id: UUID?): EstatisticaDto {
         return EstatisticaDto(
             id,
             1,

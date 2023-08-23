@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import java.util.*
 
-class MockVocabulario : Mock<UUID, Vocabulario, VocabularioDto> {
+class MockVocabulario : Mock<UUID?, Vocabulario, VocabularioDto> {
 
     override fun mockEntity(): Vocabulario {
         return mockEntity(UUID.fromString("29344618-0c89-4439-adee-ec9529a426c6"))
@@ -30,7 +30,7 @@ class MockVocabulario : Mock<UUID, Vocabulario, VocabularioDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID): Vocabulario {
+    override fun mockEntity(id: UUID?): Vocabulario {
         return Vocabulario(
             id,
             "猫",
@@ -40,7 +40,7 @@ class MockVocabulario : Mock<UUID, Vocabulario, VocabularioDto> {
         )
     }
 
-    override fun mockDto(id: UUID): VocabularioDto {
+    override fun mockDto(id: UUID?): VocabularioDto {
         return VocabularioDto(
             id,
             "猫",

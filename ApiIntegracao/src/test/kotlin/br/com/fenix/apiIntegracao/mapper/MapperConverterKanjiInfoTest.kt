@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
 
-class MapperConverterKanjiInfoTest() : MapperConvertBase<UUID, KanjiInfo, KanjiInfoDto>(KanjiInfo::class.java, KanjiInfoDto::class.java) {
+class MapperConverterKanjiInfoTest() : MapperConvertBase<UUID?, KanjiInfo, KanjiInfoDto>(KanjiInfo::class.java, KanjiInfoDto::class.java) {
 
     lateinit var inputObject: MockKanjiInfo
 
@@ -17,7 +17,7 @@ class MapperConverterKanjiInfoTest() : MapperConvertBase<UUID, KanjiInfo, KanjiI
         inputObject = MockKanjiInfo()
     }
 
-    override fun mock(): Mock<UUID, KanjiInfo, KanjiInfoDto> {
+    override fun mock(): Mock<UUID?, KanjiInfo, KanjiInfoDto> {
         return inputObject
     }
 

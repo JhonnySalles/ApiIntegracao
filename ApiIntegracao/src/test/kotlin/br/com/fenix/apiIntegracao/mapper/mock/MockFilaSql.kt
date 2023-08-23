@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import java.util.*
 import kotlin.random.Random
 
-class MockFilaSql : Mock<UUID, FilaSql, FilaSqlDto> {
+class MockFilaSql : Mock<UUID?, FilaSql, FilaSqlDto> {
 
     override fun mockEntity(): FilaSql {
         return mockEntity(UUID.fromString("f9b0e6e3-8b2d-4399-8a48-81c055a9d4d2"))
@@ -31,14 +31,14 @@ class MockFilaSql : Mock<UUID, FilaSql, FilaSqlDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID): FilaSql {
+    override fun mockEntity(id: UUID?): FilaSql {
         return FilaSql(
             id, 0, "SELECT 1 > 0", "UPDATE", "DELETE", "VOCABULARIO",
             Random.nextBoolean(), Random.nextBoolean()
         )
     }
 
-    override fun mockDto(id: UUID): FilaSqlDto {
+    override fun mockDto(id: UUID?): FilaSqlDto {
         return FilaSqlDto(
             id, 0, "SELECT 1 > 0", "UPDATE", "DELETE", "VOCABULARIO",
             Random.nextBoolean(), Random.nextBoolean()

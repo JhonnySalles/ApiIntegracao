@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import java.util.*
 import kotlin.random.Random
 
-class MockRevisar : Mock<UUID, Revisar, RevisarDto> {
+class MockRevisar : Mock<UUID?, Revisar, RevisarDto> {
 
     override fun mockEntity(): Revisar {
         return mockEntity(UUID.fromString("b4822003-8f53-4c22-a272-5392c1c68c5e"))
@@ -31,7 +31,7 @@ class MockRevisar : Mock<UUID, Revisar, RevisarDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID): Revisar {
+    override fun mockEntity(id: UUID?): Revisar {
         return Revisar(
             id,
             "猫",
@@ -46,7 +46,7 @@ class MockRevisar : Mock<UUID, Revisar, RevisarDto> {
         )
     }
 
-    override fun mockDto(id: UUID): RevisarDto {
+    override fun mockDto(id: UUID?): RevisarDto {
         return RevisarDto(
             id,
             "猫",

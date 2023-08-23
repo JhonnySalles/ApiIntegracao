@@ -1,5 +1,7 @@
 package br.com.fenix.apiIntegracao
 
+import br.com.fenix.apiIntegracao.dto.AccountCredentialDto
+
 class TestConfigs {
     companion object {
         const val SERVER_PORT = 8888
@@ -12,6 +14,10 @@ class TestConfigs {
         const val CONTENT_TYPE_YML = "application/x-yaml"
 
         const val ORIGIN_SEMERU = "https://anotherlink.com.br"
-        const val ORIGIN_ERUDIO = "https://localhost:8080"
+        const val ORIGIN_LOCALHOST = "https://localhost:8080"
+
+        const val ENDPOINT_LOGIN = "/api/auth"
+
+        fun getCredential() : AccountCredentialDto = AccountCredentialDto("admin", "admin")
     }
 }

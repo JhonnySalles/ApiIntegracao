@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
 
 data class EmbeddedEstatisticaDto(
-    @JsonProperty("bookVOList")
+    @JsonProperty("estatisticaList")
     val estatisticas: List<EstatisticaDto>
-) : Serializable
+) : Serializable, EmbeddedDtoBase<EstatisticaDto> {
+
+    override fun getList(): List<EstatisticaDto> = estatisticas
+
+}

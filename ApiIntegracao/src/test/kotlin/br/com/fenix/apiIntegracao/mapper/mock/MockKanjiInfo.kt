@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import java.util.*
 import kotlin.random.Random
 
-class MockKanjiInfo : Mock<UUID, KanjiInfo, KanjiInfoDto> {
+class MockKanjiInfo : Mock<UUID?, KanjiInfo, KanjiInfoDto> {
 
     override fun mockEntity(): KanjiInfo {
         return mockEntity(UUID.fromString("9e0d941e-7510-4fae-8e8f-cdc96be86bde"))
@@ -31,13 +31,13 @@ class MockKanjiInfo : Mock<UUID, KanjiInfo, KanjiInfoDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID): KanjiInfo {
+    override fun mockEntity(id: UUID?): KanjiInfo {
         return KanjiInfo(
             id, Random.nextLong(), "猫", "ねこ", Random.nextInt(5), "KANJI"
         )
     }
 
-    override fun mockDto(id: UUID): KanjiInfoDto {
+    override fun mockDto(id: UUID?): KanjiInfoDto {
         return KanjiInfoDto(
             id, Random.nextLong(), "猫", "ねこ", Random.nextInt(5), "KANJI"
         )

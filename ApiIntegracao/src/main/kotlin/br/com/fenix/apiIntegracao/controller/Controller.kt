@@ -59,7 +59,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
     @Operation(summary = "Pesquisa paginada apartir da data informada", description = "Pesquisa paginada apartir da data informada")
     @GetMapping(
-        "/{atualizacao}",
+        "/atualizacao/{atualizacao}",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -126,7 +126,7 @@ abstract class Controller<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller
 
     @Operation(summary = "Pesquisar todos apartir da data informada", description = "Pesquisar todos apartir da data informada")
     @GetMapping(
-        "/lista/{atualizacao}",
+        "/lista/atualizacao/{atualizacao}",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,

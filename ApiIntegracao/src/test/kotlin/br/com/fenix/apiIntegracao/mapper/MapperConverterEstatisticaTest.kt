@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
 
-class MapperConverterEstatisticaTest() : MapperConvertBase<UUID, Estatistica, EstatisticaDto>(Estatistica::class.java, EstatisticaDto::class.java) {
+class MapperConverterEstatisticaTest() : MapperConvertBase<UUID?, Estatistica, EstatisticaDto>(Estatistica::class.java, EstatisticaDto::class.java) {
 
     lateinit var inputObject: MockEstatistica
 
@@ -17,7 +17,7 @@ class MapperConverterEstatisticaTest() : MapperConvertBase<UUID, Estatistica, Es
         inputObject = MockEstatistica()
     }
 
-    override fun mock(): Mock<UUID, Estatistica, EstatisticaDto> {
+    override fun mock(): Mock<UUID?, Estatistica, EstatisticaDto> {
         return inputObject
     }
 
