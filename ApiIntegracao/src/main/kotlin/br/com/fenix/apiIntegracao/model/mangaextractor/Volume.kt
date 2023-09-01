@@ -1,7 +1,7 @@
 package br.com.fenix.apiIntegracao.model.mangaextractor
 
 import br.com.fenix.apiIntegracao.enums.Linguagens
-import br.com.fenix.apiIntegracao.model.Entity
+import br.com.fenix.apiIntegracao.model.EntityBase
 import java.io.Serializable
 import java.util.*
 
@@ -16,7 +16,7 @@ data class Volume(
     var isProcessado: Boolean,
     var capitulos: List<Capitulo> = listOf(),
     var vocabulario: Set<Vocabulario> = setOf()
-) : Serializable, Entity<Volume, UUID?> {
+) : Serializable, EntityBase<Volume, UUID?>() {
 
     override fun merge(source: Volume) {
         this.manga = source.manga

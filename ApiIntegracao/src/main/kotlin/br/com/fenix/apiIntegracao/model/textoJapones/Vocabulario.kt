@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.model.textojapones
 
+import br.com.fenix.apiIntegracao.model.EntityBase
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -18,16 +19,22 @@ data class Vocabulario(
     var formaBasica: String,
     @Column(length = 250, nullable = false)
     var leitura: String,
+    @Column(length = 250, nullable = false)
+    var ingles: String,
     @Column(nullable = false)
-    var traducao: String,
+    var portugues: String,
+    @Column(nullable = false)
+    var jlpt: Int,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Vocabulario, UUID?> {
+) : Serializable, EntityBase<Vocabulario, UUID?>() {
 
     override fun merge(source: Vocabulario) {
         this.formaBasica = source.formaBasica
         this.leitura = source.leitura
-        this.traducao = source.traducao
+        this.ingles = source.ingles
+        this.portugues = source.portugues
+        this.jlpt = source.jlpt
     }
 
     override fun getId(): UUID? {
@@ -35,14 +42,14 @@ data class Vocabulario(
     }
 
     override fun create(id: UUID?): Vocabulario {
-        return Vocabulario(id, "", "", "", "")
+        return Vocabulario(id, "", "", "", "", "", 0)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as FilaSql
+        other as Vocabulario
 
         if (vocabulario != other.vocabulario) return false
 

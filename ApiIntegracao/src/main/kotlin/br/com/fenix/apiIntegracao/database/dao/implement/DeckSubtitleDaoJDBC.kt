@@ -206,7 +206,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
 
     // -------------------------------------------------------------------------------------------------------------  //
 
-    override fun existTabela(nome: String): Boolean {
+    override fun existTable(nome: String): Boolean {
         var st: PreparedStatement? = null
         val rs: ResultSet?
         try {
@@ -228,7 +228,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
         }
     }
 
-    override fun createTabela(nome: String) {
+    override fun createTable(nome: String) {
         var st: PreparedStatement? = null
         try {
             st = conn.prepareStatement(
@@ -273,7 +273,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
     }
 
     @get:Throws(ExceptionDb::class)
-    override val tabelas: List<String>
+    override val tables: List<String>
         get() {
             var st: PreparedStatement? = null
             var rs: ResultSet? = null

@@ -1,11 +1,11 @@
 package br.com.fenix.apiIntegracao.mapper
 
-import br.com.fenix.apiIntegracao.dto.BaseDto
+import br.com.fenix.apiIntegracao.dto.DtoBase
 import br.com.fenix.apiIntegracao.mapper.mock.Mock
 import br.com.fenix.apiIntegracao.model.Entity
 import org.junit.jupiter.api.Test
 
-abstract class MapperConvertBase<ID, E : Entity<E, ID>, D : BaseDto<ID>>(var entity: Class<E>, var dto: Class<D>) {
+abstract class MapperConvertBase<ID, E : Entity<E, ID>, D : DtoBase<ID>>(var entity: Class<E>, var dto: Class<D>) {
 
     abstract fun mock(): Mock<ID, E, D>
 

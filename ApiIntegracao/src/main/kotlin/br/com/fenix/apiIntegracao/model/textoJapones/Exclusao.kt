@@ -1,6 +1,7 @@
 package br.com.fenix.apiIntegracao.model.textojapones
 
 import br.com.fenix.apiIntegracao.exceptions.ResourceNonUpgradeableException
+import br.com.fenix.apiIntegracao.model.EntityBase
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ data class Exclusao(
     val exclusao: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-): Serializable, br.com.fenix.apiIntegracao.model.Entity<Exclusao, UUID?> {
+): Serializable, EntityBase<Exclusao, UUID?>() {
 
     override fun merge(source: Exclusao) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")

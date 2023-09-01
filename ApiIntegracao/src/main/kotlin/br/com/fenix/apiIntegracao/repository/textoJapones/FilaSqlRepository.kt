@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface FilaSqlRepository : br.com.fenix.apiIntegracao.repository.Repository<FilaSql, UUID?> {
+interface FilaSqlRepository : br.com.fenix.apiIntegracao.repository.RepositoryJpaBase<FilaSql, UUID?> {
 
 }

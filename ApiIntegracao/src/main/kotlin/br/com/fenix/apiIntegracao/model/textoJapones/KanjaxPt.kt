@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.model.textojapones
 
+import br.com.fenix.apiIntegracao.model.EntityBase
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -72,7 +73,7 @@ data class KanjaxPt(
     var significado: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<KanjaxPt, UUID?> {
+) : Serializable, EntityBase<KanjaxPt, UUID?>() {
 
     override fun merge(source: KanjaxPt) {
         this.sequencia = source.sequencia

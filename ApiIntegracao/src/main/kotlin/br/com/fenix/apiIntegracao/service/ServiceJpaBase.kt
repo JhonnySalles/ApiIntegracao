@@ -1,17 +1,17 @@
 package br.com.fenix.apiIntegracao.service
 
-import br.com.fenix.apiIntegracao.controller.Controller
-import br.com.fenix.apiIntegracao.dto.BaseDto
+import br.com.fenix.apiIntegracao.controller.ControllerJpaBase
+import br.com.fenix.apiIntegracao.dto.DtoBase
 import br.com.fenix.apiIntegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.mapper.Mapper
 import br.com.fenix.apiIntegracao.model.Entity
-import br.com.fenix.apiIntegracao.repository.Repository
+import br.com.fenix.apiIntegracao.model.EntityBase
+import br.com.fenix.apiIntegracao.repository.RepositoryJpaBase
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
-import org.springframework.hateoas.Link
 import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 
-abstract class Service<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID, E, D, C>>(var repository: Repository<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C>>(var repository: RepositoryJpaBase<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
 
     fun getPage(pageable: Pageable?): PagedModel<EntityModel<D>> {
         if (pageable == null)
@@ -30,10 +30,10 @@ abstract class Service<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID
         return assembler.toModel(list, link)
     }
 
-    fun getPage(atualizacao: String, pageable: Pageable): PagedModel<EntityModel<D>> {
-        val dateTime = LocalDateTime.parse(atualizacao)
+    fun getPage(updateDate: String, pageable: Pageable): PagedModel<EntityModel<D>> {
+        val dateTime = LocalDateTime.parse(updateDate)
         val list = repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable).map { addLink(toDto(it)) }
-        val link = linkTo(methodOn(clazzController).getLastSyncPage(atualizacao, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+        val link = linkTo(methodOn(clazzController).getLastSyncPage(updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
         return assembler.toModel(list, link)
     }
 
@@ -45,7 +45,7 @@ abstract class Service<ID, E : Entity<E, ID>, D : BaseDto<ID>, C : Controller<ID
 
     fun getAll(): List<D> = addLink(toDto(repository.findAll()))
 
-    fun getAll(atualizacao: LocalDateTime): List<D> = addLink(toDto(repository.findAllByAtualizacaoGreaterThanEqual(atualizacao)))
+    fun getAll(updateDate: LocalDateTime): List<D> = addLink(toDto(repository.findAllByAtualizacaoGreaterThanEqual(updateDate)))
 
     @Transactional
     open fun update(dto: D?): D {

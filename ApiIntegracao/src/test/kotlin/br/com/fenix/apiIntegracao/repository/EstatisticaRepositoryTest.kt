@@ -6,7 +6,7 @@ import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
 import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
 import br.com.fenix.apiIntegracao.repository.textojapones.EstatisticaRepository
-import br.com.fenix.apiIntegracao.service.Service
+import br.com.fenix.apiIntegracao.service.ServiceJpaBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,7 +26,7 @@ class EstatisticaRepositoryTest(@Mock var repository: EstatisticaRepository, ass
     lateinit var input: MockEstatistica
 
     @InjectMocks
-    var service = object : Service<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, assembler, Estatistica::class.java, EstatisticaDto::class.java, EstatisticaController::class.java) {}
+    var service = object : ServiceJpaBase<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, assembler, Estatistica::class.java, EstatisticaDto::class.java, EstatisticaController::class.java) {}
 
     @BeforeEach
     @Throws(Exception::class)

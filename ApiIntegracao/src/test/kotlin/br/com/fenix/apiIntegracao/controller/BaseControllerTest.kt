@@ -1,11 +1,10 @@
 package br.com.fenix.apiIntegracao.controller
 
 import br.com.fenix.apiIntegracao.TestConfigs
-import br.com.fenix.apiIntegracao.dto.BaseDto
+import br.com.fenix.apiIntegracao.dto.DtoBase
 import br.com.fenix.apiIntegracao.dto.TokenDto
 import br.com.fenix.apiIntegracao.dto.wrapper.WrapperDtoBase
 import br.com.fenix.apiIntegracao.mapper.mock.Mock
-import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
 import br.com.fenix.apiIntegracao.model.Entity
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -23,7 +22,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-abstract class BaseControllerTest<ID, E : Entity<E, ID>, D : BaseDto<ID>, W : WrapperDtoBase<D>>(
+abstract class BaseControllerTest<ID, E : Entity<E, ID>, D : DtoBase<ID>, W : WrapperDtoBase<D>>(
     var clazzDto: Class<D>,
     var clazzWrapper: Class<W>,
     var mock: Mock<ID, E, D>,

@@ -1,6 +1,6 @@
 package br.com.fenix.apiIntegracao.model.decksubtitle
 
-import br.com.fenix.apiIntegracao.model.Entity
+import br.com.fenix.apiIntegracao.model.EntityBase
 import java.io.Serializable
 import java.util.*
 
@@ -14,7 +14,7 @@ data class Legenda(
     var texto: String,
     var traducao: String,
     var vocabulario: String?
-) : Serializable, Entity<Legenda, UUID?> {
+) : Serializable, EntityBase<Legenda, UUID?>() {
 
     override fun merge(source: Legenda) {
         this.episodio = source.episodio

@@ -1,10 +1,9 @@
 package br.com.fenix.apiIntegracao.mapper.mock
 
-import br.com.fenix.apiIntegracao.dto.BaseDto
+import br.com.fenix.apiIntegracao.dto.DtoBase
 import br.com.fenix.apiIntegracao.model.Entity
-import java.time.LocalDateTime
 
-interface Mock<ID, E : Entity<E, ID>, D : BaseDto<ID>> {
+interface Mock<ID, E : Entity<E, ID>, D : DtoBase<ID>> {
     fun mockEntity(): E
     fun mockDto(): D
     fun mockEntityList(): List<E>

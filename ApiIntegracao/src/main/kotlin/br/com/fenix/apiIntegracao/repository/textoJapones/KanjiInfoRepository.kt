@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface KanjiInfoRepository : br.com.fenix.apiIntegracao.repository.Repository<KanjiInfo, UUID?> {
+interface KanjiInfoRepository : br.com.fenix.apiIntegracao.repository.RepositoryJpaBase<KanjiInfo, UUID?> {
 
 }

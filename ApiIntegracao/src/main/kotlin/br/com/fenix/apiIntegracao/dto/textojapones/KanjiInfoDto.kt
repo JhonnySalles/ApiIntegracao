@@ -1,6 +1,6 @@
 package br.com.fenix.apiIntegracao.dto.textojapones
 
-import br.com.fenix.apiIntegracao.dto.BaseDto
+import br.com.fenix.apiIntegracao.dto.DtoBase
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime
 import java.util.*
@@ -14,7 +14,7 @@ data class KanjiInfoDto(
     var tabela: String,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : BaseDto<UUID?>() {
+) : DtoBase<UUID?>() {
 
     override fun getId(): UUID? {
         return id

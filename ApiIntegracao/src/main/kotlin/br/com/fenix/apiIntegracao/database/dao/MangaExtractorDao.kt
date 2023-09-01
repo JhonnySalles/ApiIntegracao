@@ -93,14 +93,11 @@ interface MangaExtractorDao {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun createTabela(nome: String)
+    fun createTable(nome: String)
 
     @Throws(ExceptionDb::class)
-    fun existTabela(nome: String):Boolean
-
-    @Throws(ExceptionDb::class)
-    fun selectAllTabelas() : List<Tabela>
+    fun existTable(nome: String):Boolean
 
     @get:Throws(ExceptionDb::class)
-    val tabelas: List<String>
+    val tables: List<String>
 }

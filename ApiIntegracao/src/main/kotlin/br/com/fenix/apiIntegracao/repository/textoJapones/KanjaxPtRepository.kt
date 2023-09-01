@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface KanjaxPtRepository : br.com.fenix.apiIntegracao.repository.Repository<KanjaxPt, UUID?> {
+interface KanjaxPtRepository : br.com.fenix.apiIntegracao.repository.RepositoryJpaBase<KanjaxPt, UUID?> {
 
 }

@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface RevisarRepository : br.com.fenix.apiIntegracao.repository.Repository<Revisar, UUID?> {
+interface RevisarRepository : br.com.fenix.apiIntegracao.repository.RepositoryJpaBase<Revisar, UUID?> {
 
 }

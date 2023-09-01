@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface ExclusaoRepository : br.com.fenix.apiIntegracao.repository.Repository<Exclusao, UUID?> {
+interface ExclusaoRepository : br.com.fenix.apiIntegracao.repository.RepositoryJpaBase<Exclusao, UUID?> {
 
 }

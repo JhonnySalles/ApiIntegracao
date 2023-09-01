@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.model.textojapones
 
+import br.com.fenix.apiIntegracao.model.EntityBase
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -32,7 +33,7 @@ data class Estatistica(
     var corSequencial: Int,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : br.com.fenix.apiIntegracao.model.Entity<Estatistica, UUID?>, Serializable {
+) : EntityBase<Estatistica, UUID?>(), Serializable {
 
     override fun merge(source: Estatistica) {
         this.sequencial = source.sequencial

@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.model.textojapones
 
+import br.com.fenix.apiIntegracao.model.EntityBase
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -19,9 +20,9 @@ data class Revisar(
     @Column(length = 250, nullable = false)
     var leitura: String,
     @Column(nullable = false)
-    var traducao: String,
-    @Column(nullable = false)
     var ingles: String,
+    @Column(nullable = false)
+    var portugues: String,
     @Column(nullable = false)
     var revisado: Boolean,
     @Column(nullable = false)
@@ -32,13 +33,13 @@ data class Revisar(
     var isManga: Boolean,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<Revisar, UUID?> {
+) : Serializable, EntityBase<Revisar, UUID?>() {
 
     override fun merge(source: Revisar) {
         this.vocabulario = source.vocabulario
         this.formaBasica = source.formaBasica
         this.leitura = source.leitura
-        this.traducao = source.traducao
+        this.portugues = source.portugues
         this.ingles = source.ingles
         this.revisado = source.revisado
         this.aparece = source.aparece

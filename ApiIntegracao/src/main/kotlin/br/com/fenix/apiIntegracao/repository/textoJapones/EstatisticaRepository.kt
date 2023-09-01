@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface EstatisticaRepository : br.com.fenix.apiIntegracao.repository.Repository<Estatistica, UUID?> {
+interface EstatisticaRepository : br.com.fenix.apiIntegracao.repository.RepositoryJpaBase<Estatistica, UUID?> {
 
 }

@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.model.textojapones
 
+import br.com.fenix.apiIntegracao.model.EntityBase
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -28,7 +29,7 @@ data class FilaSql(
     var isLimpeza: Boolean,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, br.com.fenix.apiIntegracao.model.Entity<FilaSql, UUID?> {
+) : Serializable, EntityBase<FilaSql, UUID?>() {
 
     override fun merge(source: FilaSql) {
         this.sequencial = source.sequencial
