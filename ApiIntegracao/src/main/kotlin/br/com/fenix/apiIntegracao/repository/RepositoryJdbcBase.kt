@@ -9,40 +9,40 @@ import java.util.*
 
 interface RepositoryJdbcBase<E : EntityBase<E, ID>, ID> {
     @Throws(ExceptionDb::class)
-    fun update(table: String, obj: E): E
+    fun update(tabela: String, obj: E): E
 
     @Throws(ExceptionDb::class)
-    fun insert(table: String, obj: E): E
+    fun insert(tabela: String, obj: E): E
 
     @Throws(ExceptionDb::class)
-    fun select(table: String, id: ID): Optional<E>
+    fun select(tabela: String, id: ID): Optional<E>
 
     @Throws(ExceptionDb::class)
-    fun findAll(table: String): List<E>
+    fun findAll(tabela: String): List<E>
 
     @Throws(ExceptionDb::class)
-    fun findAll(table: String, pageable: Pageable?): Page<E>
+    fun findAll(tabela: String, pageable: Pageable?): Page<E>
 
     @Throws(ExceptionDb::class)
-    fun findAllByAtualizacaoGreaterThanEqual(table: String, dateTime: LocalDateTime): List<E>
+    fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime): List<E>
 
     @Throws(ExceptionDb::class)
-    fun findAllByAtualizacaoGreaterThanEqual(table: String, dateTime: LocalDateTime, pageable: Pageable?): Page<E>
+    fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime, pageable: Pageable?): Page<E>
 
     @Throws(ExceptionDb::class)
-    fun delete(table: String, obj: E)
+    fun delete(tabela: String, obj: E)
 
     @Throws(ExceptionDb::class)
-    fun delete(table: String, id: ID)
+    fun delete(tabela: String, id: ID)
 
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun createTable(table: String)
+    fun createtabela(tabela: String)
 
     @Throws(ExceptionDb::class)
-    fun existsTable(table: String): Boolean
+    fun existstabela(tabela: String): Boolean
 
     @Throws(ExceptionDb::class)
-    fun tables(): List<String>
+    fun tabelas(): List<String>
 }

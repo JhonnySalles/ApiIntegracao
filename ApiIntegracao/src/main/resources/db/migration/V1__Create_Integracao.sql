@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS consultas (
 CREATE TABLE IF NOT EXISTS tabelas (
   id int(11) NOT NULL AUTO_INCREMENT,
   url VARCHAR (250),
+  porta VARCHAR (10),
   username VARCHAR (250),
   password VARCHAR (250),
   base VARCHAR (100),

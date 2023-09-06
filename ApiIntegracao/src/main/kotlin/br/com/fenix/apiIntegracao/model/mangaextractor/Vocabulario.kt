@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 data class Vocabulario(
-    private val id: UUID?,
+    private var id: UUID?,
     var palavra: String,
     var portugues: String,
     var ingles: String,
@@ -29,6 +29,10 @@ data class Vocabulario(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    fun setId(id: UUID?) {
+        this.id = id;
     }
 
     override fun create(id: UUID?): Vocabulario {

@@ -1,7 +1,7 @@
-package br.com.fenix.apiIntegracao.service
+package br.com.fenix.apiIntegracao.service.api
 
 import br.com.fenix.apiIntegracao.exceptions.InvalidNotFoundException
-import br.com.fenix.apiIntegracao.repository.UsuarioRepository
+import br.com.fenix.apiIntegracao.repository.api.UsuarioRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.logging.Logger

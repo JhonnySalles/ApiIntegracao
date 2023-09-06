@@ -6,7 +6,7 @@ import java.io.Serializable
 import java.util.*
 
 data class Capitulo(
-    private val id: UUID?,
+    private var id: UUID?,
     var manga: String,
     var volume: Int,
     var capitulo: Double,
@@ -33,6 +33,10 @@ data class Capitulo(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    fun setId(id: UUID?) {
+        this.id = id;
     }
 
     override fun create(id: UUID?): Capitulo {

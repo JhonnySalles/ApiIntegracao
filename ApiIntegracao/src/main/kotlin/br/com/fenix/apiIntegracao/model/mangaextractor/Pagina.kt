@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 data class Pagina(
-    private val id: UUID?,
+    private var id: UUID?,
     var nome: String,
     var numero: Int,
     var nomePagina: String,
@@ -26,6 +26,10 @@ data class Pagina(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    fun setId(id: UUID?) {
+        this.id = id;
     }
 
     override fun create(id: UUID?): Pagina {

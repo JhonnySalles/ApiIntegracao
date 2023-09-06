@@ -1,17 +1,21 @@
 package br.com.fenix.apiIntegracao.database.mysql
 
 import br.com.fenix.apiIntegracao.exceptions.ExceptionDb
+import br.com.fenix.apiIntegracao.exceptions.TableNotConnectedException
+import br.com.fenix.apiIntegracao.service.api.TabelasService.Companion.PROP_BASE
+import br.com.fenix.apiIntegracao.service.api.TabelasService.Companion.PROP_PORTA
+import br.com.fenix.apiIntegracao.service.api.TabelasService.Companion.PROP_URL
 import java.sql.*
 import java.util.*
 
 object DB {
-    fun getConnection(prop: Properties, base: String): Connection {
+    fun getConnection(prop: Properties): Connection {
         var conn: Connection? = null
         try {
             prop.setProperty("characterEncoding", "UTF-8")
             prop.setProperty("useUnicode", "true")
-            val url = ("jdbc:mysql://" + prop.getProperty("server") + ":" + prop.getProperty("port") + "/"
-                    + base
+            val url = ("jdbc:mysql://" + prop.getProperty(PROP_URL) + ":" + prop.getProperty(PROP_PORTA) + "/"
+                    + prop.getProperty(PROP_BASE)
                     + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC")
             conn = DriverManager.getConnection(url, prop)
         } catch (e: SQLException) {
@@ -19,7 +23,7 @@ object DB {
         }
 
         if (conn == null)
-            throw ExceptionDb("Não foi possível conectar ao banco de dados.")
+            throw TableNotConnectedException("Não foi possível conectar ao banco de dados.")
 
         return conn
     }

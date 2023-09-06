@@ -7,7 +7,7 @@ import java.util.*
 
 
 data class Volume(
-    private val id: UUID?,
+    private var id: UUID?,
     var manga: String,
     var volume: Int,
     var linguagem: Linguagens?,
@@ -30,6 +30,10 @@ data class Volume(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    fun setId(id: UUID?) {
+        this.id = id;
     }
 
     override fun create(id: UUID?): Volume {

@@ -950,11 +950,6 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
     }
 
     // -------------------------------------------------------------------------------------------------------------  //
-
-    override fun selectAllTabelas(): List<Tabela> {
-        TODO("Not yet implemented")
-    }
-
     @get:Throws(ExceptionDb::class)
     override val tables: List<String>
         get() {

@@ -1,4 +1,4 @@
-package br.com.fenix.apiIntegracao.model
+package br.com.fenix.apiIntegracao.model.api
 
 import jakarta.persistence.*
 import jakarta.persistence.Entity

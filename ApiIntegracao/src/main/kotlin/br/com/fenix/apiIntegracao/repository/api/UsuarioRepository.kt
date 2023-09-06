@@ -1,6 +1,6 @@
-package br.com.fenix.apiIntegracao.repository
+package br.com.fenix.apiIntegracao.repository.api
 
-import br.com.fenix.apiIntegracao.model.Usuario
+import br.com.fenix.apiIntegracao.model.api.Usuario
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param

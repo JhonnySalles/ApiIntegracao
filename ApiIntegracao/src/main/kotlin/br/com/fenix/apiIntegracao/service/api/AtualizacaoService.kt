@@ -1,7 +1,7 @@
-package br.com.fenix.apiIntegracao.service
+package br.com.fenix.apiIntegracao.service.api
 
-import br.com.fenix.apiIntegracao.model.Atualizacao
-import br.com.fenix.apiIntegracao.repository.AtualizacaoRepository
+import br.com.fenix.apiIntegracao.model.api.Atualizacao
+import br.com.fenix.apiIntegracao.repository.api.AtualizacaoRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

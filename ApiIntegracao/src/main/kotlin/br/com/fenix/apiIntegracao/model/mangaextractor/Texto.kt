@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 data class Texto(
-    private val id: UUID?,
+    private var id: UUID?,
     var sequencia: Int,
     var texto: String,
     var posicao_x1: Int,
@@ -27,6 +27,10 @@ data class Texto(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    fun setId(id: UUID?) {
+        this.id = id;
     }
 
     override fun create(id: UUID?): Texto {

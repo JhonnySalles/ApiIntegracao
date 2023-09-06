@@ -3,7 +3,7 @@ package br.com.fenix.apiIntegracao.security
 
 import br.com.fenix.apiIntegracao.dto.TokenDto
 import br.com.fenix.apiIntegracao.exceptions.InvalidAuthenticationException
-import br.com.fenix.apiIntegracao.service.UsuarioService
+import br.com.fenix.apiIntegracao.service.api.UsuarioService
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
