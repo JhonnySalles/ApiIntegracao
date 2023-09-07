@@ -3,12 +3,12 @@ package br.com.fenix.apiIntegracao.mapper
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.mapper.mock.Mock
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
-import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
+import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
 import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
 
-class MapperConverterEstatisticaTest() : MapperConvertBase<UUID?, Estatistica, EstatisticaDto>(Estatistica::class.java, EstatisticaDto::class.java) {
+class MapperConverterEstatisticaTest() : MapperConvertBase<UUID?, EstatisticaJapones, EstatisticaDto>(EstatisticaJapones::class.java, EstatisticaDto::class.java) {
 
     lateinit var inputObject: MockEstatistica
 
@@ -17,7 +17,7 @@ class MapperConverterEstatisticaTest() : MapperConvertBase<UUID?, Estatistica, E
         inputObject = MockEstatistica()
     }
 
-    override fun mock(): Mock<UUID?, Estatistica, EstatisticaDto> {
+    override fun mock(): Mock<UUID?, EstatisticaJapones, EstatisticaDto> {
         return inputObject
     }
 

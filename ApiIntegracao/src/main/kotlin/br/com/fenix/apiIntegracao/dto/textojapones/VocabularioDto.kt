@@ -10,7 +10,9 @@ data class VocabularioDto(
     val vocabulario: String,
     var formaBasica: String,
     var leitura: String,
-    var traducao: String,
+    var ingles: String,
+    var portugues: String,
+    var jlpt: Int,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {

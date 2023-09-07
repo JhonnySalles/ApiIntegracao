@@ -6,7 +6,7 @@ import java.util.*
 
 
 data class Legenda(
-    private val id: UUID?,
+    private var id: UUID?,
     var episodio: Int,
     var linguagem: String,
     var tempoInicial: String,
@@ -28,6 +28,10 @@ data class Legenda(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): Legenda {

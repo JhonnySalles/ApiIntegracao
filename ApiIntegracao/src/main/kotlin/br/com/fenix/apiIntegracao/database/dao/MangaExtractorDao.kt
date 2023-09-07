@@ -2,6 +2,9 @@ package br.com.fenix.apiIntegracao.database.dao
 
 import br.com.fenix.apiIntegracao.exceptions.ExceptionDb
 import br.com.fenix.apiIntegracao.model.mangaextractor.*
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import java.time.LocalDateTime
 import java.util.*
 
 interface MangaExtractorDao {
@@ -60,6 +63,15 @@ interface MangaExtractorDao {
 
     @Throws(ExceptionDb::class)
     fun selectAllVolumes(base: String): List<Volume>
+
+    @Throws(ExceptionDb::class)
+    fun selectAllVolumes(base: String, pageable: Pageable): Page<Volume>
+
+    @Throws(ExceptionDb::class)
+    fun selectAllVolumes(base: String, dateTime: LocalDateTime): List<Volume>
+
+    @Throws(ExceptionDb::class)
+    fun selectAllVolumes(base: String, dateTime: LocalDateTime, pageable: Pageable): Page<Volume>
 
     @Throws(ExceptionDb::class)
     fun selectAllCapitulos(base: String, idVolume: UUID): List<Capitulo>

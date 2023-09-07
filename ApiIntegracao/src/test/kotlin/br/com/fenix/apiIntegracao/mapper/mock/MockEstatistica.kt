@@ -1,15 +1,14 @@
 package br.com.fenix.apiIntegracao.mapper.mock
 
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
-import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
+import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
-import java.time.LocalDateTime
 import java.util.*
 
-class MockEstatistica : Mock<UUID?, Estatistica, EstatisticaDto> {
+class MockEstatistica : Mock<UUID?, EstatisticaJapones, EstatisticaDto> {
 
-    override fun mockEntity(): Estatistica {
+    override fun mockEntity(): EstatisticaJapones {
         return mockEntity(UUID.fromString("6cd56de7-0f4d-4f18-ab0d-2bd3e4fc40bd"))
     }
 
@@ -17,8 +16,8 @@ class MockEstatistica : Mock<UUID?, Estatistica, EstatisticaDto> {
         return mockDto(UUID.fromString("6cd56de7-0f4d-4f18-ab0d-2bd3e4fc40bd"))
     }
 
-    override fun mockEntityList(): List<Estatistica> {
-        val list: MutableList<Estatistica> = ArrayList<Estatistica>()
+    override fun mockEntityList(): List<EstatisticaJapones> {
+        val list: MutableList<EstatisticaJapones> = ArrayList<EstatisticaJapones>()
         for (i in 1..13)
             list.add(mockEntity(UUID.randomUUID()))
         return list
@@ -31,8 +30,8 @@ class MockEstatistica : Mock<UUID?, Estatistica, EstatisticaDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID?): Estatistica {
-        return Estatistica(
+    override fun mockEntity(id: UUID?): EstatisticaJapones {
+        return EstatisticaJapones(
             id,
             1,
             "猫",
@@ -61,7 +60,7 @@ class MockEstatistica : Mock<UUID?, Estatistica, EstatisticaDto> {
         )
     }
 
-    override fun assertsToDto(input: Estatistica, output: EstatisticaDto) {
+    override fun assertsToDto(input: EstatisticaJapones, output: EstatisticaDto) {
         assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.kanji, output.kanji)
@@ -74,7 +73,7 @@ class MockEstatistica : Mock<UUID?, Estatistica, EstatisticaDto> {
         assertEquals(input.corSequencial, output.corSequencial)
     }
 
-    override fun assertsFromDto(input: EstatisticaDto, output: Estatistica) {
+    override fun assertsFromDto(input: EstatisticaDto, output: EstatisticaJapones) {
         assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.kanji, output.kanji)

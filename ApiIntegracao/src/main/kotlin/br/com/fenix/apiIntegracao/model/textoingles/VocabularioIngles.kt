@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity
 @Table(name = "vocabulario")
-data class Vocabulario(
+data class VocabularioIngles(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
@@ -21,9 +21,9 @@ data class Vocabulario(
     var portugues: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<Vocabulario, UUID?>() {
+) : Serializable, EntityBase<VocabularioIngles, UUID?>() {
 
-    override fun merge(source: Vocabulario) {
+    override fun merge(source: VocabularioIngles) {
         this.leitura = source.leitura
         this.portugues = source.portugues
     }
@@ -32,15 +32,15 @@ data class Vocabulario(
         return id
     }
 
-    override fun create(id: UUID?): Vocabulario {
-        return Vocabulario(id, "", "", "")
+    override fun create(id: UUID?): VocabularioIngles {
+        return VocabularioIngles(id, "", "", "")
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Vocabulario
+        other as VocabularioIngles
 
         if (vocabulario != other.vocabulario) return false
 

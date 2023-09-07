@@ -7,7 +7,9 @@ import br.com.fenix.apiIntegracao.exceptions.ExceptionDb
 import br.com.fenix.apiIntegracao.messages.Mensagens
 import br.com.fenix.apiIntegracao.model.decksubtitle.Legenda
 import br.com.fenix.apiIntegracao.model.mangaextractor.*
+import org.springframework.data.domain.*
 import java.sql.*
+import java.time.LocalDateTime
 import java.util.*
 
 class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String) : DeckSubtitleDao {
@@ -22,6 +24,13 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
         private const val SELECT = "SELECT id, Episodio, Linguagem, TempoInicial, TempoFinal, Texto, Traducao, Vocabulario  FROM %s WHERE id = ?"
 
         private const val SELECT_ALL = "SELECT id, Episodio, Linguagem, TempoInicial, TempoFinal, Texto, Traducao, Vocabulario  FROM %s"
+
+        private const val SELECT_COUNT = "SELECT count(*) as total FROM %s"
+
+        private const val WHERE_DATE_SYNC = " WHERE atualizacao >= ?"
+        private const val ORDER_BY = " ORDER BY %s"
+        private const val LIMIT = " LIMIT %s OFFSET %s"
+
 
         private const val CREATE_TABELA =
             ("CREATE TABLE %s (id varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL, Episodio int(2) DEFAULT NULL, "
@@ -50,10 +59,56 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
                 + " FROM information_schema.tables WHERE table_schema = '%s' "
                 + " AND Table_Name LIKE '%%%s%%' GROUP BY Tabela ")
 
-        private const val SELECT_LISTA_TABELAS = ("SELECT REPLACE(Table_Name, '_volumes', '') AS Tabela "
+        private const val SELECT_LISTA_TABELAS = ("SELECT Table_Name AS Tabela "
                 + " FROM information_schema.tables WHERE table_schema = '%s' "
                 + " GROUP BY Tabela ")
     }
+
+
+    // -------------------------------------------------------------------------------------------------------------  //
+
+    private fun <E> toPageable(pageable: Pageable, total: Int, list: List<E>) : Page<E> {
+        val page: Pageable = object : Pageable {
+            override fun getPageNumber(): Int {
+                return pageable.pageNumber
+            }
+
+            override fun getPageSize(): Int {
+                return pageable.pageSize
+            }
+
+            override fun getOffset(): Long {
+                return pageable.pageNumber * pageable.pageSize.toLong()
+            }
+
+            override fun getSort(): Sort {
+                return pageable.sort
+            }
+
+            override fun next(): Pageable {
+                return PageRequest.of(this.pageNumber + 1, this.pageSize, this.sort)
+            }
+
+            override fun previousOrFirst(): Pageable {
+                return if (this.pageNumber == 0) this else PageRequest.of(this.pageNumber - 1, this.pageSize, this.sort)
+            }
+
+            override fun first(): Pageable {
+                return PageRequest.of(0, this.pageSize, this.sort)
+            }
+
+            override fun withPage(pageNumber: Int): Pageable {
+                TODO("Not yet implemented")
+            }
+
+            override fun hasPrevious(): Boolean {
+                return pageable.pageNumber > 0
+            }
+        }
+
+        return PageImpl(list, page, total.toLong())
+    }
+
 
     // -------------------------------------------------------------------------------------------------------------  //
     private fun getLegenda(rs: ResultSet, base: String): Legenda {
@@ -177,6 +232,88 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
         }
     }
 
+    override fun selectAll(base: String, pageable: Pageable): Page<Legenda> {
+        var st: PreparedStatement? = null
+        var rs: ResultSet? = null
+        return try {
+            st = conn.prepareStatement(String.format(SELECT_COUNT, base))
+            rs = st.executeQuery()
+            var total = 1
+            if (rs.next())
+                total = rs.getInt(1)
+            if (total < 1)
+                total = 1
+
+            st = conn.prepareStatement(String.format(SELECT_ALL, base) + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(LIMIT, pageable.pageSize, pageable.pageNumber))
+            rs = st.executeQuery()
+            val list: MutableList<Legenda> = mutableListOf()
+            while (rs.next())
+                list.add(getLegenda(rs, base))
+
+            toPageable(pageable, total, list)
+        } catch (e: SQLException) {
+            e.printStackTrace()
+            println(st.toString())
+            throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
+        } finally {
+            closeStatement(st)
+            closeResultSet(rs)
+        }
+    }
+
+    override fun selectAll(base: String, dateTime: LocalDateTime): List<Legenda> {
+        var st: PreparedStatement? = null
+        var rs: ResultSet? = null
+        return try {
+            st = conn.prepareStatement(String.format(SELECT_ALL, base) + WHERE_DATE_SYNC)
+            st.setTimestamp(1, Timestamp.valueOf(dateTime))
+            rs = st.executeQuery()
+            val list: MutableList<Legenda> = mutableListOf()
+            while (rs.next())
+                list.add(getLegenda(rs, base))
+            list
+        } catch (e: SQLException) {
+            e.printStackTrace()
+            println(st.toString())
+            throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
+        } finally {
+            closeStatement(st)
+            closeResultSet(rs)
+        }
+    }
+
+    override fun selectAll(base: String, dateTime: LocalDateTime, pageable: Pageable): Page<Legenda> {
+        var st: PreparedStatement? = null
+        var rs: ResultSet? = null
+        return try {
+            val time = Timestamp.valueOf(dateTime)
+            st = conn.prepareStatement(String.format(SELECT_COUNT, base) + WHERE_DATE_SYNC)
+            st.setTimestamp(1, time)
+            rs = st.executeQuery()
+            var total = 1
+            if (rs.next())
+                total = rs.getInt(1)
+            if (total < 1)
+                total = 1
+
+            st = conn.prepareStatement(String.format(SELECT_ALL, base) + WHERE_DATE_SYNC+ (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(LIMIT, pageable.pageSize, pageable.pageNumber))
+            st.setTimestamp(1, time)
+            rs = st.executeQuery()
+            val list: MutableList<Legenda> = mutableListOf()
+            while (rs.next())
+                list.add(getLegenda(rs, base))
+
+            toPageable(pageable, total, list)
+        } catch (e: SQLException) {
+            e.printStackTrace()
+            println(st.toString())
+            throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
+        } finally {
+            closeStatement(st)
+            closeResultSet(rs)
+        }
+    }
+
     override fun delete(base: String, obj: Legenda) {
         var st: PreparedStatement? = null
         try {
@@ -266,10 +403,6 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
         } finally {
             closeStatement(st)
         }
-    }
-
-    override fun selectAllTabelas(): List<Tabela> {
-        TODO("Not yet implemented")
     }
 
     @get:Throws(ExceptionDb::class)

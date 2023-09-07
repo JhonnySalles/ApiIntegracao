@@ -7,7 +7,9 @@ import br.com.fenix.apiIntegracao.enums.Linguagens
 import br.com.fenix.apiIntegracao.exceptions.ExceptionDb
 import br.com.fenix.apiIntegracao.messages.Mensagens
 import br.com.fenix.apiIntegracao.model.mangaextractor.*
+import org.springframework.data.domain.*
 import java.sql.*
+import java.time.LocalDateTime
 import java.util.*
 
 class MangaExtractorDaoJDBC(private val conn: Connection, private val base: String) : MangaExtractorDao {
@@ -36,31 +38,26 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         private const val DELETE_PAGINAS = "DELETE %s_paginas WHERE id = ?"
         private const val DELETE_TEXTOS = "DELETE %s_textos WHERE id = ?"
 
-        private const val SELECT_VOLUMES =
-            "SELECT id, manga, volume, linguagem, arquivo, is_Processado FROM %s_volumes"
-        private const val SELECT_CAPITULOS =
-            "SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, is_processado FROM %s_capitulos CAP WHERE id_volume = ?"
-        private const val SELECT_PAGINAS =
-            "SELECT id, nome, numero, hash_pagina, is_processado FROM %s_paginas WHERE id_capitulo = ? "
-        private const val SELECT_TEXTOS =
-            "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2 FROM %s_textos WHERE id_pagina = ? "
+        private const val SELECT_VOLUMES = "SELECT id, manga, volume, linguagem, arquivo, is_Processado FROM %s_volumes"
+        private const val SELECT_CAPITULOS = "SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, is_processado FROM %s_capitulos CAP WHERE id_volume = ?"
+        private const val SELECT_PAGINAS = "SELECT id, nome, numero, hash_pagina, is_processado FROM %s_paginas WHERE id_capitulo = ? "
+        private const val SELECT_TEXTOS = "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2 FROM %s_textos WHERE id_pagina = ? "
 
-        private const val SELECT_VOLUME =
-            "SELECT VOL.id, VOL.manga, VOL.volume, VOL.linguagem, VOL.arquivo, VOL.is_Processado FROM %s_volumes VOL WHERE id = ?"
-        private const val SELECT_CAPITULO =
-            ("SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, is_processado FROM %s_capitulos WHERE id = ?")
-        private const val SELECT_PAGINA =
-            "SELECT id, nome, numero, hash_pagina, is_processado FROM %s_paginas WHERE id = ?"
-        private const val SELECT_TEXTO =
-            "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2, versaoApp FROM %s_textos WHERE id = ?"
+        private const val SELECT_VOLUME = "SELECT VOL.id, VOL.manga, VOL.volume, VOL.linguagem, VOL.arquivo, VOL.is_Processado FROM %s_volumes VOL WHERE id = ?"
+        private const val SELECT_CAPITULO = ("SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, is_processado FROM %s_capitulos WHERE id = ?")
+        private const val SELECT_PAGINA = "SELECT id, nome, numero, hash_pagina, is_processado FROM %s_paginas WHERE id = ?"
+        private const val SELECT_TEXTO = "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2, versaoApp FROM %s_textos WHERE id = ?"
 
+        private const val SELECT_COUNT_VOLUMES = "SELECT count(*) as total FROM %s_volumes"
+
+        private const val WHERE_DATE_SYNC = " WHERE atualizacao >= ?"
+        private const val ORDER_BY = " ORDER BY %s"
+        private const val LIMIT = " LIMIT %s OFFSET %s"
 
         private const val DELETE_VOCABULARIO = "DELETE FROM %s_vocabulario WHERE %s = ?;"
-        private const val INSERT_VOCABULARIO =
-            ("INSERT INTO %s_vocabulario (%s, palavra, portugues, ingles, leitura, revisado) "
+        private const val INSERT_VOCABULARIO = ("INSERT INTO %s_vocabulario (%s, palavra, portugues, ingles, leitura, revisado) "
                     + " VALUES (?,?,?,?,?,?);")
-        private const val SELECT_VOCABUALARIO =
-            "SELECT id, id_volume, id_capitulo, id_pagina, palavra, portugues, ingles, leitura, revisado FROM %s_vocabulario WHERE %s "
+        private const val SELECT_VOCABUALARIO = "SELECT id, id_volume, id_capitulo, id_pagina, palavra, portugues, ingles, leitura, revisado FROM %s_vocabulario WHERE %s "
 
 
         private const val CREATE_TABELA = "CALL create_table('%s');"
@@ -168,6 +165,48 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             (if (rs.getObject("id_capitulo") != null) selectCapitulo(base, UUID.fromString(rs.getString("id_capitulo"))) else null),
             (if (rs.getObject("id_pagina") != null) selectPagina(base, UUID.fromString(rs.getString("id_pagina"))) else null)
         )
+    }
+
+    private fun <E> toPageable(pageable: Pageable, total: Int, list: List<E>) : Page<E> {
+        val page: Pageable = object : Pageable {
+            override fun getPageNumber(): Int {
+                return pageable.pageNumber
+            }
+
+            override fun getPageSize(): Int {
+                return pageable.pageSize
+            }
+
+            override fun getOffset(): Long {
+                return pageable.pageNumber * pageable.pageSize.toLong()
+            }
+
+            override fun getSort(): Sort {
+                return pageable.sort
+            }
+
+            override fun next(): Pageable {
+                return PageRequest.of(this.pageNumber + 1, this.pageSize, this.sort)
+            }
+
+            override fun previousOrFirst(): Pageable {
+                return if (this.pageNumber == 0) this else PageRequest.of(this.pageNumber - 1, this.pageSize, this.sort)
+            }
+
+            override fun first(): Pageable {
+                return PageRequest.of(0, this.pageSize, this.sort)
+            }
+
+            override fun withPage(pageNumber: Int): Pageable {
+                TODO("Not yet implemented")
+            }
+
+            override fun hasPrevious(): Boolean {
+                return pageable.pageNumber > 0
+            }
+        }
+
+        return PageImpl(list, page, total.toLong())
     }
 
 
@@ -604,6 +643,88 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             while (rs.next())
                 list.add(getVolume(rs, base))
             list
+        } catch (e: SQLException) {
+            e.printStackTrace()
+            println(st.toString())
+            throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
+        } finally {
+            closeStatement(st)
+            closeResultSet(rs)
+        }
+    }
+
+    override fun selectAllVolumes(base: String, pageable: Pageable): Page<Volume> {
+        var st: PreparedStatement? = null
+        var rs: ResultSet? = null
+        return try {
+            st = conn.prepareStatement(String.format(SELECT_COUNT_VOLUMES, base))
+            rs = st.executeQuery()
+            var total = 1
+            if (rs.next())
+                total = rs.getInt(1)
+            if (total < 1)
+                total = 1
+
+            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(LIMIT, pageable.pageSize, pageable.pageNumber))
+            rs = st.executeQuery()
+            val list: MutableList<Volume> = mutableListOf()
+            while (rs.next())
+                list.add(getVolume(rs, base))
+
+            toPageable(pageable, total, list)
+        } catch (e: SQLException) {
+            e.printStackTrace()
+            println(st.toString())
+            throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
+        } finally {
+            closeStatement(st)
+            closeResultSet(rs)
+        }
+    }
+
+    override fun selectAllVolumes(base: String, dateTime: LocalDateTime): List<Volume> {
+        var st: PreparedStatement? = null
+        var rs: ResultSet? = null
+        return try {
+            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + WHERE_DATE_SYNC)
+            st.setTimestamp(1, Timestamp.valueOf(dateTime))
+            rs = st.executeQuery()
+            val list: MutableList<Volume> = mutableListOf()
+            while (rs.next())
+                list.add(getVolume(rs, base))
+            list
+        } catch (e: SQLException) {
+            e.printStackTrace()
+            println(st.toString())
+            throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
+        } finally {
+            closeStatement(st)
+            closeResultSet(rs)
+        }
+    }
+
+    override fun selectAllVolumes(base: String, dateTime: LocalDateTime, pageable: Pageable): Page<Volume> {
+        var st: PreparedStatement? = null
+        var rs: ResultSet? = null
+        return try {
+            val time = Timestamp.valueOf(dateTime)
+            st = conn.prepareStatement(String.format(SELECT_COUNT_VOLUMES, base) + WHERE_DATE_SYNC)
+            st.setTimestamp(1, time)
+            rs = st.executeQuery()
+            var total = 1
+            if (rs.next())
+                total = rs.getInt(1)
+            if (total < 1)
+                total = 1
+
+            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + WHERE_DATE_SYNC + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(LIMIT, pageable.pageSize, pageable.pageNumber) )
+            st.setTimestamp(1, time)
+            rs = st.executeQuery()
+            val list: MutableList<Volume> = mutableListOf()
+            while (rs.next())
+                list.add(getVolume(rs, base))
+
+            toPageable(pageable, total, list)
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())

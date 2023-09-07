@@ -1,4 +1,4 @@
-package br.com.fenix.apiIntegracao.model.textojapones
+package br.com.fenix.apiIntegracao.model.textoingles
 
 import br.com.fenix.apiIntegracao.model.EntityBase
 import jakarta.persistence.*
@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity
 @Table(name = "revisar")
-data class Revisar(
+data class RevisarIngles(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
@@ -16,11 +16,7 @@ data class Revisar(
     @Column(length = 250, nullable = false)
     var vocabulario: String,
     @Column(length = 250, nullable = false)
-    var formaBasica: String,
-    @Column(length = 250, nullable = false)
     var leitura: String,
-    @Column(nullable = false)
-    var ingles: String,
     @Column(nullable = false)
     var portugues: String,
     @Column(nullable = false)
@@ -33,14 +29,12 @@ data class Revisar(
     var isManga: Boolean,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<Revisar, UUID?>() {
+) : Serializable, EntityBase<RevisarIngles, UUID?>() {
 
-    override fun merge(source: Revisar) {
+    override fun merge(source: RevisarIngles) {
         this.vocabulario = source.vocabulario
-        this.formaBasica = source.formaBasica
         this.leitura = source.leitura
         this.portugues = source.portugues
-        this.ingles = source.ingles
         this.revisado = source.revisado
         this.aparece = source.aparece
         this.isAnime = source.isAnime
@@ -51,15 +45,15 @@ data class Revisar(
         return id
     }
 
-    override fun create(id: UUID?): Revisar {
-        return Revisar(id, "", "", "", "", "", false, 0, isAnime = false, isManga = false)
+    override fun create(id: UUID?): RevisarIngles {
+        return RevisarIngles(id, "", "", "",  false, 0, isAnime = false, isManga = false)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Revisar
+        other as RevisarIngles
 
         if (vocabulario != other.vocabulario) return false
 

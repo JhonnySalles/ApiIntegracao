@@ -5,7 +5,7 @@ import br.com.fenix.apiIntegracao.controller.BaseControllerTest
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.dto.wrapper.WrapperEstatisticaDto
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
-import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
+import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.MethodOrderer
@@ -21,7 +21,7 @@ class EstatisticaControllerJsonTest(
     override var pathEndpointList: String = "/api/texto-japones/estatistica/lista",
     override var pathEndpointPaginadoAtualizacao: String = "/api/texto-japones/estatistica/atualizacao",
     override var pathEndpointListaAtualizacao: String = "/api/texto-japones/estatistica/lista/atualizacao"
-) : BaseControllerTest<UUID?, Estatistica, EstatisticaDto, WrapperEstatisticaDto>(
+) : BaseControllerTest<UUID?, EstatisticaJapones, EstatisticaDto, WrapperEstatisticaDto>(
     EstatisticaDto::class.java,
     WrapperEstatisticaDto::class.java,
     MockEstatistica(),

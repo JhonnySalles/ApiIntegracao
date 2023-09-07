@@ -3,19 +3,21 @@ package br.com.fenix.apiIntegracao.repository.mangaextractor
 import br.com.fenix.apiIntegracao.database.dao.DaoFactory
 import br.com.fenix.apiIntegracao.database.dao.MangaExtractorDao
 import br.com.fenix.apiIntegracao.enums.Tipo
+import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.model.mangaextractor.Volume
 import br.com.fenix.apiIntegracao.repository.RepositoryJdbcBase
 import br.com.fenix.apiIntegracao.service.api.TabelasService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.concurrent.thread
 
-class MangaExtractorRepository: RepositoryJdbcBase<Volume, UUID?> {
-
-    @Bean
-    private lateinit var tabelas : TabelasService
+@Repository
+class MangaExtractorRepository(var tabelas : TabelasService): RepositoryJdbcBase<Volume, UUID?> {
 
     private val dao : MangaExtractorDao = DaoFactory.createMangaExtractorDao(tabelas.getProperty(Tipo.MANGAEXTRACTOR))
 
@@ -30,8 +32,6 @@ class MangaExtractorRepository: RepositoryJdbcBase<Volume, UUID?> {
     override fun tabelas(): List<String> {
         return dao.tables
     }
-
-
 
     override fun update(tabela: String, obj: Volume): Volume {
         dao.updateVolume(tabela, obj)
@@ -82,15 +82,21 @@ class MangaExtractorRepository: RepositoryJdbcBase<Volume, UUID?> {
     }
 
     override fun findAll(tabela: String, pageable: Pageable?): Page<Volume> {
-        TODO("Not yet implemented")
+        if (pageable == null)
+            throw RequiredObjectIsNullException("Its necessary inform a pageable")
+
+        return dao.selectAllVolumes(tabela, pageable)
     }
 
     override fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime): List<Volume> {
-        TODO("Not yet implemented")
+        return dao.selectAllVolumes(tabela, dateTime)
     }
 
     override fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime, pageable: Pageable?): Page<Volume> {
-        TODO("Not yet implemented")
+        if (pageable == null)
+            throw RequiredObjectIsNullException("Its necessary inform a pageable")
+
+        return dao.selectAllVolumes(tabela, dateTime, pageable)
     }
 
     override fun delete(tabela: String, id: UUID?) {

@@ -1,15 +1,15 @@
 package br.com.fenix.apiIntegracao.mapper.mock
 
 import br.com.fenix.apiIntegracao.dto.textojapones.FilaSqlDto
-import br.com.fenix.apiIntegracao.model.textojapones.FilaSql
+import br.com.fenix.apiIntegracao.model.textojapones.FilaSqlJapones
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import java.util.*
 import kotlin.random.Random
 
-class MockFilaSql : Mock<UUID?, FilaSql, FilaSqlDto> {
+class MockFilaSql : Mock<UUID?, FilaSqlJapones, FilaSqlDto> {
 
-    override fun mockEntity(): FilaSql {
+    override fun mockEntity(): FilaSqlJapones {
         return mockEntity(UUID.fromString("f9b0e6e3-8b2d-4399-8a48-81c055a9d4d2"))
     }
 
@@ -17,8 +17,8 @@ class MockFilaSql : Mock<UUID?, FilaSql, FilaSqlDto> {
         return mockDto(UUID.fromString("f9b0e6e3-8b2d-4399-8a48-81c055a9d4d2"))
     }
 
-    override fun mockEntityList(): List<FilaSql> {
-        val list: MutableList<FilaSql> = ArrayList<FilaSql>()
+    override fun mockEntityList(): List<FilaSqlJapones> {
+        val list: MutableList<FilaSqlJapones> = ArrayList<FilaSqlJapones>()
         for (i in 1..13)
             list.add(mockEntity(UUID.randomUUID()))
         return list
@@ -31,8 +31,8 @@ class MockFilaSql : Mock<UUID?, FilaSql, FilaSqlDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID?): FilaSql {
-        return FilaSql(
+    override fun mockEntity(id: UUID?): FilaSqlJapones {
+        return FilaSqlJapones(
             id, 0, "SELECT 1 > 0", "UPDATE", "DELETE", "VOCABULARIO",
             Random.nextBoolean(), Random.nextBoolean()
         )
@@ -45,7 +45,7 @@ class MockFilaSql : Mock<UUID?, FilaSql, FilaSqlDto> {
         )
     }
 
-    override fun assertsToDto(input: FilaSql, output: FilaSqlDto) {
+    override fun assertsToDto(input: FilaSqlJapones, output: FilaSqlDto) {
         assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.selectSQL, output.selectSQL)
@@ -56,7 +56,7 @@ class MockFilaSql : Mock<UUID?, FilaSql, FilaSqlDto> {
         assertEquals(input.isLimpeza, output.isLimpeza)
     }
 
-    override fun assertsFromDto(input: FilaSqlDto, output: FilaSql) {
+    override fun assertsFromDto(input: FilaSqlDto, output: FilaSqlJapones) {
         assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.sequencial, output.sequencial)
         assertEquals(input.selectSQL, output.selectSQL)

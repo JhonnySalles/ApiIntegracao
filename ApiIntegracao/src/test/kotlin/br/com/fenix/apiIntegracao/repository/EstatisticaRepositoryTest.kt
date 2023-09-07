@@ -1,11 +1,11 @@
 package br.com.fenix.apiIntegracao.repository
 
-import br.com.fenix.apiIntegracao.controller.textojapones.EstatisticaController
+import br.com.fenix.apiIntegracao.controller.textojapones.EstatisticaJaponesController
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
-import br.com.fenix.apiIntegracao.model.textojapones.Estatistica
-import br.com.fenix.apiIntegracao.repository.textojapones.EstatisticaRepository
+import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
+import br.com.fenix.apiIntegracao.repository.textojapones.EstatisticaJaponesRepository
 import br.com.fenix.apiIntegracao.service.ServiceJpaBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -22,11 +22,11 @@ import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension::class)
-class EstatisticaRepositoryTest(@Mock var repository: EstatisticaRepository, assembler: PagedResourcesAssembler<EstatisticaDto>) {
+class EstatisticaRepositoryTest(@Mock var repository: EstatisticaJaponesRepository, assembler: PagedResourcesAssembler<EstatisticaDto>) {
     lateinit var input: MockEstatistica
 
     @InjectMocks
-    var service = object : ServiceJpaBase<UUID?, Estatistica, EstatisticaDto, EstatisticaController>(repository, assembler, Estatistica::class.java, EstatisticaDto::class.java, EstatisticaController::class.java) {}
+    var service = object : ServiceJpaBase<UUID?, EstatisticaJapones, EstatisticaDto, EstatisticaJaponesController>(repository, assembler, EstatisticaJapones::class.java, EstatisticaDto::class.java, EstatisticaJaponesController::class.java) {}
 
     @BeforeEach
     @Throws(Exception::class)
@@ -98,7 +98,7 @@ class EstatisticaRepositoryTest(@Mock var repository: EstatisticaRepository, ass
 
     @Test
     fun testFindAll() {
-        val list: List<Estatistica> = input.mockEntityList()
+        val list: List<EstatisticaJapones> = input.mockEntityList()
         Mockito.`when`(repository.findAll()).thenReturn(list)
         val dtos = service.getAll()
 

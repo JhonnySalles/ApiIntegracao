@@ -22,11 +22,11 @@ import java.time.LocalDateTime
 
 abstract class ServiceJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(var repository: RepositoryJdbcBase<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
 
-    fun getTables() : List<String> = repository.tables
+    fun getTables() : List<String> = repository.tabelas()
 
-    private fun existTable(table: String) : Boolean = repository.existsTable(table)
+    private fun existTable(table: String) : Boolean = repository.existstabela(table)
 
-    private fun createTable(table: String) = repository.createTable(table)
+    private fun createTable(table: String) = repository.createtabela(table)
 
     private fun verifyTable(table: String) {
         if (!existTable(table))

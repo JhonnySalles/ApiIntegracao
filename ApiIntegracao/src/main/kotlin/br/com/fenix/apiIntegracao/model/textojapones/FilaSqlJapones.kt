@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity
 @Table(name = "fila_sql")
-data class FilaSql(
+data class FilaSqlJapones(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
@@ -29,9 +29,9 @@ data class FilaSql(
     var isLimpeza: Boolean,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<FilaSql, UUID?>() {
+) : Serializable, EntityBase<FilaSqlJapones, UUID?>() {
 
-    override fun merge(source: FilaSql) {
+    override fun merge(source: FilaSqlJapones) {
         this.sequencial = source.sequencial
         this.selectSQL = source.selectSQL
         this.updateSQL = source.updateSQL
@@ -45,15 +45,15 @@ data class FilaSql(
         return id
     }
 
-    override fun create(id: UUID?): FilaSql {
-        return FilaSql(id, 0, "", "", "", "", false, false)
+    override fun create(id: UUID?): FilaSqlJapones {
+        return FilaSqlJapones(id, 0, "", "", "", "", false, false)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as FilaSql
+        other as FilaSqlJapones
 
         if (sequencial != other.sequencial) return false
 

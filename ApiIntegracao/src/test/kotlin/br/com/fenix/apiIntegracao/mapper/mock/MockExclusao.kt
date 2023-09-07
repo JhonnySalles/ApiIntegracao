@@ -1,15 +1,14 @@
 package br.com.fenix.apiIntegracao.mapper.mock
 
-import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.dto.textojapones.ExclusaoDto
-import br.com.fenix.apiIntegracao.model.textojapones.Exclusao
+import br.com.fenix.apiIntegracao.model.textojapones.ExclusaoJapones
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.util.*
 
-class MockExclusao : Mock<UUID?, Exclusao, ExclusaoDto> {
+class MockExclusao : Mock<UUID?, ExclusaoJapones, ExclusaoDto> {
 
-    override fun mockEntity(): Exclusao {
+    override fun mockEntity(): ExclusaoJapones {
         return mockEntity(UUID.fromString("a3b75d19-aeb9-459d-85ed-5b2f5d003ff9"))
     }
 
@@ -17,8 +16,8 @@ class MockExclusao : Mock<UUID?, Exclusao, ExclusaoDto> {
         return mockDto(UUID.fromString("a3b75d19-aeb9-459d-85ed-5b2f5d003ff9"))
     }
 
-    override fun mockEntityList(): List<Exclusao> {
-        val list: MutableList<Exclusao> = ArrayList<Exclusao>()
+    override fun mockEntityList(): List<ExclusaoJapones> {
+        val list: MutableList<ExclusaoJapones> = ArrayList<ExclusaoJapones>()
         for (i in 1..13)
             list.add(mockEntity(UUID.randomUUID()))
         return list
@@ -31,8 +30,8 @@ class MockExclusao : Mock<UUID?, Exclusao, ExclusaoDto> {
         return list
     }
 
-    override fun mockEntity(id: UUID?): Exclusao {
-        return Exclusao(
+    override fun mockEntity(id: UUID?): ExclusaoJapones {
+        return ExclusaoJapones(
             id,
             "Teste exclusao"
         )
@@ -45,12 +44,12 @@ class MockExclusao : Mock<UUID?, Exclusao, ExclusaoDto> {
         )
     }
 
-    override fun assertsToDto(input: Exclusao, output: ExclusaoDto) {
+    override fun assertsToDto(input: ExclusaoJapones, output: ExclusaoDto) {
         assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.exclusao, output.exclusao)
     }
 
-    override fun assertsFromDto(input: ExclusaoDto, output: Exclusao) {
+    override fun assertsFromDto(input: ExclusaoDto, output: ExclusaoJapones) {
         assertEquals(input.getId().toString(), output.getId().toString())
         assertEquals(input.exclusao, output.exclusao)
     }
