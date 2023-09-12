@@ -20,7 +20,7 @@ class Endpoints {
         const val TEXTO_INGLES_VALIDO     = "$TEXTO_INGLES/valido"
 
         const val TEXTO_INGLES_VOCABULARIO = "$TEXTO_INGLES/vocabulario"
-        const val TABLES_URL = "/tabela/{tables}/"
+        const val TABLES_URL = "/tabela/{table}/"
 
         const val MANGA_EXTRACTOR = "$API/manga-extractor"
         const val DECK_SUBTITLE = "$API/deck-subtitle"

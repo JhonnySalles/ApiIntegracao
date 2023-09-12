@@ -10,7 +10,7 @@ DELETE FROM manga_extractor;
 
 INSERT INTO manga_extractor (id, tabela, isVocabulario)
 SELECT UUID(), Table_Name, 1 FROM information_schema.tables
-WHERE table_schema = "manga_extractor" AND Table_Name = "_vocabulario" GROUP BY Table_Name
+WHERE table_schema = "manga_extractor" AND Table_Name = "_vocabularios" GROUP BY Table_Name
 UNION ALL
 SELECT UUID(), Table_Name, 0 FROM information_schema.tables
-WHERE table_schema = "manga_extractor" AND Table_Name <> "_vocabulario" GROUP BY Table_Name
+WHERE table_schema = "manga_extractor" AND Table_Name <> "_vocabularios" GROUP BY Table_Name

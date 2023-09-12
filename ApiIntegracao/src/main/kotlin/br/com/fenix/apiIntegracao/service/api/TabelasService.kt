@@ -1,15 +1,11 @@
 package br.com.fenix.apiIntegracao.service.api
 
 import br.com.fenix.apiIntegracao.enums.Tipo
-import br.com.fenix.apiIntegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiIntegracao.exceptions.TableNotExistsException
-import br.com.fenix.apiIntegracao.model.api.Atualizacao
 import br.com.fenix.apiIntegracao.model.api.Tabelas
-import br.com.fenix.apiIntegracao.repository.api.AtualizacaoRepository
 import br.com.fenix.apiIntegracao.repository.api.TabelasRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 import java.util.*
 import java.util.logging.Logger
 
@@ -32,8 +28,7 @@ class TabelasService {
     private lateinit var repository: TabelasRepository
 
     fun find(base: Tipo): Tabelas {
-        return repository.findByBase(base.tipo)
-            .orElseThrow { TableNotExistsException("Não encontrado a base $base no servidor.") }
+        return repository.findByBase(base).orElseThrow { TableNotExistsException("Não encontrado a base $base no servidor.") }
     }
 
     fun findAll(): List<Tabelas> {

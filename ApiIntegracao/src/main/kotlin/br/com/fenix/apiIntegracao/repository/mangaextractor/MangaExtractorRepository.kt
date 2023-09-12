@@ -19,7 +19,7 @@ import kotlin.concurrent.thread
 @Repository
 class MangaExtractorRepository(var tabelas : TabelasService): RepositoryJdbcBase<Volume, UUID?> {
 
-    private val dao : MangaExtractorDao = DaoFactory.createMangaExtractorDao(tabelas.getProperty(Tipo.MANGAEXTRACTOR))
+    private val dao : MangaExtractorDao = DaoFactory.createMangaExtractorDao(tabelas.getProperty(Tipo.MANGA_EXTRACTOR))
 
     override fun createtabela(tabela: String) {
         dao.createTable(tabela)

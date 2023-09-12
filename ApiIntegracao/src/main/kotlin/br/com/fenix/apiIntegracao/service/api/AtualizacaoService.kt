@@ -1,6 +1,6 @@
 package br.com.fenix.apiIntegracao.service.api
 
-import br.com.fenix.apiIntegracao.model.api.Atualizacao
+import br.com.fenix.apiIntegracao.model.api.Consultas
 import br.com.fenix.apiIntegracao.repository.api.AtualizacaoRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -18,21 +18,21 @@ class AtualizacaoService {
     @Autowired
     private lateinit var repository: AtualizacaoRepository
 
-    fun find(computador: String): Atualizacao {
+    fun find(computador: String): Consultas {
         return repository.findById(computador)
-            .orElse(Atualizacao(UUID.randomUUID().toString(), computador, "", LocalDateTime.now()))
+            .orElse(Consultas(UUID.randomUUID().toString(), computador, "", LocalDateTime.now()))
     }
 
-    fun findAll(): List<Atualizacao> {
+    fun findAll(): List<Consultas> {
         return repository.findAll()
     }
 
-    fun create(save: Atualizacao): Atualizacao {
+    fun create(save: Consultas): Consultas {
         val entity = repository.findByComputador(save.computador).orElse(save)
         return repository.save(entity)
     }
 
-    fun update(entity: Atualizacao): Atualizacao {
+    fun update(entity: Consultas): Consultas {
         return repository.save(entity)
     }
 }

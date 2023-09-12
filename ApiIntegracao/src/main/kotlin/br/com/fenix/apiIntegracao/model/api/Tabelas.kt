@@ -22,8 +22,10 @@ data class Tabelas(
     @Column
     var base: String,
     @Column
+    @Enumerated(EnumType.STRING)
     var driver: Conexao,
     @Column
+    @Enumerated(EnumType.STRING)
     var tipo: Tipo
 ) : Serializable {
 

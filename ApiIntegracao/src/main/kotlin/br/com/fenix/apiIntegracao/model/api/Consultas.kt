@@ -6,8 +6,8 @@ import java.io.Serializable
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "atualizacoes")
-data class Atualizacao(
+@Table(name = "consultas")
+data class Consultas(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: String,
@@ -23,7 +23,7 @@ data class Atualizacao(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Atualizacao
+        other as Consultas
 
         if (id != other.id) return false
 

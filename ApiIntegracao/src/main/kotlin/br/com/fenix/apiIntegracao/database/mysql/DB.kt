@@ -14,8 +14,7 @@ object DB {
         try {
             prop.setProperty("characterEncoding", "UTF-8")
             prop.setProperty("useUnicode", "true")
-            val url = ("jdbc:mysql://" + prop.getProperty(PROP_URL) + ":" + prop.getProperty(PROP_PORTA) + "/"
-                    + prop.getProperty(PROP_BASE)
+            val url = ("jdbc:mysql://" + prop.getProperty(PROP_URL) + ":" + prop.getProperty(PROP_PORTA) + "/" + prop.getProperty(PROP_BASE)
                     + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC")
             conn = DriverManager.getConnection(url, prop)
         } catch (e: SQLException) {
