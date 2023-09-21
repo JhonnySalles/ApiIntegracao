@@ -4,5 +4,5 @@ import br.com.fenix.apiIntegracao.config.SecurityConfig
 
 
 fun main(args: Array<String>) {
-    println("Password: " + SecurityConfig.encodePassword("admin"))
+    println("Password 'admin': " + SecurityConfig.encodePassword("admin"))
 }

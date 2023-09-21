@@ -2,7 +2,7 @@ package br.com.fenix.apiIntegracao.controller
 
 import br.com.fenix.apiIntegracao.TestConfigs
 import br.com.fenix.apiIntegracao.dto.DtoBase
-import br.com.fenix.apiIntegracao.dto.TokenDto
+import br.com.fenix.apiIntegracao.dto.api.TokenDto
 import br.com.fenix.apiIntegracao.dto.wrapper.WrapperDtoBase
 import br.com.fenix.apiIntegracao.mapper.mock.Mock
 import br.com.fenix.apiIntegracao.model.Entity

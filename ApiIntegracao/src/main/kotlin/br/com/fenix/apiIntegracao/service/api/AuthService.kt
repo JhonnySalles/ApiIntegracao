@@ -1,7 +1,7 @@
 package br.com.fenix.apiIntegracao.service.api
 
-import br.com.fenix.apiIntegracao.dto.CredencialDto
-import br.com.fenix.apiIntegracao.dto.TokenDto
+import br.com.fenix.apiIntegracao.dto.api.CredencialDto
+import br.com.fenix.apiIntegracao.dto.api.TokenDto
 import br.com.fenix.apiIntegracao.repository.api.UsuarioRepository
 import br.com.fenix.apiIntegracao.security.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Autowired

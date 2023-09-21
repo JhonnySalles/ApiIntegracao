@@ -1,6 +1,6 @@
 package br.com.fenix.apiIntegracao.controller
 
-import br.com.fenix.apiIntegracao.dto.CredencialDto
+import br.com.fenix.apiIntegracao.dto.api.CredencialDto
 import br.com.fenix.apiIntegracao.service.api.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag

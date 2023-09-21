@@ -23,7 +23,7 @@ data class Usuario(
     val contaNaoTravada: Boolean,
     @Column(name = "credencial_nao_expirado")
     val credencialNaoExpirada: Boolean,
-    @Column(name = "enabled")
+    @Column(name = "ativo")
     val ativo: Boolean,
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

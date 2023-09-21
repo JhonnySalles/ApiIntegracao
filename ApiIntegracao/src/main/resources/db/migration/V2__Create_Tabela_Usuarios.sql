@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS usuarios (
 );
 
 INSERT INTO usuarios (username, nome, password, conta_nao_expirada, conta_nao_travada, credencial_nao_expirado, ativo) VALUES
-('admin', 'Admin', 'c579dd4bffe3efccd56540baf9b5743cd9ae61b9ee5a1f03eacfa49cbe26c65b3194eb32290d9ed5', b'1', b'1', b'1', b'1'),
-('jhonny', 'Jhonny', '098344719160725f7c5e7448053cfe1b828b34be1942e6b97aa8f4e177912668df48c2df19681072', b'1', b'1', b'1', b'1');
+('admin', 'Admin', '$2a$10$BipJ1Wv3lo7QBybP/Lo6n.Fge32f17DEKjNvciEuOBJfSYvJrB2ze', b'1', b'1', b'1', b'1'),
+('jhonny', 'Jhonny', '$2a$10$3GqPlc2fJ21KEOIWCA2csu54EhqMDVwtM0dyicLhwL9aF6CvtfloO', b'1', b'1', b'1', b'1');

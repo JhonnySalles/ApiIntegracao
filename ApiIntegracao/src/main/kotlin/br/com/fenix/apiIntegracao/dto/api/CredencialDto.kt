@@ -1,4 +1,4 @@
-package br.com.fenix.apiIntegracao.dto
+package br.com.fenix.apiIntegracao.dto.api
 
 import java.io.Serializable
 

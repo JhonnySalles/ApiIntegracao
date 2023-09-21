@@ -2,7 +2,7 @@ package br.com.fenix.apiIntegracao.controller.cors
 
 import br.com.fenix.apiIntegracao.TestConfigs
 import br.com.fenix.apiIntegracao.dto.AccountCredentialDto
-import br.com.fenix.apiIntegracao.dto.TokenDto
+import br.com.fenix.apiIntegracao.dto.api.TokenDto
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
 import com.fasterxml.jackson.core.JsonProcessingException
