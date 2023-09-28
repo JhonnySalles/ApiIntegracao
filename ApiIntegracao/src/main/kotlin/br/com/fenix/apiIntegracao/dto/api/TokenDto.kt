@@ -10,4 +10,8 @@ data class TokenDto(
     val expiration: Date,
     val accessToken: String,
     val refreshToken: String,
-) : Serializable { }
+) : Serializable {
+
+    constructor(): this("", true, Date(),Date(),"","")
+
+}

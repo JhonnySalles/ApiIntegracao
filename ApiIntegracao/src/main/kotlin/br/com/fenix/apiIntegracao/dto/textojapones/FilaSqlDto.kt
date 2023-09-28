@@ -18,6 +18,8 @@ data class FilaSqlDto(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null, 0, "","","","", false, false)
+
     override fun getId(): UUID? {
         return id
     }

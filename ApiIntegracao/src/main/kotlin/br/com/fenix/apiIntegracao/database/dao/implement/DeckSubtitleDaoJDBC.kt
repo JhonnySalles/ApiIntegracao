@@ -244,7 +244,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             if (total < 1)
                 total = 1
 
-            st = conn.prepareStatement(String.format(SELECT_ALL, base) + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(LIMIT, pageable.pageSize, pageable.pageNumber))
+            st = conn.prepareStatement(String.format(SELECT_ALL, base) + (if (pageable.sort.isEmpty) "" else String.format(ORDER_BY, pageable.sort).replace(":", "")) + String.format(LIMIT, pageable.pageSize, pageable.pageNumber))
             rs = st.executeQuery()
             val list: MutableList<Legenda> = mutableListOf()
             while (rs.next())

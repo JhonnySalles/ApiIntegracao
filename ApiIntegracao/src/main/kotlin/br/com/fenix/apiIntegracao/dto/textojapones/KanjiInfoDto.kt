@@ -16,6 +16,8 @@ data class KanjiInfoDto(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null, 0, "","",0,"")
+
     override fun getId(): UUID? {
         return id
     }

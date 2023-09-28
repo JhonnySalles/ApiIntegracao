@@ -15,6 +15,8 @@ data class LegendaDto(
     var vocabulario: String?
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null, 0, "","","","","","")
+
     override fun getId(): UUID? {
         return id
     }

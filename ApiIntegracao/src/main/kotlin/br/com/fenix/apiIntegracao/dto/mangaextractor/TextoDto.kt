@@ -14,6 +14,8 @@ data class TextoDto(
     var versaoApp: Int
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null,  0, "",0,0,0,0, 0)
+
     override fun getId(): UUID? {
         return id
     }

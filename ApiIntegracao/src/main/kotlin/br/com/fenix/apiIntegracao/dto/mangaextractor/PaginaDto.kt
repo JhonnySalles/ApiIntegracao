@@ -14,6 +14,8 @@ data class PaginaDto(
     var vocabulario: Set<VocabularioDto> = setOf()
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null,  "", 0,"","",false)
+
     override fun getId(): UUID? {
         return id
     }

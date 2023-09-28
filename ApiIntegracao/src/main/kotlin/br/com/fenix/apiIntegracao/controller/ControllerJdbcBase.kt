@@ -21,7 +21,7 @@ import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
 
-abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(repository: RepositoryJdbcBase<E, ID>, @Autowired var assembler: PagedResourcesAssembler<D>) {
+abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(repository: RepositoryJdbcBase<E, ID>, assembler: PagedResourcesAssembler<D>) {
     private val service: ServiceJdbcBase<ID, E, D, C>
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>

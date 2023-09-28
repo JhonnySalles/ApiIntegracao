@@ -18,6 +18,8 @@ data class RevisarDto(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null, "", "","",false,0,false,false)
+
     override fun getId(): UUID? {
         return id
     }

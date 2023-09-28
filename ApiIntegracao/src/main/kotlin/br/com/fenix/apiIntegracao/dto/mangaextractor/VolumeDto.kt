@@ -17,6 +17,8 @@ data class VolumeDto(
     var vocabulario: Set<VocabularioDto> = setOf()
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null,  "", 0,null,"","",false)
+
     override fun getId(): UUID? {
         return id
     }

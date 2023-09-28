@@ -40,6 +40,8 @@ data class KanjaxPtDto(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null, 0,"","", "","","","","","","",0,0,0,0,"","","","","",false,false,false,false, LocalDateTime.MIN,LocalDateTime.MIN,"",false, "", "")
+
     override fun getId(): UUID? {
         return id
     }

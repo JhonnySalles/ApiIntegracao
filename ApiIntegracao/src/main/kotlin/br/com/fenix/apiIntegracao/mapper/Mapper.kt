@@ -6,11 +6,9 @@ import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
 
 
-@Component
 class Mapper {
     companion object {
-        @Autowired
-        lateinit var mapper: ModelMapper
+        val mapper: ModelMapper = ModelMapper()
 
         fun <O, D> parse(origin: O, destination: Class<D>): D = mapper.map(origin, destination)
 

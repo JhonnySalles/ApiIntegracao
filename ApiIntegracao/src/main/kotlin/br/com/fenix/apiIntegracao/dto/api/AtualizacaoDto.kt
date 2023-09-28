@@ -10,6 +10,8 @@ data class AtualizacaoDto(
     var UltimaConsulta: LocalDateTime
 ) : Serializable {
 
+    constructor(): this("", "", "", LocalDateTime.now())
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
