@@ -1,5 +1,6 @@
 package br.com.fenix.apiIntegracao.exceptions
 
+import br.com.fenix.apiIntegracao.service.ServiceJpaBase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -8,15 +9,20 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.util.*
+import java.util.logging.Level
+import java.util.logging.Logger
 
 @ControllerAdvice
 @RestController
 class CustomizedResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
 
+    val LOG = Logger.getLogger(CustomizedResponseEntityExceptionHandler::class.java.name)
+
     @ExceptionHandler(Exception::class)
     fun handleAllExceptions(
         ex: Exception, request: WebRequest
     ): ResponseEntity<ExceptionResponse> {
+        LOG.log(Level.SEVERE, "Internal server error", ex)
         val exceptionResponse = ExceptionResponse(
             Date(),
             ex.message,
@@ -51,6 +57,18 @@ class CustomizedResponseEntityExceptionHandler : ResponseEntityExceptionHandler(
 
     @ExceptionHandler(InvalidNotFoundException::class)
     fun handleInvalidJwtAuthenticationExceptions(
+        ex: Exception, request: WebRequest
+    ): ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(ServerErrorException::class)
+    fun serverErrorExceptions(
         ex: Exception, request: WebRequest
     ): ResponseEntity<ExceptionResponse> {
         val exceptionResponse = ExceptionResponse(

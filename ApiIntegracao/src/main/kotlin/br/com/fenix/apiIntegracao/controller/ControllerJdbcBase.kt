@@ -84,13 +84,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getLastSyncPage(
@@ -112,13 +110,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getOne(@PathVariable table: String, @PathVariable id: ID): ResponseEntity<D> {
@@ -133,13 +129,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getAll(@PathVariable table: String): ResponseEntity<List<D>> {
@@ -154,13 +148,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getAllLastSync(@PathVariable table: String, @PathVariable updateDate: String): ResponseEntity<List<D>> {
@@ -175,13 +167,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun update(@PathVariable table: String, @RequestBody update: D?): ResponseEntity<D> {
@@ -196,13 +186,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun update(@PathVariable table: String, @RequestBody update: List<D>): ResponseEntity<List<D>> {
@@ -217,13 +205,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun create(@PathVariable table: String, @RequestBody create: D?): ResponseEntity<D> {
@@ -237,13 +223,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun create(@PathVariable table: String, @RequestBody create: List<D>): ResponseEntity<List<D>> {
@@ -257,13 +241,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun delete(@PathVariable table: String, @PathVariable id: ID): ResponseEntity<String> {
@@ -279,13 +261,11 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun delete(@PathVariable table: String, @RequestBody delete: List<ID>): ResponseEntity<String> {

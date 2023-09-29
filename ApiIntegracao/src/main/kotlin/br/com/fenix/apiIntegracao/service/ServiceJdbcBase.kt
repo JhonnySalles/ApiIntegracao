@@ -43,9 +43,14 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : C
             throw RequiredObjectIsNullException("Its necessary inform a pageable")
 
         validTable(table)
-        val list = repository.findAll(table, pageable).map { addLink(table, toDto(it)) }
-        val link = linkTo(methodOn(clazzController).getPage(table, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
-        return assembler.toModel(list, link)
+        try {
+            val list = repository.findAll(table, pageable).map { addLink(table, toDto(it)) }
+            val link = linkTo(methodOn(clazzController).getPage(table, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+            return assembler.toModel(list, link)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
     }
 
     fun getPage(table: String, updateDate: String, pageable: Pageable): PagedModel<EntityModel<D>> {
