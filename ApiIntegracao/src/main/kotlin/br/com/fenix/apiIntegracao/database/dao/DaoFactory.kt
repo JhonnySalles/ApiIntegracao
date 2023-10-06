@@ -2,16 +2,14 @@ package br.com.fenix.apiIntegracao.database.dao
 
 import br.com.fenix.apiIntegracao.database.dao.implement.DeckSubtitleDaoJDBC
 import br.com.fenix.apiIntegracao.database.dao.implement.MangaExtractorDaoJDBC
-import br.com.fenix.apiIntegracao.database.mysql.DB
-import br.com.fenix.apiIntegracao.service.api.TabelasService.Companion.PROP_BASE
-import java.util.*
+import java.sql.Connection
 
 object DaoFactory {
-    fun createDeckSubtitleDao(prop: Properties): DeckSubtitleDao {
-        return DeckSubtitleDaoJDBC(DB.getConnection(prop), prop.getProperty(PROP_BASE))
+    fun createDeckSubtitleDao(conn: Connection): DeckSubtitleDao {
+        return DeckSubtitleDaoJDBC(conn, conn.schema)
     }
 
-    fun createMangaExtractorDao(prop: Properties): MangaExtractorDao {
-        return MangaExtractorDaoJDBC(DB.getConnection(prop), prop.getProperty(PROP_BASE))
+    fun createMangaExtractorDao(conn: Connection): MangaExtractorDao {
+        return MangaExtractorDaoJDBC(conn, conn.schema)
     }
 }

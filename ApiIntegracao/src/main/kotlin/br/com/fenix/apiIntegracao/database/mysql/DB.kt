@@ -1,14 +1,19 @@
 package br.com.fenix.apiIntegracao.database.mysql
 
-import br.com.fenix.apiIntegracao.exceptions.ExceptionDb
 import br.com.fenix.apiIntegracao.exceptions.TableNotConnectedException
-import br.com.fenix.apiIntegracao.service.api.TabelasService.Companion.PROP_BASE
-import br.com.fenix.apiIntegracao.service.api.TabelasService.Companion.PROP_PORTA
-import br.com.fenix.apiIntegracao.service.api.TabelasService.Companion.PROP_URL
 import java.sql.*
 import java.util.*
 
 object DB {
+
+    val PROP_URL = "url"
+    val PROP_PORTA = "porta"
+    val PROP_BASE = "base"
+    val PROP_SERVER = "server"
+    val PROP_PORT = "port"
+    val PROP_USER = "user"
+    val PROP_PASSWORD = "password"
+
     fun getConnection(prop: Properties): Connection {
         var conn: Connection? = null
         try {

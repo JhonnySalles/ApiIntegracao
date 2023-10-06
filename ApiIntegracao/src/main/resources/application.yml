@@ -18,6 +18,27 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
       show-sql: true
+servers:
+  decksubtitle:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/decksubtitle?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: admin
+    password: admin
+  mangaextractor:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/manga_extractor?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: admin
+    password: admin
+  textoingles:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/texto_ingles?useTimezone=true&serverTimezone=UTC
+    username: admin
+    password: admin
+  textojapones:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/texto_japones?useTimezone=true&serverTimezone=UTC
+    username: admin
+    password: admin
 server:
   port: 8080
 springdoc:

@@ -23,8 +23,8 @@ import java.util.logging.Logger
 
 
 abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C>>(
-    var repository: RepositoryJpaBase<E, ID>,
-    var assembler: PagedResourcesAssembler<D>,
+    val repository: RepositoryJpaBase<E, ID>,
+    val assembler: PagedResourcesAssembler<D>,
     val clazzEntity: Class<E>,
     val clazzDto: Class<D>,
     val clazzController: Class<C>
