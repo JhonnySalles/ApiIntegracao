@@ -2,14 +2,13 @@ package br.com.fenix.apiIntegracao.service.api
 
 import br.com.fenix.apiIntegracao.exceptions.InvalidNotFoundException
 import br.com.fenix.apiIntegracao.repository.api.UsuarioRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import java.util.logging.Logger
 
 @Service
-class UsuarioService(@Autowired val repository: UsuarioRepository) : UserDetailsService {
+class UsuarioService(var repository: UsuarioRepository) : UserDetailsService {
     private val LOGGER = Logger.getLogger(UsuarioService::class.java.name)
 
     @Throws(InvalidNotFoundException::class)
