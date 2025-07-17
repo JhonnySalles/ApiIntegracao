@@ -3,13 +3,15 @@ package br.com.fenix.apiIntegracao.multitenant
 import org.hibernate.cfg.AvailableSettings
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer
 import org.springframework.stereotype.Component
 import java.sql.Connection
 import javax.sql.DataSource
 
+
 @Component
-class NoOpConnectionProvider(@Autowired var datasource: DataSource) : MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
+class NoOpConnectionProvider(@Qualifier("dataSource") @Autowired var datasource: DataSource) : MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
 
     override fun isUnwrappableAs(p0: Class<*>?): Boolean = false
 

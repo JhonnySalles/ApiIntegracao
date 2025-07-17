@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+
 @RestController
 @RequestMapping(TEXTO_JAPONES_ESTATISTICA)
 @Tag(name = "Estatistica", description = "Endpoint para tabela de estatisticas dos kanjis")

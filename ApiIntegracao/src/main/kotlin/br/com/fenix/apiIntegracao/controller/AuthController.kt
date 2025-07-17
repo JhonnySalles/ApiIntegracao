@@ -39,11 +39,11 @@ class AuthController {
     }
 
     private fun checkIfParamsIsNotNull(username: String?, refreshToken: String?): Boolean {
-        return refreshToken == null || refreshToken.isBlank() || username == null || username!!.isBlank()
+        return refreshToken.isNullOrBlank() || username.isNullOrBlank()
     }
 
     private fun checkIfParamsIsNotNull(data: CredencialDto): Boolean {
-        return data.username == null || data.username.isBlank() || data.password == null || data.password.isBlank()
+        return data.username.isNullOrBlank() || data.password.isNullOrBlank()
     }
 
 }
