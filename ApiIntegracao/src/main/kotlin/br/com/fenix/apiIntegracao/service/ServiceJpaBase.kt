@@ -9,6 +9,7 @@ import br.com.fenix.apiIntegracao.mapper.Mapper
 import br.com.fenix.apiIntegracao.model.Entity
 import br.com.fenix.apiIntegracao.model.EntityBase
 import br.com.fenix.apiIntegracao.repository.RepositoryJpaBase
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
@@ -18,19 +19,13 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.util.logging.Level
-import java.util.logging.Logger
 
 
 abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C>>(
-    val repository: RepositoryJpaBase<E, ID>,
-    val assembler: PagedResourcesAssembler<D>,
-    val clazzEntity: Class<E>,
-    val clazzDto: Class<D>,
-    val clazzController: Class<C>
+    val repository: RepositoryJpaBase<E, ID>, val assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>
 ) {
 
-    val LOG = Logger.getLogger(ServiceJpaBase::class.java.name)
+    private val oLog = LoggerFactory.getLogger(ServiceJpaBase::class.java.name)
 
     fun getPage(pageable: Pageable?): PagedModel<EntityModel<D>> {
         if (pageable == null)
@@ -40,7 +35,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             val link = linkTo(methodOn(clazzController).getPage(list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
-            LOG.log(Level.SEVERE, "Error get page on jpa base", e)
+            oLog.error("Error get page on jpa base", e)
             throw ServerErrorException(e.message)
         }
     }
@@ -52,7 +47,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             val link = linkTo(methodOn(clazzController).getLastSyncPage(updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
-            LOG.log(Level.SEVERE, "Error get page on jpa base with update date", e)
+            oLog.error("Error get page on jpa base with update date", e)
             throw ServerErrorException(e.message)
         }
     }
@@ -77,7 +72,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             (dbEntity as Entity<E, ID>).merge(entity)
             return addLink(toDto(repository.save(dbEntity)))
         } catch (e: Exception) {
-            LOG.log(Level.SEVERE, "Error update item on jpa base", e)
+            oLog.error("Error update item on jpa base", e)
             throw ServerErrorException(e.message)
         }
     }
@@ -94,7 +89,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             }
             return addLink(saved)
         } catch (e: Exception) {
-            LOG.log(Level.SEVERE, "Error update item list on jpa base", e)
+            oLog.error("Error update item list on jpa base", e)
             throw ServerErrorException(e.message)
         }
     }
@@ -109,7 +104,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             (dbEntity as Entity<E, ID>).merge(entity)
             return addLink(toDto(repository.save(dbEntity)))
         } catch (e: Exception) {
-            LOG.log(Level.SEVERE, "Error create item on jpa base", e)
+            oLog.error("Error create item on jpa base", e)
             throw ServerErrorException(e.message)
         }
     }
@@ -126,7 +121,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             }
             return addLink(saved)
         } catch (e: Exception) {
-            LOG.log(Level.SEVERE, "Error create item list on jpa base", e)
+            oLog.error("Error create item list on jpa base", e)
             throw ServerErrorException(e.message)
         }
     }
@@ -137,7 +132,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             get(id)
             repository.deleteById(id)
         } catch (e: Exception) {
-            LOG.log(Level.SEVERE, "Error delete item on jpa base", e)
+            oLog.error("Error delete item on jpa base", e)
             throw ServerErrorException(e.message)
         }
     }

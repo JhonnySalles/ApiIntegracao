@@ -8,7 +8,8 @@ import br.com.fenix.apiIntegracao.multitenant.TenantRoutingDatasource
 import br.com.fenix.apiIntegracao.repository.mangaextractor.MangaExtractorRepository
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.web.PagedResourcesAssembler
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController

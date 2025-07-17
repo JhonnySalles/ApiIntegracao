@@ -7,7 +7,9 @@ import br.com.fenix.apiIntegracao.dto.wrapper.WrapperEstatisticaDto
 import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
 import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
 import org.junit.Assert
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
 

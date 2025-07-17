@@ -1,8 +1,6 @@
 package br.com.fenix.apiIntegracao.repository.mangaextractor
 
-import br.com.fenix.apiIntegracao.database.dao.DaoFactory
 import br.com.fenix.apiIntegracao.database.dao.MangaExtractorDao
-import br.com.fenix.apiIntegracao.enums.Tenants
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.model.mangaextractor.Volume
 import br.com.fenix.apiIntegracao.multitenant.TenantRoutingDatasource

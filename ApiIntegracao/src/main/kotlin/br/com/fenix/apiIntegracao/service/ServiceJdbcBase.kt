@@ -9,6 +9,7 @@ import br.com.fenix.apiIntegracao.mapper.Mapper
 import br.com.fenix.apiIntegracao.model.Entity
 import br.com.fenix.apiIntegracao.model.EntityBase
 import br.com.fenix.apiIntegracao.repository.RepositoryJdbcBase
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
@@ -20,7 +21,11 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 
-abstract class ServiceJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(var repository: RepositoryJdbcBase<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class ServiceJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(
+    var repository: RepositoryJdbcBase<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>
+) {
+
+    private val oLog = LoggerFactory.getLogger(ServiceJdbcBase::class.java.name)
 
     fun getTables() : List<String> = repository.tabelas()
 
@@ -48,7 +53,7 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : C
             val link = linkTo(methodOn(clazzController).getPage(table, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
-            e.printStackTrace()
+            oLog.error("Error get page on jpa base", e)
             throw e
         }
     }

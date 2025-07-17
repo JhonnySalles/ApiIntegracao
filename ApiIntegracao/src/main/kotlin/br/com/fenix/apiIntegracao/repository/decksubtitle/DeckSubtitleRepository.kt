@@ -1,8 +1,6 @@
 package br.com.fenix.apiIntegracao.repository.decksubtitle
 
-import br.com.fenix.apiIntegracao.database.dao.DaoFactory
 import br.com.fenix.apiIntegracao.database.dao.DeckSubtitleDao
-import br.com.fenix.apiIntegracao.enums.Tenants
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.model.decksubtitle.Legenda
 import br.com.fenix.apiIntegracao.multitenant.TenantRoutingDatasource

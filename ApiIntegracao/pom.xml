@@ -21,6 +21,8 @@
         <modelMapper.version>3.1.1</modelMapper.version>
         <modelMapper.version>3.1.1</modelMapper.version>
         <java-jwt.version>3.18.3</java-jwt.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <logback.version>1.2.0</logback.version>
         <testcontainers.version>1.16.3</testcontainers.version>
     </properties>
     <dependencies>
@@ -118,6 +120,19 @@
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>${modelMapper.version}</version>
+        </dependency>
+
+        <!-- Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
 
 

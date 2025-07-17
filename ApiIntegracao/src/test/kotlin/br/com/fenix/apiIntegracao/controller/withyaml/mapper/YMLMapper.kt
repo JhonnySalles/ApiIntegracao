@@ -8,11 +8,12 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import io.restassured.mapper.ObjectMapper
 import io.restassured.mapper.ObjectMapperDeserializationContext
 import io.restassured.mapper.ObjectMapperSerializationContext
-import java.util.logging.Logger
+import org.slf4j.LoggerFactory
+
 
 class YMLMapper : ObjectMapper {
 
-    private val logger = Logger.getLogger(YMLMapper::class.java.name)
+    private val oLog = LoggerFactory.getLogger(YMLMapper::class.java.name)
 
     private var objectMapper: com.fasterxml.jackson.databind.ObjectMapper = com.fasterxml.jackson.databind.ObjectMapper(YAMLFactory())
     protected var typeFactory: TypeFactory
@@ -26,14 +27,12 @@ class YMLMapper : ObjectMapper {
         try {
             val dataToDeserialize: String = context.getDataToDeserialize().asString()
             val type = context.getType() as Class<*>
-            logger.info("Trying deserialize object of type$type")
+            oLog.info("Trying deserialize object of type$type")
             return objectMapper.readValue(dataToDeserialize, typeFactory.constructType(type))
         } catch (e: JsonMappingException) {
-            logger.severe("Error deserializing object")
-            e.printStackTrace()
+            oLog.error("Error deserializing object", e)
         } catch (e: JsonProcessingException) {
-            logger.severe("Error deserializing object")
-            e.printStackTrace()
+            oLog.error("Error deserializing object", e)
         }
         return null
     }
@@ -42,7 +41,7 @@ class YMLMapper : ObjectMapper {
         try {
             return objectMapper.writeValueAsString(context.objectToSerialize)
         } catch (e: JsonProcessingException) {
-            logger.severe("Error deserializing object")
+            oLog.error("Error deserializing object")
         }
         return null
     }

@@ -7,7 +7,8 @@ import br.com.fenix.apiIntegracao.model.textoingles.RevisarIngles
 import br.com.fenix.apiIntegracao.repository.textoingles.RevisarInglesRepository
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.web.PagedResourcesAssembler
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController

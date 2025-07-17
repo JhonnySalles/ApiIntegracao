@@ -7,7 +7,8 @@ import br.com.fenix.apiIntegracao.model.textojapones.RevisarJapones
 import br.com.fenix.apiIntegracao.repository.textojapones.RevisarJaponesRepository
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.web.PagedResourcesAssembler
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController

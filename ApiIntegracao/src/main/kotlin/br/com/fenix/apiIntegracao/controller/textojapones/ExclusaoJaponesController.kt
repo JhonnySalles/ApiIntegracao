@@ -7,7 +7,8 @@ import br.com.fenix.apiIntegracao.model.textojapones.ExclusaoJapones
 import br.com.fenix.apiIntegracao.repository.textojapones.ExclusaoJaponesRepository
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.web.PagedResourcesAssembler
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController

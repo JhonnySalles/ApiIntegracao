@@ -1,22 +1,19 @@
 package br.com.fenix.apiIntegracao.multitenant
 
 import com.zaxxer.hikari.HikariDataSource
+import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
-import java.util.*
-import java.util.logging.Logger
 import javax.sql.DataSource
 
 
 @Configuration
 class DatasourceConfiguration {
 
-    companion object {
-        val LOG = Logger.getLogger(DatasourceConfiguration::class.java.name)
-    }
+    private val oLog = LoggerFactory.getLogger(DatasourceConfiguration::class.java.name)
 
     @Primary
     @Bean(name = ["dataSource"])
