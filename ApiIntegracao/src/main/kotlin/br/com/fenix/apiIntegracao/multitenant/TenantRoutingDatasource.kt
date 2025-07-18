@@ -2,10 +2,12 @@ package br.com.fenix.apiIntegracao.multitenant
 
 import br.com.fenix.apiIntegracao.enums.Tenants
 import br.com.fenix.apiIntegracao.exceptions.TableNotExistsException
-import org.slf4j.LoggerFactory
+import com.zaxxer.hikari.HikariDataSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Primary
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import java.util.*
+import java.util.logging.Logger
 import javax.sql.DataSource
 
 
@@ -32,8 +35,6 @@ import javax.sql.DataSource
 @EntityScan("br.com.fenix.apiIntegracao.model")
 @ComponentScan(basePackages = arrayOf("br.com.fenix.apiIntegracao"))
 class TenantRoutingDatasource : AbstractRoutingDataSource() {
-
-    private val oLog = LoggerFactory.getLogger(TenantRoutingDatasource::class.java.name)
 
     @Autowired
     lateinit var tenantIdentifierResolver: TenantIdentifierResolver
@@ -53,6 +54,10 @@ class TenantRoutingDatasource : AbstractRoutingDataSource() {
     @Autowired
     lateinit var textojapones: DataSource
 
+    companion object {
+        val LOG = Logger.getLogger(TenantRoutingDatasource::class.java.name)
+    }
+
     private val PACKAGE_SCAN = "br.com.fenix.apiIntegracao.model"
 
     override fun determineCurrentLookupKey(): Any? = tenantIdentifierResolver.resolveCurrentTenantIdentifier()
@@ -66,7 +71,7 @@ class TenantRoutingDatasource : AbstractRoutingDataSource() {
             Tenants.TEXTO_INGLES,
             Tenants.TEXTO_JAPONES -> mConnections[tenant]!!*/
             else -> {
-                oLog.warn("Não encontrado a base $tenant no servidor.")
+                LOG.warning("Não encontrado a base $tenant no servidor.")
                 throw TableNotExistsException("Não encontrado a base $tenant no servidor.")
             }
         }

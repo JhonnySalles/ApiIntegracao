@@ -4,7 +4,6 @@ import br.com.fenix.apiIntegracao.dto.api.CredencialDto
 import br.com.fenix.apiIntegracao.dto.api.TokenDto
 import br.com.fenix.apiIntegracao.repository.api.UsuarioRepository
 import br.com.fenix.apiIntegracao.security.JwtTokenProvider
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -12,12 +11,13 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
+import java.util.logging.Logger
 
 
 @Service
 class AuthService {
 
-    private val oLog = LoggerFactory.getLogger(AuthService::class.java.name)
+    private val logger = Logger.getLogger(AuthService::class.java.name)
 
     @Autowired
     private lateinit var authenticationManager: AuthenticationManager
@@ -37,7 +37,7 @@ class AuthService {
             val tokenResponse = tokenProvider.createAccessToken(username, user.getRoles())
             ResponseEntity.ok(tokenResponse)
         } catch (e: Exception) {
-            oLog.warn("Error when singin: " + e.message)
+            logger.severe("Error when singin: " + e.message)
             throw BadCredentialsException("Invalid username/password supplied!")
         }
     }

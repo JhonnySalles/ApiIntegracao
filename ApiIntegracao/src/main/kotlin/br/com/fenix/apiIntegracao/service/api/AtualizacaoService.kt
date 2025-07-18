@@ -2,17 +2,19 @@ package br.com.fenix.apiIntegracao.service.api
 
 import br.com.fenix.apiIntegracao.model.api.Consultas
 import br.com.fenix.apiIntegracao.repository.api.AtualizacaoRepository
-import org.slf4j.LoggerFactory
+import br.com.fenix.apiIntegracao.repository.api.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
-
+import java.util.logging.Logger
 
 @Service
 class AtualizacaoService(@Autowired val repository: AtualizacaoRepository) {
 
-    private val oLog = LoggerFactory.getLogger(AtualizacaoService::class.java.name)
+    companion object {
+        val LOG = Logger.getLogger(AtualizacaoService::class.java.name)
+    }
 
     fun find(computador: String): Consultas {
         return repository.findById(computador)
@@ -31,5 +33,4 @@ class AtualizacaoService(@Autowired val repository: AtualizacaoRepository) {
     fun update(entity: Consultas): Consultas {
         return repository.save(entity)
     }
-
 }

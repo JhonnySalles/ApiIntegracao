@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS texto_ingles (
   PRIMARY KEY (id)
 );
 
-DELETE FROM texto_ingles;
+DELETE FROM texto_japones;
 
-INSERT INTO texto_ingles (id, tabela)
+INSERT INTO texto_japones (id, tabela)
 SELECT UUID(), Table_Name FROM information_schema.tables
 WHERE table_schema = "texto_ingles" GROUP BY Table_Name
