@@ -3,7 +3,6 @@ package br.com.fenix.apiIntegracao
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-
 @SpringBootApplication
 class ApiIntegracaoApplication
 

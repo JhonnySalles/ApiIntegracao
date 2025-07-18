@@ -28,10 +28,9 @@ import javax.sql.DataSource
 @EnableJpaRepositories(
     entityManagerFactoryRef = "multiEntityManager",
     transactionManagerRef = "multiTransactionManager",
-    basePackages = ["br.com.fenix.apiIntegracao.repository"]
-)
+    basePackages = arrayOf("br.com.fenix.apiIntegracao.repository"))
 @EntityScan("br.com.fenix.apiIntegracao.model")
-@ComponentScan(basePackages = ["br.com.fenix.apiIntegracao"])
+@ComponentScan(basePackages = arrayOf("br.com.fenix.apiIntegracao"))
 class TenantRoutingDatasource : AbstractRoutingDataSource() {
 
     private val oLog = LoggerFactory.getLogger(TenantRoutingDatasource::class.java.name)
@@ -62,10 +61,10 @@ class TenantRoutingDatasource : AbstractRoutingDataSource() {
 
     fun getConnection(tenant: Tenants): DataSource {
         return when (tenant) {
-            Tenants.MANGA_EXTRACTOR,
+            /*Tenants.MANGA_EXTRACTOR,
             Tenants.DECKSUBTITLE,
             Tenants.TEXTO_INGLES,
-            Tenants.TEXTO_JAPONES -> mConnections[tenant]!! as DataSource
+            Tenants.TEXTO_JAPONES -> mConnections[tenant]!!*/
             else -> {
                 oLog.warn("Não encontrado a base $tenant no servidor.")
                 throw TableNotExistsException("Não encontrado a base $tenant no servidor.")
@@ -81,8 +80,8 @@ class TenantRoutingDatasource : AbstractRoutingDataSource() {
         mConnections[Tenants.TEXTO_INGLES] = textoingles
         mConnections[Tenants.TEXTO_JAPONES] = textojapones
 
-        mConnections[Tenants.DECKSUBTITLE] = decksubtitle
-        mConnections[Tenants.MANGA_EXTRACTOR] = mangaextractor
+        //mConnections[Tenants.DECKSUBTITLE] = decksubtitle
+        //mConnections[Tenants.MANGA_EXTRACTOR] = mangaextractor
 
         setTargetDataSources(mConnections)
         return this

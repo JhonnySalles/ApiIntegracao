@@ -14,7 +14,7 @@
 
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>api.log</file>
+		<file>apiIntegracao.log</file>
 		<encoder
 				class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset>UTF-8</charset>
