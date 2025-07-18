@@ -2,21 +2,24 @@ package br.com.fenix.apiIntegracao.repository.mangaextractor
 
 import br.com.fenix.apiIntegracao.database.dao.DaoFactory
 import br.com.fenix.apiIntegracao.database.dao.MangaExtractorDao
-import br.com.fenix.apiIntegracao.enums.Tenants
+import br.com.fenix.apiIntegracao.enums.Tipo
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.model.mangaextractor.Volume
-import br.com.fenix.apiIntegracao.multitenant.TenantRoutingDatasource
 import br.com.fenix.apiIntegracao.repository.RepositoryJdbcBase
+import br.com.fenix.apiIntegracao.service.api.TabelasService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.concurrent.thread
 
 @Repository
-class MangaExtractorRepository(private final val routing : TenantRoutingDatasource): RepositoryJdbcBase<Volume, UUID?> {
+class MangaExtractorRepository(var tabelas : TabelasService): RepositoryJdbcBase<Volume, UUID?> {
 
-    private val dao : MangaExtractorDao = DaoFactory.createMangaExtractorDao(routing.getConnection(Tenants.MANGA_EXTRACTOR).connection)
+    private val dao : MangaExtractorDao = DaoFactory.createMangaExtractorDao(tabelas.getProperty(Tipo.MANGA_EXTRACTOR))
 
     override fun createtabela(tabela: String) {
         dao.createTable(tabela)

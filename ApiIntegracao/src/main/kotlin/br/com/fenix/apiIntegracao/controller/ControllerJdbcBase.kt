@@ -8,6 +8,7 @@ import br.com.fenix.apiIntegracao.model.EntityBase
 import br.com.fenix.apiIntegracao.repository.RepositoryJdbcBase
 import br.com.fenix.apiIntegracao.service.ServiceJdbcBase
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PagedResourcesAssembler

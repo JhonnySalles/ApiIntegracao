@@ -1,29 +1,39 @@
 package br.com.fenix.apiIntegracao.model.api
 
+import br.com.fenix.apiIntegracao.enums.Conexao
+import br.com.fenix.apiIntegracao.enums.Tipo
 import jakarta.persistence.*
-import jakarta.persistence.Entity
 import java.io.Serializable
-import java.time.LocalDateTime
 
 @Entity
-@Table(name = "consultas")
-data class Consultas(
+@Table(name = "tabelas")
+data class Tabelas(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: String,
-    @Column(name = "Computador", length = 250, nullable = false)
-    val computador: String,
-    @Column(name = "Ip", length = 250, nullable = false)
-    var ip: String,
-    @Column(nullable = false)
-    var UltimaConsulta: LocalDateTime
+    @Column
+    val url: String,
+    @Column
+    val porta: String,
+    @Column
+    var username: String,
+    @Column
+    var password: String,
+    @Column
+    var base: String,
+    @Column
+    @Enumerated(EnumType.STRING)
+    var driver: Conexao,
+    @Column
+    @Enumerated(EnumType.STRING)
+    var tipo: Tipo
 ) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Consultas
+        other as Tabelas
 
         if (id != other.id) return false
 

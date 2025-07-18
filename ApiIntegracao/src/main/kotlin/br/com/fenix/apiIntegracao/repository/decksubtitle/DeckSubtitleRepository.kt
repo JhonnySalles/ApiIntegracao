@@ -2,11 +2,14 @@ package br.com.fenix.apiIntegracao.repository.decksubtitle
 
 import br.com.fenix.apiIntegracao.database.dao.DaoFactory
 import br.com.fenix.apiIntegracao.database.dao.DeckSubtitleDao
-import br.com.fenix.apiIntegracao.enums.Tenants
+import br.com.fenix.apiIntegracao.database.dao.MangaExtractorDao
+import br.com.fenix.apiIntegracao.enums.Tipo
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiIntegracao.model.decksubtitle.Legenda
-import br.com.fenix.apiIntegracao.multitenant.TenantRoutingDatasource
 import br.com.fenix.apiIntegracao.repository.RepositoryJdbcBase
+import br.com.fenix.apiIntegracao.service.api.TabelasService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
@@ -14,9 +17,9 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Repository
-class DeckSubtitleRepository(private final val routing : TenantRoutingDatasource): RepositoryJdbcBase<Legenda, UUID?> {
+class DeckSubtitleRepository(var tabelas : TabelasService): RepositoryJdbcBase<Legenda, UUID?> {
 
-    private val dao : DeckSubtitleDao = DaoFactory.createDeckSubtitleDao(routing.getConnection(Tenants.DECKSUBTITLE).connection)
+    private val dao : DeckSubtitleDao = DaoFactory.createDeckSubtitleDao(tabelas.getProperty(Tipo.DECKSUBTITLE))
 
     override fun createtabela(tabela: String) {
         dao.createTable(tabela)
