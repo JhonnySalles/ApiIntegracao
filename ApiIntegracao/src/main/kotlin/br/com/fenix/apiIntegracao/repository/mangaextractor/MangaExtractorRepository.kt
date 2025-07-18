@@ -16,7 +16,7 @@ import java.util.*
 @Repository
 class MangaExtractorRepository(private final val routing : TenantRoutingDatasource): RepositoryJdbcBase<Volume, UUID?> {
 
-    private val dao : MangaExtractorDao = DaoFactory.createMangaExtractorDao(routing.getConnection(Tenants.MANGA_EXTRACTOR).connection)
+    private val dao : MangaExtractorDao = DaoFactory.createMangaExtractorDao(routing.getConnection(Tenants.MANGA_EXTRACTOR))
 
     override fun createtabela(tabela: String) {
         dao.createTable(tabela)
