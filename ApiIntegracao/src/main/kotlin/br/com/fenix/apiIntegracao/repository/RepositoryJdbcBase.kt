@@ -4,11 +4,9 @@ import br.com.fenix.apiIntegracao.exceptions.ExceptionDb
 import br.com.fenix.apiIntegracao.model.EntityBase
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.NoRepositoryBean
 import java.time.LocalDateTime
 import java.util.*
 
-@NoRepositoryBean
 interface RepositoryJdbcBase<E : EntityBase<E, ID>, ID> {
     @Throws(ExceptionDb::class)
     fun update(tabela: String, obj: E): E

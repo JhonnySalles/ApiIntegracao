@@ -16,7 +16,10 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Vocabulário", description = "Endpoint para tabela de vocabulários")
-class VocabularioJaponesController(repository: VocabularioJaponesRepository, assembler: PagedResourcesAssembler<VocabularioDto>, @Autowired var currentTenant : TenantIdentifierResolver) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, VocabularioJaponesController>(repository, assembler) {
+class VocabularioJaponesController(repository: VocabularioJaponesRepository, assembler: PagedResourcesAssembler<VocabularioDto>) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, VocabularioJaponesController>(repository, assembler) {
+
+    @Autowired
+    private lateinit var currentTenant : TenantIdentifierResolver
 
     init {
         currentTenant.setCurrentTenant(Tenants.TEXTO_JAPONES)

@@ -27,7 +27,7 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C 
     private val clazzController: Class<C>
 
     init {
-        val superclass = (this.javaClass.genericSuperclass as ParameterizedType)
+        val superclass = (javaClass.genericSuperclass as ParameterizedType)
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>

@@ -16,7 +16,7 @@ import java.util.*
 @Repository
 class DeckSubtitleRepository(private final val routing : TenantRoutingDatasource): RepositoryJdbcBase<Legenda, UUID?> {
 
-    private lateinit var dao : DeckSubtitleDao //= DaoFactory.createDeckSubtitleDao(routing.getConnection(Tenants.DECKSUBTITLE))
+    private val dao : DeckSubtitleDao = DaoFactory.createDeckSubtitleDao(routing.getConnection(Tenants.DECKSUBTITLE).connection)
 
     override fun createtabela(tabela: String) {
         dao.createTable(tabela)

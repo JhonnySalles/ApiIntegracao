@@ -6,15 +6,11 @@ security:
       secret-key: 53cr37
       expire-lenght: 3600000
 spring:
-  flyway:
-    enabled: false
   datasource:
-    api:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/apiintegracao?useTimezone=true&serverTimezone=UTC
-      jdbc-url: jdbc:mysql://localhost:3306/apiintegracao?useTimezone=true&serverTimezone=UTC
-      username: admin
-      password: admin
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/apiintegracao?useTimezone=true&serverTimezone=UTC
+    username: admin
+    password: admin
   jpa:
     hibernate:
       ddl-auto: none
@@ -22,10 +18,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
       show-sql: true
-datasource:
+servers:
   decksubtitle:
     driver-class-name: com.mysql.jdbc.Driver
-    jdbcUrl: jdbc:mysql://localhost:3306/decksubtitle?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/decksubtitle?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: admin
     password: admin
   mangaextractor:
