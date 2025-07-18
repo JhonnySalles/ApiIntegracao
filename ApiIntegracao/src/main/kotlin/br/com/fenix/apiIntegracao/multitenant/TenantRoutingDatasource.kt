@@ -4,12 +4,10 @@ import br.com.fenix.apiIntegracao.enums.Tenants
 import br.com.fenix.apiIntegracao.exceptions.TableNotExistsException
 import com.zaxxer.hikari.HikariDataSource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource
 import org.springframework.stereotype.Component
@@ -19,7 +17,10 @@ import java.util.logging.Logger
 import javax.sql.DataSource
 
 @Component
-@EnableAutoConfiguration
+@EnableTransactionManagement
+@EnableJpaRepositories(
+    entityManagerFactoryRef = "multiEntityManager",
+    transactionManagerRef = "multiTransactionManager")
 @EntityScan("br.com.fenix.apiIntegracao.model")
 class TenantRoutingDatasource(@Autowired val tenantIdentifierResolver: TenantIdentifierResolver) : AbstractRoutingDataSource() {
 
@@ -27,8 +28,7 @@ class TenantRoutingDatasource(@Autowired val tenantIdentifierResolver: TenantIde
         val LOG = Logger.getLogger(TenantRoutingDatasource::class.java.name)
     }
 
-    @Primary
-    @Bean(name = ["dataSource"])
+    @Bean(name = ["default"])
     @ConfigurationProperties("spring.datasource")
     fun defaultConnection(): DataSource = DataSourceBuilder.create().type(HikariDataSource::class.java).build()
 
