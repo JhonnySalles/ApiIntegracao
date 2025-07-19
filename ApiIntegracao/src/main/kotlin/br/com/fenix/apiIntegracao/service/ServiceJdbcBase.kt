@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 
-abstract class ServiceJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(var repository: RepositoryJdbcBase<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class ServiceJdbcBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(
+    var repository: RepositoryJdbcBase<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>
+) {
 
     fun getTables() : List<String> = repository.tabelas()
 
