@@ -1,10 +1,10 @@
-package br.com.fenix.apiIntegracao.repository.textojapones
+package br.com.fenix.apiintegracao.repository.textojapones
 
-import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
+import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface EstatisticaJaponesRepository : br.com.fenix.apiIntegracao.repository.RepositoryJpaBase<EstatisticaJapones, UUID?> {
+interface EstatisticaJaponesRepository : br.com.fenix.apiintegracao.repository.RepositoryJpaBase<EstatisticaJapones, UUID?> {
 
 }
