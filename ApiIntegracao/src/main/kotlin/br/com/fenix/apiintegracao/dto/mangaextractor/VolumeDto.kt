@@ -6,7 +6,7 @@ import java.util.*
 
 
 data class VolumeDto(
-    private val id: UUID?,
+    private var id: UUID?,
     var manga: String,
     var volume: Int,
     var linguagem: Linguagens?,
@@ -21,6 +21,10 @@ data class VolumeDto(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun equals(other: Any?): Boolean {

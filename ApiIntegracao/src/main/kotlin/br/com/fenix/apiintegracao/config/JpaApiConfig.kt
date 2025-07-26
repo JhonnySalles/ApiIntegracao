@@ -29,7 +29,7 @@ class JpaApiConfig {
     ): LocalContainerEntityManagerFactoryBean {
         return builder
             .dataSource(dataSource)
-            .packages("br.com.fenix.apiIntegracao.model.api")
+            .packages("br.com.fenix.apiintegracao.model.api")
             .persistenceUnit("api")
             .build()
     }

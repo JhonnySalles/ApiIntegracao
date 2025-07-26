@@ -4,7 +4,7 @@ import br.com.fenix.apiintegracao.dto.DtoBase
 import java.util.*
 
 data class PaginaDto(
-    private val id: UUID?,
+    private var id: UUID?,
     var nome: String,
     var numero: Int,
     var nomePagina: String,
@@ -18,6 +18,10 @@ data class PaginaDto(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun equals(other: Any?): Boolean {

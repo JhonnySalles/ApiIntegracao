@@ -1,7 +1,14 @@
 package br.com.fenix.apiintegracao.exceptions
 
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
-class ExceptionResponse(val timestamp: Date, message: String?, details: String) : Serializable {
+class ExceptionResponse(
+    val timestamp: LocalDateTime = LocalDateTime.now(),
+    val status: Int,
+    val error: String,
+    val message: String,
+    val path: String
+) : Serializable {
 }

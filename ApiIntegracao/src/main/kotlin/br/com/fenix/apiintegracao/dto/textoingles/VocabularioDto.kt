@@ -20,6 +20,10 @@ data class VocabularioDto(
         return id
     }
 
+    override fun setId(id: UUID?) {
+        this.id = id
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

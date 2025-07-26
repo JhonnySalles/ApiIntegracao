@@ -1,6 +1,8 @@
 package br.com.fenix.apiintegracao.model.decksubtitle
 
 import br.com.fenix.apiintegracao.model.EntityBase
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import java.io.Serializable
 import java.util.*
 

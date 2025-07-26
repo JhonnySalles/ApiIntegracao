@@ -36,6 +36,7 @@ class MockVocabulario : Mock<UUID?, VocabularioJapones, VocabularioDto> {
             "猫",
             "猫",
             "ねこ",
+            "ねこ",
             "cat",
             "gato",
             1
@@ -47,6 +48,7 @@ class MockVocabulario : Mock<UUID?, VocabularioJapones, VocabularioDto> {
             id,
             "猫",
             "猫",
+            "ねこ",
             "ねこ",
             "cat",
             "gato",

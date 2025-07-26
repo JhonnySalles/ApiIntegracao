@@ -10,28 +10,29 @@ data class VocabularioDto(
     val vocabulario: String,
     var formaBasica: String,
     var leitura: String,
+    var leituraNovel: String,
     var ingles: String,
     var portugues: String,
     var jlpt: Int,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {
 
-    constructor(): this(null, "", "","","","", 0)
+    constructor(): this(null, "", "","","","", "", 0)
 
     override fun getId(): UUID? {
         return id
     }
 
+    override fun setId(id: UUID?) {
+        this.id = id
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as VocabularioDto
-
-        if (vocabulario != other.vocabulario) return false
-
-        return true
+        return vocabulario == other.vocabulario
     }
 
     override fun hashCode(): Int {

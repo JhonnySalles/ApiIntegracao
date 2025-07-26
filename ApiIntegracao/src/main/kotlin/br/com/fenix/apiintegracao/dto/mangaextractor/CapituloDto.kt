@@ -5,7 +5,7 @@ import br.com.fenix.apiintegracao.enums.Linguagens
 import java.util.*
 
 data class CapituloDto(
-    private val id: UUID?,
+    private var id: UUID?,
     var manga: String,
     var volume: Int,
     var capitulo: Double,
@@ -22,6 +22,10 @@ data class CapituloDto(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun equals(other: Any?): Boolean {

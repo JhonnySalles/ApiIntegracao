@@ -2,6 +2,7 @@ package br.com.fenix.apiintegracao.model.api
 
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.enums.Driver
+import br.com.fenix.apiintegracao.enums.Mapeamento
 import jakarta.persistence.*
 import java.io.Serializable
 
@@ -25,22 +26,21 @@ data class DadosConexao(
     @Enumerated(EnumType.STRING)
     @Column(name = "driver")
     val driver: Driver,
-    @Column(name = "ativo")
+    @Enumerated(EnumType.STRING)
+    @Column
+    val mapeamento: Mapeamento,
+    @Column
     val ativo: Boolean
 ) : Serializable {
 
-    constructor(url: String, base: String, usuario: String, senha: String, ativo: Boolean) : this(0, Conexao.API, url, base, usuario, senha, Driver.MYSQL, ativo)
-    constructor() : this(0, Conexao.API, "", "", "", "", Driver.MYSQL, false)
+    constructor(url: String, base: String, usuario: String, senha: String, ativo: Boolean) : this(0, Conexao.API, url, base, usuario, senha, Driver.MYSQL, Mapeamento.JDBC, ativo)
+    constructor() : this(0, Conexao.API, "", "", "", "", Driver.MYSQL, Mapeamento.JDBC, false)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as DadosConexao
-
-        if (id != other.id) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {

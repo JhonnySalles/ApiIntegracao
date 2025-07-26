@@ -1,6 +1,5 @@
 package br.com.fenix.apiintegracao.repository
 
-import br.com.fenix.apiintegracao.controller.textojapones.EstatisticaJaponesController
 import br.com.fenix.apiintegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiintegracao.mock.MockEstatistica

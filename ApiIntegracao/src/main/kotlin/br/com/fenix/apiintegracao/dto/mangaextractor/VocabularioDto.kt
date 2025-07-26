@@ -4,7 +4,7 @@ import br.com.fenix.apiintegracao.dto.DtoBase
 import java.util.*
 
 data class VocabularioDto(
-    private val id: UUID?,
+    private var id: UUID?,
     var palavra: String,
     var portugues: String,
     var ingles: String,
@@ -17,6 +17,10 @@ data class VocabularioDto(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun equals(other: Any?): Boolean {

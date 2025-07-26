@@ -172,7 +172,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
     open fun delete(delete: List<ID>) = delete.forEach { delete(it) }
     open fun delete(obj: D) = delete(obj.getId())
 
-    private fun addLink(obj: D): D = obj.let { it.add(linkTo(methodOn(clazzController).getOne(it.getId())).withSelfRel()); it }
+    private fun addLink(obj: D): D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it }
     private fun addLink(list: List<D>): List<D> = list.let { l -> l.parallelStream().forEach { addLink(it) }; l }
 
     fun toDto(obj: E): D = Mapper.parse(obj, clazzDto)

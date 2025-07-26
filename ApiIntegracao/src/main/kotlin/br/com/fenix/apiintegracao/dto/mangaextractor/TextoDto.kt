@@ -4,7 +4,7 @@ import br.com.fenix.apiintegracao.dto.DtoBase
 import java.util.*
 
 data class TextoDto(
-    private val id: UUID?,
+    private var id: UUID?,
     var sequencia: Int,
     var texto: String,
     var posicao_x1: Int,
@@ -18,6 +18,10 @@ data class TextoDto(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun toString(): String {

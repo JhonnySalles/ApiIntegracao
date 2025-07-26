@@ -5,7 +5,7 @@ import java.util.*
 
 
 data class LegendaDto(
-    private val id: UUID?,
+    private var id: UUID?,
     var episodio: Int,
     var linguagem: String,
     var tempoInicial: String,
@@ -19,6 +19,10 @@ data class LegendaDto(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun equals(other: Any?): Boolean {
