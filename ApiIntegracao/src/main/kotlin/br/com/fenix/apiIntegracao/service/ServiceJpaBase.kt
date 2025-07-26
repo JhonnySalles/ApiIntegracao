@@ -9,7 +9,6 @@ import br.com.fenix.apiIntegracao.mapper.Mapper
 import br.com.fenix.apiIntegracao.model.Entity
 import br.com.fenix.apiIntegracao.model.EntityBase
 import br.com.fenix.apiIntegracao.repository.RepositoryJpaBase
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -21,13 +20,12 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
-abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C>>(
-    var repository: RepositoryJpaBase<E, ID>, var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>
-) {
-
+abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
     companion object {
-        private val oLog: Logger = LoggerFactory.getLogger(ServiceJpaBase::class.java)
+        val oLog = LoggerFactory.getLogger(ServiceJpaBase::class.java.name)
     }
+
+    abstract val repository: RepositoryJpaBase<E, ID>
 
     fun getPage(pageable: Pageable?): PagedModel<EntityModel<D>> {
         if (pageable == null)

@@ -7,17 +7,21 @@ security:
       expire-lenght: 3600000
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/apiintegracao?useTimezone=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://localhost:3306/apiintegracao?useTimezone=true&serverTimezone=UTC
     username: admin
     password: admin
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
       show-sql: true
+      format_sql: true
+  flyway:
+    enabled: false
 server:
   port: 8080
 springdoc:

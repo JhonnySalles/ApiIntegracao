@@ -4,7 +4,6 @@ import br.com.fenix.apiIntegracao.model.EntityBase
 import java.io.Serializable
 import java.util.*
 
-
 data class Legenda(
     private var id: UUID?,
     var episodio: Int,

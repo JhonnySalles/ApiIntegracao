@@ -3,7 +3,9 @@ package br.com.fenix.apiIntegracao.controller
 import br.com.fenix.apiIntegracao.controller.Endpoints.Companion.ATUALIZACAO_URL
 import br.com.fenix.apiIntegracao.converters.MediaTypes
 import br.com.fenix.apiIntegracao.dto.DtoBase
+import br.com.fenix.apiIntegracao.enums.Conexao
 import br.com.fenix.apiIntegracao.model.EntityBase
+import br.com.fenix.apiIntegracao.repository.DynamicRepositoryRegistry
 import br.com.fenix.apiIntegracao.repository.RepositoryJpaBase
 import br.com.fenix.apiIntegracao.service.ServiceJpaBase
 import io.swagger.v3.oas.annotations.Operation
@@ -13,24 +15,35 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
-abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C>>(repository: RepositoryJpaBase<E, ID>, @Autowired var assembler: PagedResourcesAssembler<D>) {
-    private val service: ServiceJpaBase<ID, E, D, C>
+abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(@Autowired var assembler: PagedResourcesAssembler<D>) {
+    private val service: ServiceJpaBase<ID, E, D, C, R>
+
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
     private val clazzController: Class<C>
+    private val clazzRepository: Class<R>
+
+    abstract fun getDynamicRegistry() : DynamicRepositoryRegistry
+    abstract val conexao : Conexao
 
     init {
         val superclass = (javaClass.genericSuperclass as ParameterizedType)
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : ServiceJpaBase<ID, E, D, C>(repository, assembler, clazzEntity, clazzDto, clazzController) {}
+        clazzRepository = superclass.actualTypeArguments[4] as Class<R>
+        service = object : ServiceJpaBase<ID, E, D, C, R>(assembler, clazzEntity, clazzDto, clazzController) {
+            override val repository: RepositoryJpaBase<E, ID>
+                get() = getDynamicRegistry().getRepository(conexao, clazzRepository) ?: throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço indisponível no momento.")
+        }
     }
 
     @Operation(summary = "Pesquisa paginada", description = "Pesquisa paginada com retorno em JSON, XMl, YML e CSV.")
@@ -63,13 +76,11 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getLastSyncPage(
@@ -90,13 +101,11 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getOne(@PathVariable id: ID): ResponseEntity<D> {
@@ -110,13 +119,11 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getAll(): ResponseEntity<List<D>> {
@@ -130,13 +137,11 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun getAllLastSync(@PathVariable updateDate: String): ResponseEntity<List<D>> {
@@ -150,13 +155,11 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun update(@RequestBody update: D?): ResponseEntity<D> {
@@ -165,18 +168,16 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
 
     @Operation(summary = "Atualizar vários registros", description = "Atualizar vários registros")
     @PutMapping(
-        "/lista/",
+        "/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun update(@RequestBody update: List<D>): ResponseEntity<List<D>> {
@@ -190,13 +191,11 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun create(@RequestBody create: D?): ResponseEntity<D> {
@@ -205,18 +204,16 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
 
     @Operation(summary = "Inserir vários registros", description = "Inserir vários registros")
     @PostMapping(
-        "/lista/",
+        "/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun create(@RequestBody create: List<D>): ResponseEntity<List<D>> {
@@ -249,13 +246,11 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun delete(@PathVariable id: ID): ResponseEntity<String> {
@@ -265,18 +260,16 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
 
     @Operation(summary = "Deletar vários registros", description = "Deletar vários registros")
     @DeleteMapping(
-        "/lista/",
+        "/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             ),
         produces = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-
             )
     )
     fun delete(@RequestBody delete: List<ID>): ResponseEntity<String> {
@@ -304,7 +297,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
 
     @Operation(summary = "Atualizar parcialmente vários registros", description = "Atualizar parcialmente vários registros")
     @PatchMapping(
-        "/lista/",
+        "/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
