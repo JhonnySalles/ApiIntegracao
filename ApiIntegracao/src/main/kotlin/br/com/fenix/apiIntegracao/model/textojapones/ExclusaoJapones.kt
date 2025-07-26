@@ -24,6 +24,10 @@ data class ExclusaoJapones(
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
 
+    override fun patch(source: ExclusaoJapones) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

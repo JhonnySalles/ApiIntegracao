@@ -3,7 +3,7 @@ package br.com.fenix.apiIntegracao.repository
 import br.com.fenix.apiIntegracao.controller.textojapones.EstatisticaJaponesController
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.exceptions.RequiredObjectIsNullException
-import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
+import br.com.fenix.apiIntegracao.mock.MockEstatistica
 import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
 import br.com.fenix.apiIntegracao.repository.textojapones.EstatisticaJaponesRepository
 import br.com.fenix.apiIntegracao.service.ServiceJpaBase

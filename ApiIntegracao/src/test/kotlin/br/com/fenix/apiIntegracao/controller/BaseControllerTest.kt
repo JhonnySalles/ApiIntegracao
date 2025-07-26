@@ -4,7 +4,7 @@ import br.com.fenix.apiIntegracao.TestConfigs
 import br.com.fenix.apiIntegracao.dto.DtoBase
 import br.com.fenix.apiIntegracao.dto.api.TokenDto
 import br.com.fenix.apiIntegracao.dto.wrapper.WrapperDtoBase
-import br.com.fenix.apiIntegracao.mapper.mock.Mock
+import br.com.fenix.apiIntegracao.mock.Mock
 import br.com.fenix.apiIntegracao.model.Entity
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -18,16 +18,23 @@ import io.restassured.filter.log.ResponseLoggingFilter
 import io.restassured.specification.RequestSpecification
 import org.junit.Assert
 import org.junit.jupiter.api.*
+import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 import java.util.*
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-abstract class BaseControllerTest<ID, E : Entity<E, ID>, D : DtoBase<ID>, W : WrapperDtoBase<D>>(
-    var clazzDto: Class<D>,
-    var clazzWrapper: Class<W>,
-    var mock: Mock<ID, E, D>,
-    var contentType: String
-) {
+abstract class BaseControllerTest<ID, E : Entity<E, ID>, D : DtoBase<ID>, W : WrapperDtoBase<D>>(var mock: Mock<ID, E, D>, var contentType: String) {
+
+    private val clazzEntity: Class<E>
+    private val clazzDto: Class<D>
+    private val clazzWrapper: Class<W>
+
+    init {
+        val superclass = (javaClass.genericSuperclass as ParameterizedType)
+        clazzEntity = superclass.actualTypeArguments[1] as Class<E>
+        clazzDto = superclass.actualTypeArguments[2] as Class<D>
+        clazzWrapper = superclass.actualTypeArguments[3] as Class<W>
+    }
 
     abstract var testName: String
 

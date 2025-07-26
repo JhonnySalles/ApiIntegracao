@@ -23,6 +23,10 @@ data class ValidoIngles(
         this.palavra = source.palavra
     }
 
+    override fun patch(source: ValidoIngles) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

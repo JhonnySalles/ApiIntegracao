@@ -1,14 +1,13 @@
 package br.com.fenix.apiIntegracao.mapper
 
 import br.com.fenix.apiIntegracao.dto.textojapones.ExclusaoDto
-import br.com.fenix.apiIntegracao.mapper.mock.Mock
-import br.com.fenix.apiIntegracao.mapper.mock.MockExclusao
+import br.com.fenix.apiIntegracao.mock.Mock
+import br.com.fenix.apiIntegracao.mock.MockExclusao
 import br.com.fenix.apiIntegracao.model.textojapones.ExclusaoJapones
 import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
-
-class MapperConverterExclusaoTest() : MapperConvertBase<UUID?, ExclusaoJapones, ExclusaoDto>(ExclusaoJapones::class.java, ExclusaoDto::class.java) {
+class MapperConverterExclusaoTest() : MapperConvertBase<UUID?, ExclusaoJapones, ExclusaoDto>() {
 
     lateinit var inputObject: MockExclusao
 

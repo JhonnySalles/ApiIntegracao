@@ -4,7 +4,7 @@ import br.com.fenix.apiIntegracao.TestConfigs
 import br.com.fenix.apiIntegracao.dto.AccountCredentialDto
 import br.com.fenix.apiIntegracao.dto.api.TokenDto
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
-import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
+import br.com.fenix.apiIntegracao.mock.MockEstatistica
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonMappingException

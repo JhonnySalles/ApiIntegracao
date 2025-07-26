@@ -26,6 +26,10 @@ data class Legenda(
         this.texto = source.texto
     }
 
+    override fun patch(source: Legenda) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

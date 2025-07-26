@@ -1,4 +1,4 @@
-package br.com.fenix.apiIntegracao.mapper.mock
+package br.com.fenix.apiIntegracao.mock
 
 import br.com.fenix.apiIntegracao.dto.DtoBase
 import br.com.fenix.apiIntegracao.model.Entity

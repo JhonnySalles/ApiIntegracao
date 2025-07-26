@@ -25,6 +25,10 @@ data class Texto(
         this.versaoApp = source.versaoApp
     }
 
+    override fun patch(source: Texto) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

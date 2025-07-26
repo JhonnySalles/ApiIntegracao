@@ -107,6 +107,10 @@ data class KanjaxPt(
         this.significado = source.significado
     }
 
+    override fun patch(source: KanjaxPt) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

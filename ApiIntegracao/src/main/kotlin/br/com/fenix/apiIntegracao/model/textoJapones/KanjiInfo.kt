@@ -35,6 +35,10 @@ data class KanjiInfo(
         this.tabela = source.tabela
     }
 
+    override fun patch(source: KanjiInfo) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

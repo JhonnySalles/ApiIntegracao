@@ -41,6 +41,10 @@ data class FilaSqlJapones(
         this.isLimpeza = source.isLimpeza
     }
 
+    override fun patch(source: FilaSqlJapones) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

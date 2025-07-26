@@ -28,6 +28,10 @@ data class Volume(
         this.vocabulario = source.vocabulario
     }
 
+    override fun patch(source: Volume) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

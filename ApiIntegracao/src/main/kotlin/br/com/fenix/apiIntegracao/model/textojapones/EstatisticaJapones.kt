@@ -47,6 +47,10 @@ data class EstatisticaJapones(
         this.corSequencial = source.corSequencial
     }
 
+    override fun patch(source: EstatisticaJapones) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

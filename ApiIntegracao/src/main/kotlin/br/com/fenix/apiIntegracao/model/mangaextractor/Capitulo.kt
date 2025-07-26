@@ -31,6 +31,10 @@ data class Capitulo(
         this.vocabulario = source.vocabulario
     }
 
+    override fun patch(source: Capitulo) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

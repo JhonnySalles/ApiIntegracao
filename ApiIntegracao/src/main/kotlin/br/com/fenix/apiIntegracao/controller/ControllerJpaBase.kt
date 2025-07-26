@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
-
 abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C>>(repository: RepositoryJpaBase<E, ID>, @Autowired var assembler: PagedResourcesAssembler<D>) {
     private val service: ServiceJpaBase<ID, E, D, C>
     private val clazzEntity: Class<E>
@@ -226,6 +225,25 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
 
     @Operation(summary = "Deletar registro", description = "Deletar registro")
     @DeleteMapping(
+        "",
+        consumes = arrayOf(
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
+        ),
+        produces = arrayOf(
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
+        )
+    )
+    fun delete(@PathVariable id: D): ResponseEntity<String> {
+        service.delete(id)
+        return ResponseEntity.ok("Ok")
+    }
+
+    @Operation(summary = "Deletar registro", description = "Deletar registro")
+    @DeleteMapping(
         "/{id}",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
@@ -264,5 +282,41 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
     fun delete(@RequestBody delete: List<ID>): ResponseEntity<String> {
         service.delete(delete)
         return ResponseEntity.ok("Ok")
+    }
+
+    @Operation(summary = "Atualizar parcialmente o registro", description = "Atualizar parcialmente o registro")
+    @PatchMapping(
+        "",
+        consumes = arrayOf(
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
+        ),
+        produces = arrayOf(
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
+        )
+    )
+    fun patch(@RequestBody update: D?): ResponseEntity<D> {
+        return ResponseEntity.ok(service.patch(update))
+    }
+
+    @Operation(summary = "Atualizar parcialmente vários registros", description = "Atualizar parcialmente vários registros")
+    @PatchMapping(
+        "/lista/",
+        consumes = arrayOf(
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
+        ),
+        produces = arrayOf(
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
+        )
+    )
+    fun patch(@RequestBody update: List<D>): ResponseEntity<List<D>> {
+        return ResponseEntity.ok(service.patch(update))
     }
 }

@@ -24,6 +24,10 @@ data class Pagina(
         this.vocabulario = source.vocabulario
     }
 
+    override fun patch(source: Pagina) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

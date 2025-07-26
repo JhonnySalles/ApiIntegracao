@@ -41,6 +41,10 @@ data class RevisarIngles(
         this.isManga = source.isManga
     }
 
+    override fun patch(source: RevisarIngles) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

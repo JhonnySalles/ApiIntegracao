@@ -37,6 +37,10 @@ data class VocabularioJapones(
         this.jlpt = source.jlpt
     }
 
+    override fun patch(source: VocabularioJapones) {
+        TODO("Not yet implemented")
+    }
+
     override fun getId(): UUID? {
         return id
     }

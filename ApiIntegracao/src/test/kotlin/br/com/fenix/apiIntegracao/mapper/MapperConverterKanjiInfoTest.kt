@@ -1,14 +1,13 @@
 package br.com.fenix.apiIntegracao.mapper
 
 import br.com.fenix.apiIntegracao.dto.textojapones.KanjiInfoDto
-import br.com.fenix.apiIntegracao.mapper.mock.Mock
-import br.com.fenix.apiIntegracao.mapper.mock.MockKanjiInfo
+import br.com.fenix.apiIntegracao.mock.Mock
+import br.com.fenix.apiIntegracao.mock.MockKanjiInfo
 import br.com.fenix.apiIntegracao.model.textojapones.KanjiInfo
 import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
-
-class MapperConverterKanjiInfoTest() : MapperConvertBase<UUID?, KanjiInfo, KanjiInfoDto>(KanjiInfo::class.java, KanjiInfoDto::class.java) {
+class MapperConverterKanjiInfoTest() : MapperConvertBase<UUID?, KanjiInfo, KanjiInfoDto>() {
 
     lateinit var inputObject: MockKanjiInfo
 

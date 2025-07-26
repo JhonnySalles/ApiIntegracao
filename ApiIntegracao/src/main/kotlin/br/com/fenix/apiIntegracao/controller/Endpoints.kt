@@ -13,11 +13,11 @@ class Endpoints {
         const val TEXTO_JAPONES_KANJAX_PT   = "$TEXTO_JAPONES/kanjax-pt"
         const val TEXTO_JAPONES_KANJI_INFO  = "$TEXTO_JAPONES/kanji-info"
         const val TEXTO_JAPONES_REVISAR     = "$TEXTO_JAPONES/revisar"
-
         const val TEXTO_JAPONES_VOCABULARIO = "$TEXTO_JAPONES/vocabulario"
+
         const val TEXTO_INGLES = "$API/texto-ingles"
-        const val TEXTO_INGLES_REVISAR     = "$TEXTO_INGLES/revisar"
-        const val TEXTO_INGLES_VALIDO     = "$TEXTO_INGLES/valido"
+        const val TEXTO_INGLES_REVISAR  = "$TEXTO_INGLES/revisar"
+        const val TEXTO_INGLES_VALIDO   = "$TEXTO_INGLES/valido"
 
         const val TEXTO_INGLES_VOCABULARIO = "$TEXTO_INGLES/vocabulario"
         const val TABLES_URL = "/tabela/{table}/"

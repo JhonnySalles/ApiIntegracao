@@ -4,16 +4,16 @@ import br.com.fenix.apiIntegracao.enums.Tipo
 import br.com.fenix.apiIntegracao.exceptions.TableNotExistsException
 import br.com.fenix.apiIntegracao.model.api.Tabelas
 import br.com.fenix.apiIntegracao.repository.api.TabelasRepository
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.logging.Logger
 
 @Service
 class TabelasService {
 
     companion object {
-        val LOG = Logger.getLogger(TabelasService::class.java.name)
+        private val oLog = LoggerFactory.getLogger(TabelasService::class.java.name)
 
         val PROP_URL = "url"
         val PROP_PORTA = "porta"

@@ -1,4 +1,4 @@
-package br.com.fenix.apiIntegracao.dto.wrapper
+package br.com.fenix.apiIntegracao.dto.embedded
 
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import com.fasterxml.jackson.annotation.JsonProperty

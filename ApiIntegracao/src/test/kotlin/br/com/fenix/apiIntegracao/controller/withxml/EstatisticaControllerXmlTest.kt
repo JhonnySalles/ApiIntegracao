@@ -4,7 +4,7 @@ import br.com.fenix.apiIntegracao.TestConfigs
 import br.com.fenix.apiIntegracao.controller.BaseControllerTest
 import br.com.fenix.apiIntegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiIntegracao.dto.wrapper.WrapperEstatisticaDto
-import br.com.fenix.apiIntegracao.mapper.mock.MockEstatistica
+import br.com.fenix.apiIntegracao.mock.MockEstatistica
 import br.com.fenix.apiIntegracao.model.textojapones.EstatisticaJapones
 import org.junit.Assert
 import org.junit.jupiter.api.*
@@ -19,12 +19,7 @@ class EstatisticaControllerXmlTest(
     override var pathEndpointList: String = "/api/texto-japones/estatistica/lista",
     override var pathEndpointPaginadoAtualizacao: String = "/api/texto-japones/estatistica/atualizacao",
     override var pathEndpointListaAtualizacao: String = "/api/texto-japones/estatistica/lista/atualizacao"
-) : BaseControllerTest<UUID?, EstatisticaJapones, EstatisticaDto, WrapperEstatisticaDto>(
-    EstatisticaDto::class.java,
-    WrapperEstatisticaDto::class.java,
-    MockEstatistica(),
-    TestConfigs.CONTENT_TYPE_JSON
-) {
+) : BaseControllerTest<UUID?, EstatisticaJapones, EstatisticaDto, WrapperEstatisticaDto>(MockEstatistica(), TestConfigs.CONTENT_TYPE_XML) {
 
     override fun asserts(older: EstatisticaDto, new: EstatisticaDto) {
         Assert.assertNotNull(new)

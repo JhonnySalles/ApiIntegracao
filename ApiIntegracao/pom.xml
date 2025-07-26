@@ -19,9 +19,8 @@
         <flyway.version>9.16.0</flyway.version>
         <springdoc.version>2.2.0</springdoc.version>
         <modelMapper.version>3.1.1</modelMapper.version>
-        <modelMapper.version>3.1.1</modelMapper.version>
         <java-jwt.version>3.18.3</java-jwt.version>
-        <testcontainers.version>1.16.3</testcontainers.version>
+        <test.containers.version>1.16.3</test.containers.version>
     </properties>
     <dependencies>
         <dependency>
@@ -141,7 +140,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mysql</artifactId>
-            <version>${testcontainers.version}</version>
+            <version>${test.containers.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
