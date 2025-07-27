@@ -20,19 +20,17 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
-abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
     companion object {
         val oLog = LoggerFactory.getLogger(ServiceJpaBase::class.java.name)
     }
 
     abstract val repository: RepositoryJpaBase<E, ID>
 
-    fun getPage(pageable: Pageable?): PagedModel<EntityModel<D>> {
-        if (pageable == null)
-            throw RequiredObjectIsNullException("Its necessary inform a pageable")
+    fun getPage(pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
             val list = repository.findAll(pageable).map { addLink(toDto(it)) }
-            val link = linkTo(methodOn(clazzController).getPage(list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+            val link = linkTo(methodOn(clazzController).getPage(list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
             oLog.error("Error get page on jpa base", e)
@@ -40,11 +38,11 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
         }
     }
 
-    fun getPage(updateDate: String, pageable: Pageable): PagedModel<EntityModel<D>> {
+    fun getPage(updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
             val dateTime = LocalDateTime.parse(updateDate)
             val list = repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable).map { addLink(toDto(it)) }
-            val link = linkTo(methodOn(clazzController).getLastSyncPage(updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+            val link = linkTo(methodOn(clazzController).getLastSyncPage(updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
             oLog.error("Error get page on jpa base with update date", e)

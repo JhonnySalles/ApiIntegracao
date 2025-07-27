@@ -6,7 +6,7 @@ import br.com.fenix.apiintegracao.model.Entity
 import org.junit.jupiter.api.Test
 import java.lang.reflect.ParameterizedType
 
-abstract class MapperConvertBase<ID, E : Entity<E, ID>, D : DtoBase<ID>> {
+abstract class MapperConvertBase<ID, E : Entity<ID, E>, D : DtoBase<ID>> {
 
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>

@@ -18,6 +18,6 @@ class TestConfigs {
 
         const val ENDPOINT_LOGIN = "/api/auth"
 
-        fun getCredential() : AccountCredentialDto = AccountCredentialDto("admin", "admin")
+        fun getCredential() : AccountCredentialDto = AccountCredentialDto("jhonny", "jhonny")
     }
 }

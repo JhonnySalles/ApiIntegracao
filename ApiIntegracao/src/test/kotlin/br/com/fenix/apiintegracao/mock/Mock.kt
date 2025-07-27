@@ -3,7 +3,7 @@ package br.com.fenix.apiintegracao.mock
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.model.Entity
 
-interface Mock<ID, E : Entity<E, ID>, D : DtoBase<ID>> {
+interface Mock<ID, E : Entity<ID, E>, D : DtoBase<ID>> {
     fun mockEntity(): E
     fun mockDto(): D
     fun mockEntityList(): List<E>

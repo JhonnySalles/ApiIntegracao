@@ -23,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
-abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(@Autowired var assembler: PagedResourcesAssembler<D>) {
+abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>> {
     private val service: ServiceJpaBase<ID, E, D, C, R>
 
     private val clazzEntity: Class<E>
@@ -40,7 +40,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
         clazzRepository = superclass.actualTypeArguments[4] as Class<R>
-        service = object : ServiceJpaBase<ID, E, D, C, R>(assembler, clazzEntity, clazzDto, clazzController) {
+        service = object : ServiceJpaBase<ID, E, D, C, R>(clazzEntity, clazzDto, clazzController) {
             override val repository: RepositoryJpaBase<E, ID>
                 get() = getDynamicRegistry().getRepository(conexao, clazzRepository) ?: throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço indisponível no momento.")
         }
@@ -61,12 +61,14 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         )
     )
     fun getPage(
-        @RequestParam(value = "page", defaultValue = "0") page: Int, @RequestParam(value = "size", defaultValue = "1000") size: Int,
-        @RequestParam(value = "direction", defaultValue = "asc") direction: String
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "size", defaultValue = "1000") size: Int,
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String,
+        assembler: PagedResourcesAssembler<D>
     ): ResponseEntity<PagedModel<EntityModel<D>>> {
         val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
-        return ResponseEntity.ok(service.getPage(pageable))
+        return ResponseEntity.ok(service.getPage(pageable, assembler))
     }
 
     @Operation(summary = "Pesquisa paginada apartir da data informada", description = "Pesquisa paginada apartir da data informada")
@@ -87,11 +89,12 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         @PathVariable updateDate: String,
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "1000") size: Int,
-        @RequestParam(value = "direction", defaultValue = "asc") direction: String
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String,
+        assembler: PagedResourcesAssembler<D>
     ): ResponseEntity<PagedModel<EntityModel<D>>> {
         val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
-        return ResponseEntity.ok(service.getPage(updateDate, pageable))
+        return ResponseEntity.ok(service.getPage(updateDate, pageable, assembler))
     }
 
     @Operation(summary = "Pesquisa por id", description = "Pesquisa por id")

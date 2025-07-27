@@ -1,25 +1,29 @@
 package br.com.fenix.apiintegracao.config
 
-import br.com.fenix.apiintegracao.security.JwtConfigurer
+import br.com.fenix.apiintegracao.exceptions.FilterExceptionHandler
+import br.com.fenix.apiintegracao.security.CustomAuthenticationEntryPoint
+import br.com.fenix.apiintegracao.security.JwtTokenFilter
 import br.com.fenix.apiintegracao.security.JwtTokenProvider
 import br.com.fenix.apiintegracao.service.api.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @EnableWebSecurity
 @Configuration
-class SecurityConfig(var userDetailsService: UsuarioService) {
+class SecurityConfig(private var userDetailsService: UsuarioService, private val tokenFilter: JwtTokenFilter, private val customEntryPoint: CustomAuthenticationEntryPoint, private val exceptionHandlerFilter: FilterExceptionHandler) {
 
     companion object {
         fun getPasswordEncoder() : PasswordEncoder = BCryptPasswordEncoder()
@@ -33,40 +37,43 @@ class SecurityConfig(var userDetailsService: UsuarioService) {
     fun passwordEncoder(): PasswordEncoder = getPasswordEncoder()
 
     @Bean
+    fun authenticationProvider(): AuthenticationProvider {
+        val authProvider = DaoAuthenticationProvider()
+        authProvider.setUserDetailsService(userDetailsService)
+        authProvider.setPasswordEncoder(passwordEncoder())
+        return authProvider
+    }
+
+    @Bean
     @Throws(Exception::class)
-    fun authenticationManager(http: HttpSecurity): AuthenticationManager {
-        return http.getSharedObject(AuthenticationManagerBuilder::class.java)
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder())
-            .and().build()
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
+        return config.authenticationManager
     }
 
     @Bean
     @Throws(java.lang.Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain? {
-        return http
-            .httpBasic().disable()
-            .csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
-            .sessionManagement { session: SessionManagementConfigurer<HttpSecurity> ->
-                session.sessionCreationPolicy(
-                    SessionCreationPolicy.STATELESS
-                )
-            }
-            .authorizeHttpRequests {
-                it.requestMatchers(
-                    "/auth/signin",
-                    "/auth/refresh",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/v3/api-docs/**"
-                ).permitAll()
+        http.httpBasic { it.disable() }
+            .csrf { it.disable() }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .authorizeHttpRequests { authorize ->
+                authorize
+                    .requestMatchers(
+                        "/auth/signin",
+                        "/auth/refresh",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**"
+                    ).permitAll()
                     .requestMatchers("/api/**").authenticated()
                     .requestMatchers("/users").denyAll()
             }
-            .cors()
-            .and()
-            .apply(JwtConfigurer(tokenProvider))
-            .and()
-            .build()
+            .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .exceptionHandling {
+                it.authenticationEntryPoint(customEntryPoint)
+            }
+            .cors { }
+        return http.build()
     }
 }

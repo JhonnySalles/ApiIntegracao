@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.*
 
-
 @Service
 class JwtTokenProvider {
 
@@ -89,8 +88,7 @@ class JwtTokenProvider {
     }
 
     private fun decodedToken(token: String): DecodedJWT {
-        val alg: Algorithm = Algorithm.HMAC256(secretKey.toByteArray())
-        val verifier: JWTVerifier = JWT.require(alg).build()
+        val verifier: JWTVerifier = JWT.require(algorithm).build()
         return verifier.verify(token)
     }
 
@@ -104,11 +102,11 @@ class JwtTokenProvider {
     }
 
     fun validateToken(token: String): Boolean {
-        val decodedJWT: DecodedJWT = decodedToken(token)
-        return try {
-            !decodedJWT.expiresAt.before(Date())
+        try {
+            decodedToken(token)
+            return true
         } catch (e: Exception) {
-            throw InvalidAuthenticationException("Expired or invalid JWT token!")
+            return false
         }
     }
 }

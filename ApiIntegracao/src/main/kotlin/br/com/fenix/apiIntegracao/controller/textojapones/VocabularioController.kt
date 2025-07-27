@@ -16,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES)
 @Tag(name = "Vocabulário Japônes", description = "Endpoint de vocabulários japônes")
-class VocabularioController(private val registry: DynamicJpaRepositoryRegistry, assembler: PagedResourcesAssembler<VocabularioDto>) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, VocabularioController, VocabularioJaponesRepository>(assembler) {
+class VocabularioController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, VocabularioController, VocabularioJaponesRepository>() {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_JAPONES
 }

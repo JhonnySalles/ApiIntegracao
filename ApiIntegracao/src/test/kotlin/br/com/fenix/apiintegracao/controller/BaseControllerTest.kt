@@ -21,8 +21,9 @@ import org.junit.jupiter.api.*
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-abstract class BaseControllerTest<ID, E : Entity<E, ID>, D : DtoBase<ID>, W : WrapperDtoBase<D>>(var mock: Mock<ID, E, D>, var contentType: String) {
+abstract class BaseControllerTest<ID, E : Entity<ID, E>, D : DtoBase<ID>, W : WrapperDtoBase<D>>(var mock: Mock<ID, E, D>, var contentType: String) {
 
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
