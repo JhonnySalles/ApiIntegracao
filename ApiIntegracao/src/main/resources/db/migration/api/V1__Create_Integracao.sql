@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS consultas (
 
 CREATE TABLE IF NOT EXISTS conexoes (
     id         INT NOT NULL AUTO_INCREMENT,
-    tipo       enum('API','MANGA_EXTRACTOR','NOVEL_EXTRACTOR','TEXTO_INGLES','TEXTO_JAPONES','DECKSUBTITLE','FIREBASE') CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT 'API',
+    tipo       enum('API','MANGA_EXTRACTOR','NOVEL_EXTRACTOR','TEXTO_INGLES','TEXTO_JAPONES','DECKSUBTITLE','PROCESSA_TEXTO','FIREBASE') CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT 'API',
     url        VARCHAR(250) DEFAULT NULL,
     username   VARCHAR(250) DEFAULT NULL,
     password   VARCHAR(250) DEFAULT NULL,
     base       VARCHAR(100) DEFAULT NULL,
     driver     enum('MYSQL','POSTGRE') CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT 'MYSQL',
-    mapeamento enum('JPA','JDBC') CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT 'JDBC',
+    mapeamento enum('JPA','JDBC','AMBOS') CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT 'JDBC',
     ativo      BOOLEAN DEFAULT false,
     PRIMARY KEY ( id ),
     UNIQUE KEY tipo (tipo)
@@ -26,4 +26,5 @@ INSERT INTO conexoes (id, tipo, url, username, password, base, driver, mapeament
 (3, 'TEXTO_INGLES', 'jdbc:mysql://localhost:3306', 'admin', 'admin', 'texto_ingles', 'MYSQL', 'JPA', true),
 (4, 'MANGA_EXTRACTOR', 'jdbc:mysql://localhost:3306', 'admin', 'admin', 'manga_extractor', 'MYSQL', 'JDBC', true),
 (5, 'NOVEL_EXTRACTOR', 'jdbc:mysql://localhost:3306', 'admin', 'admin', 'novel_extractor', 'MYSQL', 'JDBC', true),
-(6, 'DECKSUBTITLE', 'jdbc:mysql://localhost:3306', 'admin', 'admin', 'decksubtitle', 'MYSQL', 'JDBC', true);
+(6, 'DECKSUBTITLE', 'jdbc:mysql://localhost:3306', 'admin', 'admin', 'decksubtitle', 'MYSQL', 'JDBC', true),
+(7, 'PROCESSA_TEXTO', 'jdbc:mysql://localhost:3306', 'admin', 'admin', 'processa_texto', 'MYSQL', 'AMBOS', true);

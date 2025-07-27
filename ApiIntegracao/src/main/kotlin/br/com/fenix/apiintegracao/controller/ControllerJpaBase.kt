@@ -5,7 +5,7 @@ import br.com.fenix.apiintegracao.converters.MediaTypes
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.model.EntityBase
-import br.com.fenix.apiintegracao.repository.DynamicRepositoryRegistry
+import br.com.fenix.apiintegracao.component.DynamicJpaRepositoryRegistry
 import br.com.fenix.apiintegracao.repository.RepositoryJpaBase
 import br.com.fenix.apiintegracao.service.ServiceJpaBase
 import io.swagger.v3.oas.annotations.Operation
@@ -23,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
-abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(@Autowired var assembler: PagedResourcesAssembler<D>) {
+abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(@Autowired var assembler: PagedResourcesAssembler<D>) {
     private val service: ServiceJpaBase<ID, E, D, C, R>
 
     private val clazzEntity: Class<E>
@@ -31,7 +31,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C :
     private val clazzController: Class<C>
     private val clazzRepository: Class<R>
 
-    abstract fun getDynamicRegistry() : DynamicRepositoryRegistry
+    abstract fun getDynamicRegistry() : DynamicJpaRepositoryRegistry
     abstract val conexao : Conexao
 
     init {

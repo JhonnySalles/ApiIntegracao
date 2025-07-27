@@ -16,7 +16,7 @@ data class Volume(
     var isProcessado: Boolean,
     var capitulos: List<Capitulo> = listOf(),
     var vocabulario: Set<Vocabulario> = setOf()
-) : Serializable, EntityBase<Volume, UUID?>() {
+) : Serializable, EntityBase<UUID?, Volume>() {
 
     override fun merge(source: Volume) {
         this.manga = source.manga
@@ -36,7 +36,7 @@ data class Volume(
         return id
     }
 
-    fun setId(id: UUID?) {
+    override fun setId(id: UUID?) {
         this.id = id;
     }
 

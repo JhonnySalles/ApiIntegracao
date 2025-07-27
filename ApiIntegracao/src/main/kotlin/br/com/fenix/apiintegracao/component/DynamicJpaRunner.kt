@@ -4,7 +4,6 @@ import br.com.fenix.apiintegracao.config.FlywayConfig
 import br.com.fenix.apiintegracao.enums.Driver
 import br.com.fenix.apiintegracao.enums.Mapeamento
 import br.com.fenix.apiintegracao.model.api.DadosConexao
-import br.com.fenix.apiintegracao.repository.DynamicRepositoryRegistry
 import br.com.fenix.apiintegracao.repository.api.DadosConexaoRepository
 import br.com.fenix.apiintegracao.scanner.RepositoryInterfaceScanner
 import com.zaxxer.hikari.HikariDataSource
@@ -12,7 +11,6 @@ import jakarta.persistence.EntityManagerFactory
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.context.annotation.DependsOn
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.type.filter.AssignableTypeFilter
@@ -25,7 +23,7 @@ import javax.sql.DataSource
 @Component
 @DependsOn("flywayApi")
 class DynamicJpaRunner(
-    private val repository: DadosConexaoRepository, private val registry: DynamicRepositoryRegistry, private val emfBuilder: EntityManagerFactoryBuilder,
+    private val repository: DadosConexaoRepository, private val registry: DynamicJpaRepositoryRegistry, private val emfBuilder: EntityManagerFactoryBuilder,
     private val resourceLoader: ResourceLoader
 ) : CommandLineRunner {
 
@@ -34,12 +32,14 @@ class DynamicJpaRunner(
     }
 
     override fun run(vararg args: String?) {
-        oLog.info("Iniciando as conexões...")
+        oLog.info("Iniciando as conexões JPA...")
 
-        val conexoes = repository.findByAtivoIsTrue()
+        val conexoes = mutableListOf<DadosConexao>()
+        conexoes.addAll(repository.findByAtivoIsTrueAndMapeamentoEquals(Mapeamento.JPA))
+        conexoes.addAll(repository.findByAtivoIsTrueAndMapeamentoEquals(Mapeamento.AMBOS))
 
         if (conexoes.isEmpty()) {
-            oLog.info("Nenhuma conexão encontrada.")
+            oLog.info("Nenhuma conexão JPA encontrada.")
             return
         }
 
@@ -48,17 +48,13 @@ class DynamicJpaRunner(
             try {
                 val migracoes = FlywayConfig.flyway(config).migrate().migrationsExecuted
                 oLog.info("Migração para [${config.base}] concluída. $migracoes migrações aplicadas.")
-
-                if (config.mapeamento == Mapeamento.JPA) {
-                    val dataSource = createDataSourceFromConfig(config)
-                    val emf = createEntityManagerFactory(config, dataSource)
-                    val entityManager = emf.createEntityManager()
-                    val repositoryFactory = JpaRepositoryFactory(entityManager)
-                    registerRepositoriesInPackage(config, repositoryFactory, registry)
-                    registry.registerEntityManager(config.tipo, entityManager)
-                    oLog.info("Repositórios para [${config.base}] criados e registrados com sucesso.")
-                } else
-                    oLog.info("Repositórios [${config.base}] com mapeamento JDCB.")
+                val dataSource = createDataSourceFromConfig(config)
+                val emf = createEntityManagerFactory(config, dataSource)
+                val entityManager = emf.createEntityManager()
+                val repositoryFactory = JpaRepositoryFactory(entityManager)
+                registerRepositoriesInPackage(config, repositoryFactory, registry)
+                registry.registerEntityManager(config.tipo, entityManager)
+                oLog.info("Repositórios para [${config.base}] criados e registrados com sucesso.")
             } catch (e: Exception) {
                 oLog.error("Falha ao executar migração para a conexão [${config.base}]. Erro: ${e.message}", e)
             }
@@ -96,7 +92,7 @@ class DynamicJpaRunner(
         return hikariDataSource
     }
 
-    private fun registerRepositoriesInPackage(config: DadosConexao, repositoryFactory: JpaRepositoryFactory, registry: DynamicRepositoryRegistry) {
+    private fun registerRepositoriesInPackage(config: DadosConexao, repositoryFactory: JpaRepositoryFactory, registry: DynamicJpaRepositoryRegistry) {
         val pasta = "br.com.fenix.apiintegracao.repository." + config.tipo.packages.lowercase(Locale.getDefault())
         oLog.info("Buscando repositórios no pacote: [$pasta]")
 

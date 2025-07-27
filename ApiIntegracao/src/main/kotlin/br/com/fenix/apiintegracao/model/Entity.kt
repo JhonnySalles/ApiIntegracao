@@ -1,8 +1,9 @@
 package br.com.fenix.apiintegracao.model
 
-interface Entity<T, ID> {
-    fun merge(source: T)
-    fun patch(source: T)
+interface Entity<ID, E> {
+    fun merge(source: E)
+    fun patch(source: E)
     fun getId(): ID
-    fun create(id: ID): T
+    fun setId(id: ID)
+    fun create(id: ID): E
 }

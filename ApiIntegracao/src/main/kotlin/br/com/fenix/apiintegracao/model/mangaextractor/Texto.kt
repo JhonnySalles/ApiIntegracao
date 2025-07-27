@@ -13,7 +13,7 @@ data class Texto(
     var posicao_y1: Int,
     var posicao_y2: Int,
     var versaoApp: Int
-) : Serializable, EntityBase<Texto, UUID?>() {
+) : Serializable, EntityBase<UUID?, Texto>() {
 
     override fun merge(source: Texto) {
         this.sequencia = source.sequencia
@@ -33,7 +33,7 @@ data class Texto(
         return id
     }
 
-    fun setId(id: UUID?) {
+    override fun setId(id: UUID?) {
         this.id = id;
     }
 

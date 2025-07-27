@@ -18,7 +18,7 @@ data class ExclusaoJapones(
     val exclusao: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-): Serializable, EntityBase<ExclusaoJapones, UUID?>() {
+): Serializable, EntityBase<UUID?, ExclusaoJapones>() {
 
     override fun merge(source: ExclusaoJapones) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
@@ -30,6 +30,10 @@ data class ExclusaoJapones(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): ExclusaoJapones {

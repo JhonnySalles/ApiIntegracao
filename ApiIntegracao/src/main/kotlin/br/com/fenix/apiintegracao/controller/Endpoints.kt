@@ -24,5 +24,6 @@ class Endpoints {
 
         const val MANGA_EXTRACTOR = "$API/manga-extractor"
         const val DECK_SUBTITLE = "$API/deck-subtitle"
+        const val COMIC_INFO = "$API/comic-info"
     }
 }

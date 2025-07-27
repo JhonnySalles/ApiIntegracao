@@ -8,6 +8,7 @@ enum class Conexao(private val value: String, val packages : String) {
     TEXTO_INGLES("TEXTO_INGLES", "textoingles"),
     TEXTO_JAPONES("TEXTO_JAPONES", "textojapones"),
     DECKSUBTITLE("DECKSUBTITLE", "decksubtitle"),
+    PROCESSA_TEXTO("PROCESSA_TEXTO", "processatexto"),
     FIREBASE("FIREBASE", "firebase");
 
     @Override

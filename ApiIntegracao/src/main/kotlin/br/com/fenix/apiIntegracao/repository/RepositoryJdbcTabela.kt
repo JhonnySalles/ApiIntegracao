@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 import java.util.*
 
-interface RepositoryJdbcBase<E : EntityBase<E, ID>, ID> {
+interface RepositoryJdbcTabela<E : EntityBase<ID, E>, ID> : RepositoryJdbc<E, ID> {
     @Throws(ExceptionDb::class)
     fun update(tabela: String, obj: E): E
 

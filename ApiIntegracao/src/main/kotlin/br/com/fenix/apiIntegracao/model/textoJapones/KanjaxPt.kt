@@ -73,7 +73,7 @@ data class KanjaxPt(
     var significado: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<KanjaxPt, UUID?>() {
+) : Serializable, EntityBase<UUID?, KanjaxPt>() {
 
     override fun merge(source: KanjaxPt) {
         this.sequencia = source.sequencia
@@ -177,6 +177,10 @@ data class KanjaxPt(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): KanjaxPt {

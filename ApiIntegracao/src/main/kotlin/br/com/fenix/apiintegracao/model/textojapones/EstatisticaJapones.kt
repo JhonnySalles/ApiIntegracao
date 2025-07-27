@@ -33,7 +33,7 @@ data class EstatisticaJapones(
     var corSequencial: Int,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : EntityBase<EstatisticaJapones, UUID?>(), Serializable {
+) : EntityBase<UUID?, EstatisticaJapones>(), Serializable {
 
     override fun merge(source: EstatisticaJapones) {
         this.sequencial = source.sequencial
@@ -55,6 +55,10 @@ data class EstatisticaJapones(
         return id
     }
 
+    override fun setId(id: UUID?) {
+        this.id = id
+    }
+
     override fun create(id: UUID?): EstatisticaJapones {
         return EstatisticaJapones(id, 0, "", "", "", 0.0, 0f, 0.0, 0f, 0)
     }
@@ -62,12 +66,8 @@ data class EstatisticaJapones(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as EstatisticaJapones
-
-        if (kanji != other.kanji) return false
-
-        return true
+        return kanji == other.kanji
     }
 
     override fun hashCode(): Int {

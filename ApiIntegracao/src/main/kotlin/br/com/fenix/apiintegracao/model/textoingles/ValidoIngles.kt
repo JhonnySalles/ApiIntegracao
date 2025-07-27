@@ -17,7 +17,7 @@ data class ValidoIngles(
     var palavra: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<ValidoIngles, UUID?>() {
+) : Serializable, EntityBase<UUID?, ValidoIngles>() {
 
     override fun merge(source: ValidoIngles) {
         this.palavra = source.palavra
@@ -29,6 +29,10 @@ data class ValidoIngles(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): ValidoIngles {

@@ -29,7 +29,7 @@ data class FilaSqlJapones(
     var isLimpeza: Boolean,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<FilaSqlJapones, UUID?>() {
+) : Serializable, EntityBase<UUID?, FilaSqlJapones>() {
 
     override fun merge(source: FilaSqlJapones) {
         this.sequencial = source.sequencial
@@ -47,6 +47,10 @@ data class FilaSqlJapones(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): FilaSqlJapones {

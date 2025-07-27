@@ -20,7 +20,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
-abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(var assembler: PagedResourcesAssembler<D>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
     companion object {
         val oLog = LoggerFactory.getLogger(ServiceJpaBase::class.java.name)
     }
@@ -68,8 +68,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             throw RequiredObjectIsNullException()
         try {
             val entity = toEntity(dto)
-            val dbEntity = getById((entity as Entity<E, ID>).getId())
-            (dbEntity as Entity<E, ID>).merge(entity)
+            val dbEntity = getById((entity as Entity<ID, E>).getId())
+            (dbEntity as Entity<ID, E>).merge(entity)
             return addLink(toDto(repository.save(dbEntity)))
         } catch (e: Exception) {
             oLog.error("Error update item on jpa base", e)
@@ -83,8 +83,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             val entities = toEntity(dtos)
             val saved = mutableListOf<D>()
             entities.forEach {
-                val dbEntity = getById((it as Entity<E, ID>).getId())
-                (dbEntity as Entity<E, ID>).merge(it)
+                val dbEntity = getById((it as Entity<ID, E>).getId())
+                (dbEntity as Entity<ID, E>).merge(it)
                 saved.add(toDto(repository.save(dbEntity)))
             }
             return addLink(saved)
@@ -100,8 +100,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             throw RequiredObjectIsNullException()
         try {
             val entity = toEntity(dto)
-            val dbEntity: E = (entity as Entity<E, ID>).create(entity.getId())
-            (dbEntity as Entity<E, ID>).merge(entity)
+            val dbEntity: E = (entity as Entity<ID, E>).create(entity.getId())
+            (dbEntity as Entity<ID, E>).merge(entity)
             return addLink(toDto(repository.save(dbEntity)))
         } catch (e: Exception) {
             oLog.error("Error create item on jpa base", e)
@@ -115,8 +115,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             val entities = toEntity(dtos)
             val saved = mutableListOf<D>()
             entities.forEach {
-                val dbEntity: E = (it as Entity<E, ID>).create(it.getId())
-                (dbEntity as Entity<E, ID>).merge(it)
+                val dbEntity: E = (it as Entity<ID, E>).create(it.getId())
+                (dbEntity as Entity<ID, E>).merge(it)
                 saved.add(toDto(repository.save(dbEntity)))
             }
             return addLink(saved)
@@ -132,8 +132,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             throw RequiredObjectIsNullException()
         try {
             val entity = toEntity(dto)
-            val dbEntity = getById((entity as Entity<E, ID>).getId())
-            (dbEntity as Entity<E, ID>).patch(entity)
+            val dbEntity = getById((entity as Entity<ID, E>).getId())
+            (dbEntity as Entity<ID, E>).patch(entity)
             return addLink(toDto(repository.save(dbEntity)))
         } catch (e: Exception) {
             oLog.error("Error patch item on jpa base", e)
@@ -147,8 +147,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<E, ID>, D : DtoBase<ID>, C : Co
             val entities = toEntity(dtos)
             val saved = mutableListOf<D>()
             entities.forEach {
-                val dbEntity = getById((it as Entity<E, ID>).getId())
-                (dbEntity as Entity<E, ID>).patch(it)
+                val dbEntity = getById((it as Entity<ID, E>).getId())
+                (dbEntity as Entity<ID, E>).patch(it)
                 saved.add(toDto(repository.save(dbEntity)))
             }
             return addLink(saved)

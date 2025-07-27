@@ -14,7 +14,7 @@ data class Vocabulario(
     var volumes: Volume? = null,
     var capitulos: Capitulo? = null,
     var paginas: Pagina? = null
-) : Serializable, EntityBase<Vocabulario, UUID?>() {
+) : Serializable, EntityBase<UUID?, Vocabulario>() {
 
     override fun merge(source: Vocabulario) {
         this.palavra = source.palavra
@@ -35,7 +35,7 @@ data class Vocabulario(
         return id
     }
 
-    fun setId(id: UUID?) {
+    override fun setId(id: UUID?) {
         this.id = id;
     }
 

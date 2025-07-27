@@ -24,6 +24,7 @@ class FlywayConfig {
                 Conexao.DECKSUBTITLE -> arrayOf("$schema/decksubtitle")
                 Conexao.TEXTO_INGLES -> arrayOf("$schema/textoingles")
                 Conexao.TEXTO_JAPONES -> arrayOf("$schema/textojapones")
+                Conexao.PROCESSA_TEXTO -> arrayOf("$schema/processatexto")
                 else -> throw Exception("Não é possível realizar o migration, base não suportada ou não configurada.")
             }
         }

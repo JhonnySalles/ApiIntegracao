@@ -33,7 +33,7 @@ data class RevisarJapones(
     var isManga: Boolean,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<RevisarJapones, UUID?>() {
+) : Serializable, EntityBase<UUID?, RevisarJapones>() {
 
     override fun merge(source: RevisarJapones) {
         this.vocabulario = source.vocabulario
@@ -54,6 +54,10 @@ data class RevisarJapones(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): RevisarJapones {

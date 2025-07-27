@@ -8,7 +8,7 @@ import org.springframework.data.repository.NoRepositoryBean
 import java.time.LocalDateTime
 
 @NoRepositoryBean
-interface RepositoryJpaBase<E : EntityBase<E, ID>, ID> : JpaRepository<E, ID> {
+interface RepositoryJpaBase<E : EntityBase<ID, E>, ID> : JpaRepository<E, ID> {
     fun findAllByAtualizacaoGreaterThanEqual(atualizacao : LocalDateTime, pageable: Pageable) : Page<E>
     fun findAllByAtualizacaoGreaterThanEqual(atualizacao : LocalDateTime) : List<E>
 }

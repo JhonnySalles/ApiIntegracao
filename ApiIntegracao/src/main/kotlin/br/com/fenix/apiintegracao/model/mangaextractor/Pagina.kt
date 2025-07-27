@@ -13,7 +13,7 @@ data class Pagina(
     var isProcessado: Boolean,
     var textos: List<Texto> = listOf(),
     var vocabulario: Set<Vocabulario> = setOf()
-) : Serializable, EntityBase<Pagina, UUID?>() {
+) : Serializable, EntityBase<UUID?, Pagina>() {
 
     override fun merge(source: Pagina) {
         this.nome = source.nome
@@ -32,7 +32,7 @@ data class Pagina(
         return id
     }
 
-    fun setId(id: UUID?) {
+    override fun setId(id: UUID?) {
         this.id = id;
     }
 

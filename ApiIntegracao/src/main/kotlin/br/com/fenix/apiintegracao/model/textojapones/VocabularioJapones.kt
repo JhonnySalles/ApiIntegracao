@@ -32,7 +32,7 @@ data class VocabularioJapones(
     var jlpt: Int,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<VocabularioJapones, UUID?>() {
+) : Serializable, EntityBase<UUID?, VocabularioJapones>() {
 
     override fun merge(source: VocabularioJapones) {
         this.formaBasica = source.formaBasica
@@ -65,6 +65,10 @@ data class VocabularioJapones(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): VocabularioJapones {

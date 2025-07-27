@@ -25,7 +25,7 @@ data class KanjiInfo(
     var tabela: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<KanjiInfo, UUID?>() {
+) : Serializable, EntityBase<UUID?, KanjiInfo>() {
 
     override fun merge(source: KanjiInfo) {
         this.sequencia = source.sequencia
@@ -54,6 +54,10 @@ data class KanjiInfo(
 
     override fun getId(): UUID? {
         return id
+    }
+
+    override fun setId(id: UUID?) {
+        this.id = id
     }
 
     override fun create(id: UUID?): KanjiInfo {

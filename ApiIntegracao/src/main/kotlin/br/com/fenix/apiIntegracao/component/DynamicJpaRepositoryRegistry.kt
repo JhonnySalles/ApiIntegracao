@@ -1,11 +1,11 @@
-package br.com.fenix.apiintegracao.repository
+package br.com.fenix.apiintegracao.component
 
 import br.com.fenix.apiintegracao.enums.Conexao
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
-class DynamicRepositoryRegistry {
+class DynamicJpaRepositoryRegistry {
     private val repositoriesByConnection = ConcurrentHashMap<Conexao, MutableMap<Class<*>, Any>>()
     private val entityManagersByConnection = ConcurrentHashMap<Conexao, jakarta.persistence.EntityManager>()
 
