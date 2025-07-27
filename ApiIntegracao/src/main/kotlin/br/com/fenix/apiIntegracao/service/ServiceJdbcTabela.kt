@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbc<ID, E, D, C>>(
-    var repo: RepositoryJdbcTabela<E, ID>, override var assembler: PagedResourcesAssembler<D>, override val clazzEntity: Class<E>, override val clazzDto: Class<D>, override val clazzController: Class<C>
-) : ServiceJdbcBase<ID, E, D, C>(repo, assembler, clazzEntity, clazzDto, clazzController) {
+    var repo: RepositoryJdbcTabela<E, ID>, override val clazzEntity: Class<E>, override val clazzDto: Class<D>, override val clazzController: Class<C>
+) : ServiceJdbcBase<ID, E, D, C>(repo, clazzEntity, clazzDto, clazzController) {
 
     companion object {
         private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcTabela::class.java)
@@ -44,11 +44,11 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
             throw TableNotExistsException()
     }
 
-    override fun getPage(table: String, pageable: Pageable): PagedModel<EntityModel<D>> {
+    override fun getPage(table: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         validTable(table)
         try {
             val list = repo.findAll(table, pageable).map { addLink(table, toDto(it)) }
-            val link = linkTo(methodOn(clazzController).getPage(table, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+            val link = linkTo(methodOn(clazzController).getPage(table, list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
             oLog.error("Error get page on jpa base", e)
@@ -56,11 +56,11 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         }
     }
 
-    fun getPage(table: String, updateDate: String, pageable: Pageable): PagedModel<EntityModel<D>> {
+    fun getPage(table: String, updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         validTable(table)
         val dateTime = LocalDateTime.parse(updateDate)
         val list = repo.findAllByAtualizacaoGreaterThanEqual(table, dateTime, pageable).map { addLink(table, toDto(it)) }
-        val link = linkTo(methodOn(clazzController).getLastSyncPage(table, updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+        val link = linkTo(methodOn(clazzController).getLastSyncPage(table, updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
         return assembler.toModel(list, link)
     }
 
@@ -81,7 +81,7 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
 
     operator fun get(table: String, id: ID): D = addLink(table, toDto(getById(table, id)))
 
-    override fun getAll(table: String): List<D> = addLink(table, toDto(findAll(table)))
+    fun getAll(table: String): List<D> = addLink(table, toDto(findAll(table)))
 
     fun getAll(table: String, updateDate: LocalDateTime): List<D> = addLink(table, toDto(findAllByAtualizacaoGreaterThanEqual(table, updateDate)))
 

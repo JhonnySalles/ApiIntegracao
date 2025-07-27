@@ -3,7 +3,6 @@ package br.com.fenix.apiintegracao.dto.decsubtitle
 import br.com.fenix.apiintegracao.dto.DtoBase
 import java.util.*
 
-
 data class LegendaDto(
     private var id: UUID?,
     var episodio: Int,

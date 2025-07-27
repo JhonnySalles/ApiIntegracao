@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
-abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcTabela<ID, E, D, C>>(repository: RepositoryJdbcTabela<E, ID>, assembler: PagedResourcesAssembler<D>) : ControllerJdbc<ID, E, D, C> {
+abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcTabela<ID, E, D, C>>(repository: RepositoryJdbcTabela<E, ID>) : ControllerJdbc<ID, E, D, C> {
     private val service: ServiceJdbcTabela<ID, E, D, C>
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
@@ -32,7 +32,7 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : ServiceJdbcTabela<ID, E, D, C>(repository, assembler, clazzEntity, clazzDto, clazzController) {}
+        service = object : ServiceJdbcTabela<ID, E, D, C>(repository, clazzEntity, clazzDto, clazzController) {}
     }
 
     @Operation(summary = "Tabelas disponíveis para a consulta.", description = "Tabelas disponíveis para a consulta.")
@@ -67,14 +67,17 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
         )
     )
-    override fun getPage(@PathVariable table: String, @RequestParam(value = "page", defaultValue = "0") page: Int,
-                         @RequestParam(value = "size", defaultValue = "1000") size: Int,
-                         @RequestParam(value = "direction", defaultValue = "asc") direction: String
+    override fun getPage(
+        @PathVariable table: String,
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "size", defaultValue = "1000") size: Int,
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String,
+        assembler: PagedResourcesAssembler<D>
     ): ResponseEntity<PagedModel<EntityModel<D>>> {
         service.validTable(table)
         val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
-        return ResponseEntity.ok(service.getPage(table, pageable))
+        return ResponseEntity.ok(service.getPage(table, pageable, assembler))
     }
 
     @Operation(summary = "Pesquisa paginada apartir da data informada", description = "Pesquisa paginada apartir da data informada")
@@ -95,12 +98,13 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
         @PathVariable table: String, @PathVariable updateDate: String,
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "1000") size: Int,
-        @RequestParam(value = "direction", defaultValue = "asc") direction: String
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String,
+        assembler: PagedResourcesAssembler<D>
     ): ResponseEntity<PagedModel<EntityModel<D>>> {
         service.validTable(table)
         val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
-        return ResponseEntity.ok(service.getPage(table, updateDate, pageable))
+        return ResponseEntity.ok(service.getPage(table, updateDate, pageable, assembler))
     }
 
     @Operation(summary = "Pesquisa por id", description = "Pesquisa por id")
@@ -124,7 +128,7 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
 
     @Operation(summary = "Pesquisar todos", description = "Pesquisar todos")
     @GetMapping(
-        TABLES_URL + "/lista",
+        "$TABLES_URL/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -143,7 +147,7 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
 
     @Operation(summary = "Pesquisar todos apartir da data informada", description = "Pesquisar todos apartir da data informada")
     @GetMapping(
-        TABLES_URL + "/lista" + ATUALIZACAO_URL,
+        "$TABLES_URL/lista$ATUALIZACAO_URL",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -174,14 +178,14 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
             )
     )
-    fun update(@PathVariable table: String, @RequestBody update: D?): ResponseEntity<D> {
+    fun update(@PathVariable table: String, @RequestBody update: D): ResponseEntity<D> {
         service.validTable(table)
         return ResponseEntity.ok(service.update(table, update))
     }
 
     @Operation(summary = "Atualizar vários registros", description = "Atualizar vários registros")
     @PutMapping(
-        TABLES_URL + "/lista/",
+        "$TABLES_URL/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -212,13 +216,13 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
             )
     )
-    fun create(@PathVariable table: String, @RequestBody create: D?): ResponseEntity<D> {
+    fun create(@PathVariable table: String, @RequestBody create: D): ResponseEntity<D> {
         return ResponseEntity.ok(service.create(table, create))
     }
 
     @Operation(summary = "Inserir vários registros", description = "Inserir vários registros")
     @PostMapping(
-        TABLES_URL + "/lista/",
+        "$TABLES_URL/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -236,7 +240,7 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
 
     @Operation(summary = "Deletar registro", description = "Deletar registro")
     @DeleteMapping(
-        TABLES_URL + "/{id}",
+        "$TABLES_URL/{id}",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -256,7 +260,7 @@ abstract class ControllerJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
 
     @Operation(summary = "Deletar vários registros", description = "Deletar vários registros")
     @DeleteMapping(
-        TABLES_URL + "/lista/",
+        TABLES_URL + "/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,

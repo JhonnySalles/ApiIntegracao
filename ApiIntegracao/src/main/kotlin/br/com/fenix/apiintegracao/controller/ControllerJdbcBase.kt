@@ -19,7 +19,7 @@ import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 import java.util.*
 
-abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(repository: RepositoryJdbc<E, ID>, assembler: PagedResourcesAssembler<D>) : ControllerJdbc<ID, E, D, C> {
+abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(repository: RepositoryJdbc<E, ID>) : ControllerJdbc<ID, E, D, C> {
     private val service: ServiceJdbcBase<ID, E, D, C>
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
@@ -30,14 +30,14 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : ServiceJdbcBase<ID, E, D, C>(repository, assembler, clazzEntity, clazzDto, clazzController) {}
+        service = object : ServiceJdbcBase<ID, E, D, C>(repository, clazzEntity, clazzDto, clazzController) {}
     }
 
-    override fun getPage(table: String, page: Int, size: Int, direction: String): Any {
+    override fun getPage(table: String, page: Int, size: Int, direction: String, assembler: PagedResourcesAssembler<D>): Any {
         TODO("Not yet implemented")
     }
 
-    override fun getLastSyncPage(table: String, updateDate: String, page: Int, size: Int, direction: String): Any {
+    override fun getLastSyncPage(table: String, updateDate: String, page: Int, size: Int, direction: String, assembler: PagedResourcesAssembler<D>): Any {
         TODO("Not yet implemented")
     }
 
@@ -59,13 +59,15 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
         )
     )
-    override fun getPage(@RequestParam(value = "page", defaultValue = "0") page: Int,
-                         @RequestParam(value = "size", defaultValue = "1000") size: Int,
-                         @RequestParam(value = "direction", defaultValue = "asc") direction: String
+    override fun getPage(
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "size", defaultValue = "1000") size: Int,
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String,
+        assembler: PagedResourcesAssembler<D>
     ): ResponseEntity<PagedModel<EntityModel<D>>> {
         val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
-        return ResponseEntity.ok(service.getPage(pageable))
+        return ResponseEntity.ok(service.getPage(pageable, assembler))
     }
 
     @Operation(summary = "Pesquisa paginada apartir da data informada", description = "Pesquisa paginada apartir da data informada")
@@ -86,11 +88,12 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
         @PathVariable updateDate: String,
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "1000") size: Int,
-        @RequestParam(value = "direction", defaultValue = "asc") direction: String
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String,
+        assembler: PagedResourcesAssembler<D>
     ): ResponseEntity<PagedModel<EntityModel<D>>> {
         val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
-        return ResponseEntity.ok(service.getPage(updateDate, pageable))
+        return ResponseEntity.ok(service.getPage(updateDate, pageable, assembler))
     }
 
     @Operation(summary = "Pesquisa por id", description = "Pesquisa por id")
@@ -125,13 +128,13 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
             )
     )
-    fun getAll(@PathVariable table: String): ResponseEntity<List<D>> {
-        return ResponseEntity.ok(service.getAll(table))
+    fun getAll(): ResponseEntity<List<D>> {
+        return ResponseEntity.ok(service.getAll())
     }
 
     @Operation(summary = "Pesquisar todos apartir da data informada", description = "Pesquisar todos apartir da data informada")
     @GetMapping(
-        "/lista" + ATUALIZACAO_URL,
+        "/lista$ATUALIZACAO_URL",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -161,7 +164,7 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
             )
     )
-    fun update(@RequestBody update: D?): ResponseEntity<D> {
+    fun update(@RequestBody update: D): ResponseEntity<D> {
         return ResponseEntity.ok(service.update(update))
     }
 
@@ -197,7 +200,7 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
             )
     )
-    fun create(@RequestBody create: D?): ResponseEntity<D> {
+    fun create(@RequestBody create: D): ResponseEntity<D> {
         return ResponseEntity.ok(service.create(create))
     }
 
@@ -290,7 +293,7 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
         )
     )
-    fun patch(@RequestBody update: D?): ResponseEntity<D> {
+    fun patch(@RequestBody update: D): ResponseEntity<D> {
         return ResponseEntity.ok(service.patch(update))
     }
 

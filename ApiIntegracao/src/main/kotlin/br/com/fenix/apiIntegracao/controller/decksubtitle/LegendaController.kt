@@ -17,6 +17,6 @@ import java.util.*
 @RestController
 @RequestMapping(DECK_SUBTITLE)
 @Tag(name = "Legenda", description = "Endpoint de legendas")
-class LegendaController(registry: DynamicJdbcRegistry, assembler: PagedResourcesAssembler<LegendaDto>) : ControllerJdbcBase<UUID?, Legenda, LegendaDto, LegendaController>(DeckSubtitleRepository(registry), assembler) {
+class LegendaController(registry: DynamicJdbcRegistry) : ControllerJdbcBase<UUID?, Legenda, LegendaDto, LegendaController>(DeckSubtitleRepository(registry)) {
 
 }

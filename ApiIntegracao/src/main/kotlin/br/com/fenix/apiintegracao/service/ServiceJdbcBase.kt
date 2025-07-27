@@ -26,17 +26,17 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbc<ID, E, D, C>>(
-    open var repository: RepositoryJdbc<E, ID>, open var assembler: PagedResourcesAssembler<D>, open val clazzEntity: Class<E>, open val clazzDto: Class<D>, open val clazzController: Class<C>
+    open var repository: RepositoryJdbc<E, ID>, open val clazzEntity: Class<E>, open val clazzDto: Class<D>, open val clazzController: Class<C>
 ) {
 
     companion object {
         private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcBase::class.java)
     }
 
-    fun getPage(pageable: Pageable): PagedModel<EntityModel<D>> {
+    fun getPage(pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
             val list = repository.findAll(pageable).map { addLink(toDto(it)) }
-            val link = linkTo(methodOn(clazzController).getPage(list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+            val link = linkTo(methodOn(clazzController).getPage(list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
             oLog.error("Error get page on jpa base", e)
@@ -44,10 +44,10 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
         }
     }
 
-    open fun getPage(updateDate: String, pageable: Pageable): PagedModel<EntityModel<D>> {
+    open fun getPage(updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         val dateTime = LocalDateTime.parse(updateDate)
         val list = repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable).map { addLink(toDto(it)) }
-        val link = linkTo(methodOn(clazzController).getLastSyncPage(updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc")).withSelfRel()
+        val link = linkTo(methodOn(clazzController).getLastSyncPage(updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
         return assembler.toModel(list, link)
     }
 
@@ -59,7 +59,7 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
 
     operator fun get(id: ID): D = addLink(toDto(getById(id)))
 
-    open fun getAll(table: String): List<D> = addLink(toDto(findAll()))
+    open fun getAll(): List<D> = addLink(toDto(findAll()))
 
     fun getAll(updateDate: LocalDateTime): List<D> = addLink(toDto(findAllByAtualizacaoGreaterThanEqual(updateDate)))
 

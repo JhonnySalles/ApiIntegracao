@@ -165,7 +165,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
             )
     )
-    fun update(@RequestBody update: D?): ResponseEntity<D> {
+    fun update(@RequestBody update: D): ResponseEntity<D> {
         return ResponseEntity.ok(service.update(update))
     }
 
@@ -201,7 +201,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
             )
     )
-    fun create(@RequestBody create: D?): ResponseEntity<D> {
+    fun create(@RequestBody create: D): ResponseEntity<D> {
         return ResponseEntity.ok(service.create(create))
     }
 
@@ -294,7 +294,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
             MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
         )
     )
-    fun patch(@RequestBody update: D?): ResponseEntity<D> {
+    fun patch(@RequestBody update: D): ResponseEntity<D> {
         return ResponseEntity.ok(service.patch(update))
     }
 
