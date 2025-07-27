@@ -1,11 +1,11 @@
 package br.com.fenix.apiintegracao.database
 
 import br.com.fenix.apiintegracao.database.dao.ComicInfoDao
-import br.com.fenix.apiintegracao.database.dao.implement.DeckSubtitleDaoJDBC
-import br.com.fenix.apiintegracao.database.dao.implement.MangaExtractorDaoJDBC
 import br.com.fenix.apiintegracao.database.dao.DeckSubtitleDao
 import br.com.fenix.apiintegracao.database.dao.MangaExtractorDao
 import br.com.fenix.apiintegracao.database.dao.implement.ComicInfoDaoJDBC
+import br.com.fenix.apiintegracao.database.dao.implement.DeckSubtitleDaoJDBC
+import br.com.fenix.apiintegracao.database.dao.implement.MangaExtractorDaoJDBC
 import br.com.fenix.apiintegracao.model.api.DadosConexao
 import org.slf4j.LoggerFactory
 import java.sql.Connection

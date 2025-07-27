@@ -1,7 +1,6 @@
 package br.com.fenix.apiintegracao.model.api
 
 import jakarta.persistence.*
-import jakarta.persistence.Entity
 import java.io.Serializable
 import java.time.LocalDateTime
 

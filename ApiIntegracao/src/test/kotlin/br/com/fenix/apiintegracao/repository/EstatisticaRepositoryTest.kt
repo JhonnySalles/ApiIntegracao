@@ -1,23 +1,5 @@
 package br.com.fenix.apiintegracao.repository
 
-import br.com.fenix.apiintegracao.dto.textojapones.EstatisticaDto
-import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
-import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
-import br.com.fenix.apiintegracao.repository.textojapones.EstatisticaJaponesRepository
-import br.com.fenix.apiintegracao.service.ServiceJpaBase
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.data.web.PagedResourcesAssembler
-import java.util.*
-
 /*@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension::class)
 class EstatisticaRepositoryTest(@Mock var repository: EstatisticaJaponesRepository, assembler: PagedResourcesAssembler<EstatisticaDto>) {

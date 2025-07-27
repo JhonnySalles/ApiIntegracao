@@ -4,7 +4,8 @@ class Endpoints {
     companion object {
         const val API = "/api"
 
-        const val ATUALIZACAO_URL = "/atualizacao/{updateDate}"
+        const val ATUALIZACAO = "atualizacao"
+        const val ATUALIZACAO_URL = "/$ATUALIZACAO/{updateDate}"
 
         const val TEXTO_JAPONES = "$API/texto-japones"
         const val TEXTO_JAPONES_ESTATISTICA = "$TEXTO_JAPONES/estatistica"

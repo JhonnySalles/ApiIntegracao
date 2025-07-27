@@ -1,26 +1,16 @@
 package br.com.fenix.apiintegracao.component
 
 import br.com.fenix.apiintegracao.config.FlywayConfig
-import br.com.fenix.apiintegracao.enums.Driver
 import br.com.fenix.apiintegracao.enums.Mapeamento
 import br.com.fenix.apiintegracao.model.api.DadosConexao
 import br.com.fenix.apiintegracao.repository.api.DadosConexaoRepository
-import br.com.fenix.apiintegracao.scanner.RepositoryInterfaceScanner
-import com.zaxxer.hikari.HikariDataSource
-import jakarta.persistence.EntityManagerFactory
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
 import org.springframework.context.annotation.DependsOn
-import org.springframework.core.io.ResourceLoader
-import org.springframework.core.type.filter.AssignableTypeFilter
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactory
-import org.springframework.data.repository.Repository
 import org.springframework.stereotype.Component
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.*
-import javax.sql.DataSource
 
 @Component
 @DependsOn("flywayApi")

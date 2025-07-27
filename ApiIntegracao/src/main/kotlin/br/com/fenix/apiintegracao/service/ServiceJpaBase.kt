@@ -1,6 +1,7 @@
 package br.com.fenix.apiintegracao.service
 
 import br.com.fenix.apiintegracao.controller.ControllerJpaBase
+import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
@@ -16,7 +17,6 @@ import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
@@ -29,8 +29,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
 
     fun getPage(pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
-            val list = repository.findAll(pageable).map { addLink(toDto(it)) }
-            val link = linkTo(methodOn(clazzController).getPage(list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
+            val list = toDtoLink(repository.findAll(pageable))
+            val link = linkTo(clazzController).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
             oLog.error("Error get page on jpa base", e)
@@ -38,11 +38,11 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
         }
     }
 
-    fun getPage(updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
+    fun getLastSyncPage(updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
             val dateTime = LocalDateTime.parse(updateDate)
-            val list = repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable).map { addLink(toDto(it)) }
-            val link = linkTo(methodOn(clazzController).getLastSyncPage(updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
+            val list = toDtoLink(repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable))
+            val link = linkTo(clazzController).slash(ATUALIZACAO).slash(updateDate).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
             oLog.error("Error get page on jpa base with update date", e)
@@ -172,6 +172,8 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
 
     private fun addLink(obj: D): D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it }
     private fun addLink(list: List<D>): List<D> = list.let { l -> l.parallelStream().forEach { addLink(it) }; l }
+    private fun addLink(list: Page<D>): Page<D> = list.map { addLink(it) }
+    private fun toDtoLink(list: Page<E>): Page<D> = list.map { addLink(toDto(it)) }
 
     fun toDto(obj: E): D = Mapper.parse(obj, clazzDto)
     fun toDto(list: Page<E>): Page<D> = Mapper.parse(list, clazzDto)

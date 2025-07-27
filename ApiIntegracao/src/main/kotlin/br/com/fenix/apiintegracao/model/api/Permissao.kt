@@ -1,7 +1,6 @@
 package br.com.fenix.apiintegracao.model.api
 
 import jakarta.persistence.*
-import jakarta.persistence.Entity
 import org.springframework.security.core.GrantedAuthority
 import java.io.Serializable
 

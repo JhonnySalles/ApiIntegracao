@@ -7,7 +7,6 @@ import br.com.fenix.apiintegracao.dto.textojapones.EstatisticaDto
 import br.com.fenix.apiintegracao.dto.wrapper.WrapperEstatisticaDto
 import br.com.fenix.apiintegracao.mock.MockEstatistica
 import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
-import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.TestMethodOrder

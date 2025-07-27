@@ -2,7 +2,6 @@ package br.com.fenix.apiintegracao.exceptions
 
 import java.io.Serializable
 import java.time.LocalDateTime
-import java.util.*
 
 class ExceptionResponse(
     val timestamp: LocalDateTime = LocalDateTime.now(),

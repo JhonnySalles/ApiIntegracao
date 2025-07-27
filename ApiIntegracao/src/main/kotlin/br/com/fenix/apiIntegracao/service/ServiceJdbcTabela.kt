@@ -1,7 +1,7 @@
 package br.com.fenix.apiintegracao.service
 
-import br.com.fenix.apiintegracao.controller.ControllerJdbc
-import br.com.fenix.apiintegracao.controller.ControllerJdbcTabela
+import br.com.fenix.apiintegracao.controller.ControllerJdbcBaseTabela
+import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
@@ -11,16 +11,16 @@ import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcTabela
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
-abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbc<ID, E, D, C>>(
+abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseTabela<ID, E, D, C>>(
     var repo: RepositoryJdbcTabela<E, ID>, override val clazzEntity: Class<E>, override val clazzDto: Class<D>, override val clazzController: Class<C>
 ) : ServiceJdbcBase<ID, E, D, C>(repo, clazzEntity, clazzDto, clazzController) {
 
@@ -44,11 +44,11 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
             throw TableNotExistsException()
     }
 
-    override fun getPage(table: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
+    fun getPage(table: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         validTable(table)
         try {
-            val list = repo.findAll(table, pageable).map { addLink(table, toDto(it)) }
-            val link = linkTo(methodOn(clazzController).getPage(table, list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
+            val list = toDtoLink(table, repo.findAll(table, pageable))
+            val link = linkTo(clazzController).withSelfRel()
             return assembler.toModel(list, link)
         } catch (e: Exception) {
             oLog.error("Error get page on jpa base", e)
@@ -56,11 +56,11 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         }
     }
 
-    fun getPage(table: String, updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
+    fun getLastSyncPage(table: String, updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         validTable(table)
         val dateTime = LocalDateTime.parse(updateDate)
-        val list = repo.findAllByAtualizacaoGreaterThanEqual(table, dateTime, pageable).map { addLink(table, toDto(it)) }
-        val link = linkTo(methodOn(clazzController).getLastSyncPage(table, updateDate, list.pageable.pageNumber, list.pageable.pageSize, "asc", assembler)).withSelfRel()
+        val list = toDtoLink(table, repo.findAllByAtualizacaoGreaterThanEqual(table, dateTime, pageable))
+        val link = linkTo(clazzController).slash(ATUALIZACAO).slash(updateDate).withSelfRel()
         return assembler.toModel(list, link)
     }
 
@@ -141,7 +141,9 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
 
     open fun delete(table: String, delete: List<ID>) = delete.forEach { delete(table, it) }
 
-    private fun addLink(table: String, obj : D) : D = obj.let { it.add(linkTo(methodOn(clazzController).getOne(table, it.getId())).withSelfRel()); it}
+    private fun addLink(table: String, obj : D) : D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it}
     private fun addLink(table: String, list : List<D>) : List<D> = list.let { l -> l.parallelStream().forEach{ addLink(table, it) }; l }
+    private fun addLink(table: String, list: Page<D>): Page<D> = list.map { addLink(table, it) }
+    private fun toDtoLink(table: String, list: Page<E>): Page<D> = list.map { addLink(table, toDto(it)) }
 
 }

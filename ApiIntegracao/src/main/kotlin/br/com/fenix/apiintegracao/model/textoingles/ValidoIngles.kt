@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-@Table(name = "revisar")
+@Table(name = "valido")
 data class ValidoIngles(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

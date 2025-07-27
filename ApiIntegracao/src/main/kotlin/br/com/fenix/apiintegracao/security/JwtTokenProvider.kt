@@ -2,7 +2,6 @@ package br.com.fenix.apiintegracao.security
 
 
 import br.com.fenix.apiintegracao.dto.api.TokenDto
-import br.com.fenix.apiintegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiintegracao.service.api.UsuarioService
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier

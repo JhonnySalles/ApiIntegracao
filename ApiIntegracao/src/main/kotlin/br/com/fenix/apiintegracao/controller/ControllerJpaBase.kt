@@ -1,15 +1,14 @@
 package br.com.fenix.apiintegracao.controller
 
+import br.com.fenix.apiintegracao.component.DynamicJpaRepositoryRegistry
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO_URL
 import br.com.fenix.apiintegracao.converters.MediaTypes
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.model.EntityBase
-import br.com.fenix.apiintegracao.component.DynamicJpaRepositoryRegistry
 import br.com.fenix.apiintegracao.repository.RepositoryJpaBase
 import br.com.fenix.apiintegracao.service.ServiceJpaBase
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PagedResourcesAssembler
@@ -94,7 +93,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
     ): ResponseEntity<PagedModel<EntityModel<D>>> {
         val sort = if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val pageable = PageRequest.of(page, size, Sort.by(sort, "id"))
-        return ResponseEntity.ok(service.getPage(updateDate, pageable, assembler))
+        return ResponseEntity.ok(service.getLastSyncPage(updateDate, pageable, assembler))
     }
 
     @Operation(summary = "Pesquisa por id", description = "Pesquisa por id")
