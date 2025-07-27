@@ -8,23 +8,23 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-@Table(name = "revisar")
-data class ValidoIngles(
+@Table(name = "exclusao")
+data class ExclusaoIngles(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
     private var id: UUID?,
-    @Column(length = 250, nullable = false)
-    val palavra: String,
+    @Column(name = "palavra", length = 250, nullable = false)
+    val exclusao: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
-) : Serializable, EntityBase<UUID?, ValidoIngles>() {
+): Serializable, EntityBase<UUID?, ExclusaoIngles>() {
 
-    override fun merge(source: ValidoIngles) {
+    override fun merge(source: ExclusaoIngles) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
 
-    override fun patch(source: ValidoIngles) {
+    override fun patch(source: ExclusaoIngles) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
 
@@ -36,18 +36,22 @@ data class ValidoIngles(
         this.id = id
     }
 
-    override fun create(id: UUID?): ValidoIngles {
-        return ValidoIngles(id, "")
+    override fun create(id: UUID?): ExclusaoIngles {
+        return ExclusaoIngles(id, "" + "")
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as ValidoIngles
-        return palavra == other.palavra
+
+        other as ExclusaoIngles
+
+        if (exclusao != other.exclusao) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
-        return palavra.hashCode()
+        return exclusao.hashCode()
     }
 }

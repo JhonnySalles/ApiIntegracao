@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-
 @Tag(name = "Authentication Endpoint")
 @RestController
 @RequestMapping("/auth")
@@ -28,10 +27,7 @@ class AuthController {
 
     @Operation(summary = "Refresh token for authenticated user and returns a token")
     @PutMapping(value = ["/refresh/{username}"])
-    fun refreshToken(
-        @PathVariable("username") username: String?,
-        @RequestHeader("Authorization") refreshToken: String?
-    ): ResponseEntity<*>? {
+    fun refreshToken(@PathVariable("username") username: String?, @RequestHeader("Authorization") refreshToken: String?): ResponseEntity<*>? {
         return if (checkIfParamsIsNotNull(username, refreshToken))
             ResponseEntity.status(HttpStatus.FORBIDDEN).body<String>("Invalid client request!")
         else

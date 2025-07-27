@@ -48,7 +48,32 @@ data class EstatisticaJapones(
     }
 
     override fun patch(source: EstatisticaJapones) {
-        TODO("Not yet implemented")
+        if (source.sequencial != null && source.sequencial!! > 0)
+            this.sequencial = source.sequencial
+
+        if (source.kanji.isNotEmpty())
+            this.kanji = source.kanji
+
+        if (source.leitura.isNotEmpty())
+            this.leitura = source.leitura
+
+        if (source.tipo.isNotEmpty())
+            this.tipo = source.tipo
+
+        if (source.quantidade > 0)
+            this.quantidade = source.quantidade
+
+        if (source.percentual > 0)
+            this.percentual = source.percentual
+
+        if (source.media > 0)
+            this.media = source.media
+
+        if (source.percentualMedio > 0)
+            this.percentualMedio = source.percentualMedio
+
+        if (source.corSequencial > 0)
+            this.corSequencial = source.corSequencial
     }
 
     override fun getId(): UUID? {

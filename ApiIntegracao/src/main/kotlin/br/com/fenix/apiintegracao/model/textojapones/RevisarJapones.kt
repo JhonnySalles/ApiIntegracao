@@ -14,11 +14,13 @@ data class RevisarJapones(
     @Column(length = 36)
     private var id: UUID?,
     @Column(length = 250, nullable = false)
-    var vocabulario: String,
-    @Column(length = 250, nullable = false)
+    val vocabulario: String,
+    @Column(name = "forma_basica", length = 250, nullable = false)
     var formaBasica: String,
     @Column(length = 250, nullable = false)
     var leitura: String,
+    @Column(name = "leitura_novel", length = 250, nullable = false)
+    var leituraNovel: String,
     @Column(nullable = false)
     var ingles: String,
     @Column(nullable = false)
@@ -36,12 +38,11 @@ data class RevisarJapones(
 ) : Serializable, EntityBase<UUID?, RevisarJapones>() {
 
     override fun merge(source: RevisarJapones) {
-        this.vocabulario = source.vocabulario
         this.formaBasica = source.formaBasica
         this.leitura = source.leitura
+        this.leituraNovel = source.leituraNovel
         this.portugues = source.portugues
         this.ingles = source.ingles
-        this.portugues = source.portugues
         this.revisado = source.revisado
         this.aparece = source.aparece
         this.isAnime = source.isAnime
@@ -49,7 +50,23 @@ data class RevisarJapones(
     }
 
     override fun patch(source: RevisarJapones) {
-        TODO("Not yet implemented")
+        if (source.formaBasica.isNotEmpty())
+            this.formaBasica = source.formaBasica
+
+        if (source.leitura.isNotEmpty())
+            this.leitura = source.leitura
+
+        if (source.leituraNovel.isNotEmpty())
+            this.leituraNovel = source.leituraNovel
+
+        if (source.portugues.isNotEmpty())
+            this.portugues = source.portugues
+
+        if (source.ingles.isNotEmpty())
+            this.ingles = source.ingles
+
+        if (source.aparece > 0)
+            this.aparece = source.aparece
     }
 
     override fun getId(): UUID? {
@@ -61,18 +78,14 @@ data class RevisarJapones(
     }
 
     override fun create(id: UUID?): RevisarJapones {
-        return RevisarJapones(id, "", "", "", "", "", false, 0, isAnime = false, isManga = false)
+        return RevisarJapones(id, "", "", "", "", "", "", false, 0, isAnime = false, isManga = false)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as RevisarJapones
-
-        if (vocabulario != other.vocabulario) return false
-
-        return true
+        return vocabulario == other.vocabulario
     }
 
     override fun hashCode(): Int {

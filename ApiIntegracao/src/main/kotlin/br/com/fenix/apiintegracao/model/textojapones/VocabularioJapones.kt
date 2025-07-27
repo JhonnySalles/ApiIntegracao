@@ -47,7 +47,7 @@ data class VocabularioJapones(
         if (source.formaBasica.isNotEmpty())
             this.formaBasica = source.formaBasica
 
-        if (source.formaBasica.isNotEmpty())
+        if (source.leitura.isNotEmpty())
             this.leitura = source.leitura
 
         if (source.leituraNovel.isNotEmpty())

@@ -42,7 +42,20 @@ data class FilaSqlJapones(
     }
 
     override fun patch(source: FilaSqlJapones) {
-        TODO("Not yet implemented")
+        if (source.sequencial > 0)
+            this.sequencial = source.sequencial
+
+        if (source.selectSQL.isNotEmpty())
+            this.selectSQL = source.selectSQL
+
+        if (source.updateSQL.isNotEmpty())
+            this.updateSQL = source.updateSQL
+
+        if (source.deleteSQL.isNotEmpty())
+            this.deleteSQL = source.deleteSQL
+
+        if (source.vocabulario.isNotEmpty())
+            this.vocabulario = source.vocabulario
     }
 
     override fun getId(): UUID? {

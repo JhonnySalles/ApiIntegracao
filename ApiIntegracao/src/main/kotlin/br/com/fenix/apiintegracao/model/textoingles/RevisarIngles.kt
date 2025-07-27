@@ -14,7 +14,7 @@ data class RevisarIngles(
     @Column(length = 36)
     private var id: UUID?,
     @Column(length = 250, nullable = false)
-    var vocabulario: String,
+    val vocabulario: String,
     @Column(length = 250, nullable = false)
     var leitura: String,
     @Column(nullable = false)
@@ -32,7 +32,6 @@ data class RevisarIngles(
 ) : Serializable, EntityBase<UUID?, RevisarIngles>() {
 
     override fun merge(source: RevisarIngles) {
-        this.vocabulario = source.vocabulario
         this.leitura = source.leitura
         this.portugues = source.portugues
         this.revisado = source.revisado
@@ -42,7 +41,14 @@ data class RevisarIngles(
     }
 
     override fun patch(source: RevisarIngles) {
-        TODO("Not yet implemented")
+        if (source.leitura.isNotEmpty())
+            this.leitura = source.leitura
+
+        if (source.portugues.isNotEmpty())
+            this.portugues = source.portugues
+
+        if (source.aparece > 0)
+            this.aparece = source.aparece
     }
 
     override fun getId(): UUID? {

@@ -14,7 +14,7 @@ data class ExclusaoJapones(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 36)
     private var id: UUID?,
-    @Column(length = 250, nullable = false)
+    @Column(name = "palavra", length = 250, nullable = false)
     val exclusao: String,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
@@ -25,7 +25,7 @@ data class ExclusaoJapones(
     }
 
     override fun patch(source: ExclusaoJapones) {
-        TODO("Not yet implemented")
+        throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
 
     override fun getId(): UUID? {
@@ -43,12 +43,8 @@ data class ExclusaoJapones(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as ExclusaoJapones
-
-        if (exclusao != other.exclusao) return false
-
-        return true
+        return exclusao == other.exclusao
     }
 
     override fun hashCode(): Int {

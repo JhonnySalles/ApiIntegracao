@@ -29,7 +29,11 @@ data class VocabularioIngles(
     }
 
     override fun patch(source: VocabularioIngles) {
-        TODO("Not yet implemented")
+        if (source.leitura.isNotEmpty())
+            this.leitura = source.leitura
+
+        if (source.portugues.isNotEmpty())
+            this.portugues = source.portugues
     }
 
     override fun getId(): UUID? {
