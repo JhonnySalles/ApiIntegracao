@@ -15,7 +15,7 @@ import java.util.*
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class VocabularioJaponesControllerJsonTest() : BaseControllerTest<UUID?, EstatisticaJapones, EstatisticaDto, WrapperEstatisticaDto>(MockEstatistica(), TestConfigs.CONTENT_TYPE_JSON) {
+class MangaVocabularioJaponesControllerJsonTest() : BaseControllerTest<UUID?, EstatisticaJapones, EstatisticaDto, WrapperEstatisticaDto>(MockEstatistica(), TestConfigs.CONTENT_TYPE_JSON) {
 
     override var testName: String = "Estatistica Controller Json Test"
     override var pathEndpointObject: String = TEXTO_JAPONES

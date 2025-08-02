@@ -298,7 +298,7 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
      * @return retorna um id do registro gerado
      * @throws SQLException caso o sql esteja errado ou não tenha nenhuma linha alterada
      */
-    override fun insert(obj: E) : ID? {
+    override fun insert(obj: E, isThrowsNotInsert: Boolean) : ID? {
         val parametros = getParametros(obj)
         var colunas = ""
         var valores = ""
@@ -316,6 +316,8 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
                 id as ID
             else if (generate != null)
                 toID(generate)
+            else if (isThrowsNotInsert)
+                throw SQLException(Mensagens.BD_ERRO_INSERT)
             else
                 null
     }
@@ -340,7 +342,38 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
 
         val sql = String.format(UPDATE, getTabela(obj), colunas.substringBeforeLast(","), chaves.substringBeforeLast(" AND "))
         //LOGGER.info("Gerado SQL Update: $sql")
-        toID(query(sql, parametros, isThrowsNotUpdate))
+        try {
+            toID(query(sql, parametros, isThrowsNotUpdate))
+        } catch (e : Exception) {
+            if (isThrowsNotUpdate)
+                throw SQLException(Mensagens.BD_ERRO_UPDATE, e)
+        }
+    }
+
+    /**
+     * Deleta um objeto no banco de dados pelo id, caso não informmado será utilizado pela tag @Id.
+     * @param id id do registro a ser excluido
+     * @param column campo no banco referente ao id, padrão (id)
+     * @throws SQLException caso o sql esteja errado ou não tenha nenhuma linha alterada
+     */
+    override fun delete(obj: E, isThrowsNotDelete: Boolean) {
+        val condicao = mutableMapOf<String, Any?>()
+        val ids = getIds(obj)
+        var chaves = ""
+        for (param in ids.keys) {
+            chaves += "$param = ? AND "
+            condicao["id_$param"] = ids[param]
+        }
+
+        val sql = String.format(DELETE, getTabela(obj), chaves.substringBeforeLast(" AND "))
+        //LOGGER.info("Gerado SQL Delete: $sql")
+
+        try {
+            query(sql, condicao, isThrowsNotDelete)
+        } catch (e : Exception) {
+            if (isThrowsNotDelete)
+                throw SQLException(Mensagens.BD_ERRO_DELETE, e)
+        }
     }
 
     /**
@@ -362,30 +395,6 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
         val sql = String.format(DELETE, getTabela(entity), chave)
         //LOGGER.info("Gerado SQL Delete: $sql")
         query(sql, mapOf(condicao))
-    }
-
-    /**
-     * Deleta um objeto no banco de dados pelo id, caso não informmado será utilizado pela tag @Id.
-     * @param obj objeto do registro a ser excluido
-     * @param column campo no banco referente ao id, padrão (id)
-     * @throws SQLException caso o sql esteja errado ou não tenha nenhuma linha alterada
-     */
-    override fun delete(obj: E) {
-        val parametros = getParametros(obj, true).toMutableMap()
-        var colunas = ""
-        for (param in parametros.keys)
-            colunas += "$param = ?,"
-
-        val ids = getIds(obj)
-        var chaves = ""
-        for (param in ids.keys) {
-            chaves += "$param = ? AND "
-            parametros["id_$param"] = ids[param]
-        }
-
-        val sql = String.format(UPDATE, getTabela(obj), colunas.substringBeforeLast(","), chaves.substringBeforeLast(" AND "))
-        //LOGGER.info("Gerado SQL Delete: $sql")
-        query(sql, parametros)
     }
 
     /**

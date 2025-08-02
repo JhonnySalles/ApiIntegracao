@@ -29,8 +29,8 @@ class ComicInfoDaoJDBC(conexao: Connection) : ComicInfoDao, RepositoryDaoBase<UU
     }
 
     override fun toEntity(rs: ResultSet): ComicInfo = ComicInfo(
-        UUID.fromString(rs.getString("id")), rs.getLong("idMal"), rs.getString("comic"), rs.getString("title"), rs.getString("series"), rs.getString("publisher"),
-        rs.getString("alternativeSeries"), rs.getString("storyArc"), rs.getString("seriesGroup"), rs.getString("imprint"),
+        UUID.fromString(rs.getString("id")), rs.getLong("idMal"), rs.getString("comic"), rs.getString("title"), rs.getString("series"),
+        rs.getString("publisher"), rs.getString("alternativeSeries"), rs.getString("storyArc"), rs.getString("seriesGroup"), rs.getString("imprint"),
         rs.getString("genre"), rs.getString("language"), if (rs.getString("maturityRating") != null) AgeRating.valueOf(rs.getString("maturityRating")) else null
     )
 

@@ -31,6 +31,15 @@ object DaoFactory {
         }
     }
 
+    fun createNovelExtractorDao(source: Pair<DadosConexao, Connection>): MangaExtractorDao {
+        try {
+            return MangaExtractorDaoJDBC(source.second, source.first.base)
+        } catch (e: Exception) {
+            oLog.error("Error connect manga extractor database", e)
+            throw e
+        }
+    }
+
     fun createComicInfoDao(connection: Connection): ComicInfoDao {
         try {
             return ComicInfoDaoJDBC(connection)

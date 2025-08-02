@@ -25,6 +25,7 @@ class Endpoints {
         const val TABLES_URL = "/tabela/{table}/"
 
         const val MANGA_EXTRACTOR = "$API/manga-extractor"
+        const val NOVEL_EXTRACTOR = "$API/novel-extractor"
         const val DECK_SUBTITLE = "$API/deck-subtitle"
         const val COMIC_INFO = "$API/comic-info"
     }

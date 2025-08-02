@@ -7,7 +7,7 @@ import br.com.fenix.apiintegracao.model.textojapones.VocabularioJapones
 import org.junit.jupiter.api.BeforeEach
 import java.util.*
 
-class MapperConverterVocabularioTest() : MapperConvertBase<UUID?, VocabularioJapones, VocabularioDto>() {
+class MapperConverterMangaVocabularioTest() : MapperConvertBase<UUID?, VocabularioJapones, VocabularioDto>() {
 
     lateinit var inputObject: MockVocabulario
 

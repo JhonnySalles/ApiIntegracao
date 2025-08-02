@@ -21,7 +21,7 @@ abstract class RepositoryJdbcBase<E : EntityBase<ID, E>, ID> : RepositoryJdbc<E,
 
     @Throws(ExceptionDb::class)
     override fun insert(obj: E): E {
-        val id = dao.insert(obj) ?: throw ExceptionDb("Failed to insert object, ID is null")
+        val id = dao.insert(obj, isThrowsNotInsert = true) ?: throw ExceptionDb("Failed to insert object, ID is null")
         obj.setId(id)
         return obj
     }
