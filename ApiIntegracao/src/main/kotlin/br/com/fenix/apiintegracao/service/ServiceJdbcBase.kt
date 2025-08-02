@@ -9,6 +9,7 @@ import br.com.fenix.apiintegracao.exceptions.ServerErrorException
 import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.Entity
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbc
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbc<ID, E, D, C>>(
-    open var repository: RepositoryJdbc<E, ID>, open val clazzEntity: Class<E>, open val clazzDto: Class<D>, open val clazzController: Class<C>
+    open var repository: RepositoryJdbc<E, ID>, open val factory: EntityFactory<ID, E>, open val clazzEntity: Class<E>, open val clazzDto: Class<D>, open val clazzController: Class<C>
 ) {
 
     companion object {
@@ -88,7 +89,7 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
         if (dto == null)
             throw RequiredObjectIsNullException()
         val entity = toEntity(dto)
-        val dbEntity: E = (entity as Entity<ID, E>).create(entity.getId())
+        val dbEntity: E = factory.create(entity.getId())
         (dbEntity as Entity<ID, E>).merge(entity)
         return addLink(toDto(repository.insert(dbEntity)))
     }
@@ -98,7 +99,7 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
         val entities = toEntity(dtos)
         val saved = mutableListOf<D>()
         entities.forEach {
-            val dbEntity: E = (it as Entity<ID, E>).create(it.getId())
+            val dbEntity: E = factory.create(it.getId())
             (dbEntity as Entity<ID, E>).merge(it)
             saved.add(toDto(repository.insert(dbEntity)))
         }

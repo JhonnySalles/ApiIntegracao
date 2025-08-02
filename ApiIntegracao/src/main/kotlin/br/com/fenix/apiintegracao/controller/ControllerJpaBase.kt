@@ -6,6 +6,7 @@ import br.com.fenix.apiintegracao.converters.MediaTypes
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJpaBase
 import br.com.fenix.apiintegracao.service.ServiceJpaBase
 import io.swagger.v3.oas.annotations.Operation
@@ -22,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
-abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>> {
+abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(factory: EntityFactory<ID, E>) {
     private val service: ServiceJpaBase<ID, E, D, C, R>
 
     private val clazzEntity: Class<E>
@@ -39,7 +40,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
         clazzRepository = superclass.actualTypeArguments[4] as Class<R>
-        service = object : ServiceJpaBase<ID, E, D, C, R>(clazzEntity, clazzDto, clazzController) {
+        service = object : ServiceJpaBase<ID, E, D, C, R>(factory, clazzEntity, clazzDto, clazzController) {
             override val repository: RepositoryJpaBase<E, ID>
                 get() = getDynamicRegistry().getRepository(conexao, clazzRepository) ?: throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço indisponível no momento.")
         }

@@ -9,6 +9,7 @@ import br.com.fenix.apiintegracao.exceptions.ServerErrorException
 import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.Entity
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJpaBase
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -20,7 +21,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
-abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(open val factory: EntityFactory<ID, E>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
     companion object {
         val oLog = LoggerFactory.getLogger(ServiceJpaBase::class.java.name)
     }
@@ -98,7 +99,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
             throw RequiredObjectIsNullException()
         try {
             val entity = toEntity(dto)
-            val dbEntity: E = (entity as Entity<ID, E>).create(entity.getId())
+            val dbEntity: E = factory.create(entity.getId())
             (dbEntity as Entity<ID, E>).merge(entity)
             return addLink(toDto(repository.save(dbEntity)))
         } catch (e: Exception) {
@@ -113,7 +114,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
             val entities = toEntity(dtos)
             val saved = mutableListOf<D>()
             entities.forEach {
-                val dbEntity: E = (it as Entity<ID, E>).create(it.getId())
+                val dbEntity: E = factory.create(it.getId())
                 (dbEntity as Entity<ID, E>).merge(it)
                 saved.add(toDto(repository.save(dbEntity)))
             }

@@ -2,11 +2,14 @@ package br.com.fenix.apiintegracao.model.novelextractor
 
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapitulo
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaPagina
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaVocabulario
+import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
 import com.google.gson.annotations.Expose
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class NovelCapitulo(
@@ -18,8 +21,13 @@ data class NovelCapitulo(
     @Expose var sequencia: Int = 0,
     @Expose var lingua: Linguagens = Linguagens.PORTUGUESE,
     @Expose var textos: MutableList<NovelTexto> = mutableListOf(),
-    @Expose var vocabularios: MutableSet<NovelVocabulario> = mutableSetOf()
+    @Expose var vocabularios: MutableSet<NovelVocabulario> = mutableSetOf(),
+    var atualizacao: LocalDateTime? = null
 ) : Serializable, EntityBase<UUID?, NovelCapitulo>() {
+
+    companion object : EntityFactory<UUID?, NovelCapitulo> {
+        override fun create(id: UUID?): NovelCapitulo = NovelCapitulo(id, "", 0f, 0f, "", 0, Linguagens.PORTUGUESE, mutableListOf(), mutableSetOf(), LocalDateTime.now())
+    }
 
     override fun merge(source: NovelCapitulo) {
         this.novel = source.novel
@@ -30,6 +38,7 @@ data class NovelCapitulo(
         this.sequencia = source.sequencia
         this.textos = source.textos
         this.vocabularios = source.vocabularios
+        this.atualizacao = source.atualizacao
     }
 
     override fun patch(source: NovelCapitulo) {
@@ -53,6 +62,9 @@ data class NovelCapitulo(
 
         if (source.vocabularios.isNotEmpty())
             this.vocabularios = source.vocabularios
+
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -61,10 +73,6 @@ data class NovelCapitulo(
 
     override fun setId(id: UUID?) {
         this.id = id;
-    }
-
-    override fun create(id: UUID?): NovelCapitulo {
-        return NovelCapitulo(id, "", 0f, 0f, "", 0, Linguagens.PORTUGUESE, mutableListOf(), mutableSetOf())
     }
 
     override fun equals(other: Any?): Boolean {

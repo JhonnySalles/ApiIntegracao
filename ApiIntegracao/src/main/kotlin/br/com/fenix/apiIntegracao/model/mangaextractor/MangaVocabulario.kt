@@ -1,6 +1,8 @@
 package br.com.fenix.apiintegracao.model.mangaextractor
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -27,8 +29,12 @@ data class MangaVocabulario(
     @Column
     var revisado: Boolean,
     @Column
-    var atualizacao: LocalDateTime = LocalDateTime.now()
+    var atualizacao: LocalDateTime?
 ) : Serializable, EntityBase<UUID?, MangaVocabulario>() {
+
+    companion object : EntityFactory<UUID?, MangaVocabulario> {
+        override fun create(id: UUID?): MangaVocabulario = MangaVocabulario(id, "", "", "", "", false, LocalDateTime.now())
+    }
 
     override fun merge(source: MangaVocabulario) {
         this.leitura = source.leitura
@@ -48,7 +54,8 @@ data class MangaVocabulario(
         if (source.portugues.isNotEmpty())
             this.portugues = source.portugues
 
-        this.atualizacao = LocalDateTime.now()
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -57,10 +64,6 @@ data class MangaVocabulario(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): MangaVocabulario {
-        return MangaVocabulario(id, "", "", "", "", false)
     }
 
     override fun equals(other: Any?): Boolean {

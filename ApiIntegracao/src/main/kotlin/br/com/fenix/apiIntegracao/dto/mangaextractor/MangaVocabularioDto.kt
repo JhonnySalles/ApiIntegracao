@@ -1,18 +1,18 @@
 package br.com.fenix.apiintegracao.dto.mangaextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.dto.novelextractor.NovelVocabularioDto
+import java.time.LocalDateTime
 import java.util.*
 
-data class VocabularioDto(
+data class MangaVocabularioDto(
     private var id: UUID?,
-    var palavra: String,
-    var portugues: String,
-    var ingles: String,
+    val palavra: String,
     var leitura: String,
-    var isRevisado: Boolean,
-    var volumes: VolumeDto? = null,
-    var capitulos: CapituloDto? = null,
-    var paginas: PaginaDto? = null
+    var ingles: String,
+    var portugues: String,
+    var revisado: Boolean,
+    var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 
     override fun getId(): UUID? {
@@ -26,12 +26,8 @@ data class VocabularioDto(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
-        other as VocabularioDto
-
-        if (id != other.id) return false
-
-        return true
+        other as MangaVocabularioDto
+        return id == other.id
     }
 
     override fun hashCode(): Int {

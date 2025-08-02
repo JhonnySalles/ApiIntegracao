@@ -1,6 +1,9 @@
 package br.com.fenix.apiintegracao.model.textoingles
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -31,6 +34,10 @@ data class RevisarIngles(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, EntityBase<UUID?, RevisarIngles>() {
 
+    companion object : EntityFactory<UUID?, RevisarIngles> {
+        override fun create(id: UUID?): RevisarIngles = RevisarIngles(id, "", "", "",  false, 0, isAnime = false, isManga = false)
+    }
+
     override fun merge(source: RevisarIngles) {
         this.leitura = source.leitura
         this.portugues = source.portugues
@@ -57,10 +64,6 @@ data class RevisarIngles(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): RevisarIngles {
-        return RevisarIngles(id, "", "", "",  false, 0, isAnime = false, isManga = false)
     }
 
     override fun equals(other: Any?): Boolean {

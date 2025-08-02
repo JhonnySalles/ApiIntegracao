@@ -1,20 +1,17 @@
-package br.com.fenix.apiintegracao.dto.mangaextractor
+package br.com.fenix.apiintegracao.dto.novelextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import java.time.LocalDateTime
 import java.util.*
 
-data class TextoDto(
+data class NovelTextoDto(
     private var id: UUID?,
-    var sequencia: Int,
     var texto: String,
-    var posicao_x1: Int,
-    var posicao_x2: Int,
-    var posicao_y1: Int,
-    var posicao_y2: Int,
-    var versaoApp: Int
+    var sequencia: Int,
+    var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 
-    constructor(): this(null,  0, "",0,0,0,0, 0)
+    constructor(): this(null,  "", 0, LocalDateTime.now())
 
     override fun getId(): UUID? {
         return id
@@ -24,19 +21,11 @@ data class TextoDto(
         this.id = id
     }
 
-    override fun toString(): String {
-        return "MangaTexto [id=$id, texto=$texto, sequencia=$sequencia]"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
-        other as TextoDto
-
-        if (id != other.id) return false
-
-        return true
+        other as NovelTextoDto
+        return id == other.id
     }
 
     override fun hashCode(): Int {

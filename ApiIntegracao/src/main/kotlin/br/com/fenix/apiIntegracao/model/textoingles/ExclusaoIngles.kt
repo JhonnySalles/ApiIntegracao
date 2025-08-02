@@ -1,7 +1,10 @@
 package br.com.fenix.apiintegracao.model.textoingles
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ResourceNonUpgradeableException
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -20,6 +23,10 @@ data class ExclusaoIngles(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ): Serializable, EntityBase<UUID?, ExclusaoIngles>() {
 
+    companion object : EntityFactory<UUID?, ExclusaoIngles> {
+        override fun create(id: UUID?): ExclusaoIngles = ExclusaoIngles(id, "" + "")
+    }
+
     override fun merge(source: ExclusaoIngles) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
@@ -34,10 +41,6 @@ data class ExclusaoIngles(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): ExclusaoIngles {
-        return ExclusaoIngles(id, "" + "")
     }
 
     override fun equals(other: Any?): Boolean {

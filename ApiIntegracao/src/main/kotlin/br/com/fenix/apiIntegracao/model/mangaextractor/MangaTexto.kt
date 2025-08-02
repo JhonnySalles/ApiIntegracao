@@ -1,8 +1,11 @@
 package br.com.fenix.apiintegracao.model.mangaextractor
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import com.google.gson.annotations.Expose
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class MangaTexto(
@@ -12,8 +15,13 @@ data class MangaTexto(
     @Expose var x1: Int = 0,
     @Expose var y1: Int = 0,
     @Expose var x2: Int = 0,
-    @Expose var y2: Int = 0
+    @Expose var y2: Int = 0,
+    var atualizacao: LocalDateTime? = null
 ) : Serializable, EntityBase<UUID?, MangaTexto>() {
+
+    companion object : EntityFactory<UUID?, MangaTexto> {
+        override fun create(id: UUID?): MangaTexto = MangaTexto(id, "", 0, 0, 0, 0, 0, LocalDateTime.now())
+    }
 
     override fun merge(source: MangaTexto) {
         this.sequencia = source.sequencia
@@ -22,6 +30,7 @@ data class MangaTexto(
         this.y1 = source.y1
         this.x2 = source.x2
         this.y2 = source.y2
+        this.atualizacao = source.atualizacao
     }
 
     override fun patch(source: MangaTexto) {
@@ -42,6 +51,9 @@ data class MangaTexto(
 
         if (source.y2 > 0)
             this.y2 = source.y2
+
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -50,14 +62,6 @@ data class MangaTexto(
 
     override fun setId(id: UUID?) {
         this.id = id;
-    }
-
-    override fun create(id: UUID?): MangaTexto {
-        return MangaTexto(id, "", 0, 0, 0, 0, 0)
-    }
-
-    override fun toString(): String {
-        return "MangaTexto [id=$id, texto=$texto, sequencia=$sequencia]"
     }
 
     override fun equals(other: Any?): Boolean {

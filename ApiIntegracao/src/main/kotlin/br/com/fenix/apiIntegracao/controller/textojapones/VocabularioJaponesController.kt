@@ -5,6 +5,7 @@ import br.com.fenix.apiintegracao.controller.ControllerJpaBase
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.TEXTO_JAPONES_VOCABULARIO
 import br.com.fenix.apiintegracao.dto.textojapones.VocabularioDto
 import br.com.fenix.apiintegracao.enums.Conexao
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaVolume
 import br.com.fenix.apiintegracao.model.textojapones.VocabularioJapones
 import br.com.fenix.apiintegracao.repository.textojapones.VocabularioJaponesRepository
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -15,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_VOCABULARIO)
 @Tag(name = "Vocabulário Japônes", description = "Endpoint de vocabulários japônes")
-class VocabularioJaponesController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, VocabularioJaponesController, VocabularioJaponesRepository>() {
+class VocabularioJaponesController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, VocabularioJaponesController, VocabularioJaponesRepository>(VocabularioJapones.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_JAPONES
 }

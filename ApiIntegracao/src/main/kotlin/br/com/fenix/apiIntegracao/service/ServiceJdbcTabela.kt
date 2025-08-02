@@ -8,6 +8,7 @@ import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiintegracao.exceptions.TableNotExistsException
 import br.com.fenix.apiintegracao.model.Entity
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcTabela
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseTabela<ID, E, D, C>>(
-    var repo: RepositoryJdbcTabela<E, ID>, override val clazzEntity: Class<E>, override val clazzDto: Class<D>, override val clazzController: Class<C>
-) : ServiceJdbcBase<ID, E, D, C>(repo, clazzEntity, clazzDto, clazzController) {
+    var repo: RepositoryJdbcTabela<E, ID>, override val factory: EntityFactory<ID, E>, override val clazzEntity: Class<E>, override val clazzDto: Class<D>, override val clazzController: Class<C>
+) : ServiceJdbcBase<ID, E, D, C>(repo, factory, clazzEntity, clazzDto, clazzController) {
 
     companion object {
         private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcTabela::class.java)
@@ -115,7 +116,7 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
             throw RequiredObjectIsNullException()
         verifyTable(table)
         val entity = toEntity(dto)
-        val dbEntity: E = (entity as Entity<ID, E>).create(entity.getId())
+        val dbEntity: E = factory.create(entity.getId())
         (dbEntity as Entity<ID, E>).merge(entity)
         return addLink(table, toDto(repo.insert(table, dbEntity)))
     }
@@ -126,7 +127,7 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         val entities = toEntity(dtos)
         val saved = mutableListOf<D>()
         entities.forEach {
-            val dbEntity: E = (it as Entity<ID, E>).create(it.getId())
+            val dbEntity: E = factory.create(it.getId())
             (dbEntity as Entity<ID, E>).merge(it)
             saved.add(toDto(repo.insert(table, dbEntity)))
         }

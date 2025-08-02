@@ -1,6 +1,9 @@
 package br.com.fenix.apiintegracao.model.textoingles
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -23,6 +26,10 @@ data class VocabularioIngles(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, EntityBase<UUID?, VocabularioIngles>() {
 
+    companion object : EntityFactory<UUID?, VocabularioIngles> {
+        override fun create(id: UUID?): VocabularioIngles = VocabularioIngles(id, "", "", "")
+    }
+
     override fun merge(source: VocabularioIngles) {
         this.leitura = source.leitura
         this.portugues = source.portugues
@@ -42,10 +49,6 @@ data class VocabularioIngles(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): VocabularioIngles {
-        return VocabularioIngles(id, "", "", "")
     }
 
     override fun equals(other: Any?): Boolean {

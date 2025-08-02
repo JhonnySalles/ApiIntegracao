@@ -2,11 +2,15 @@ package br.com.fenix.apiintegracao.database.dao.implement
 
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeResultSet
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeStatement
+import br.com.fenix.apiintegracao.database.dao.ExtractorDaoBase
 import br.com.fenix.apiintegracao.database.dao.MangaExtractorDao
+import br.com.fenix.apiintegracao.database.dao.PageBase
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.messages.Mensagens
+import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.mangaextractor.*
+import br.com.fenix.apiintegracao.model.novelextractor.NovelTexto
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.*
 import java.awt.image.BufferedImage
@@ -17,7 +21,7 @@ import java.time.LocalDateTime
 import java.util.*
 import javax.imageio.ImageIO
 
-class MangaExtractorDaoJDBC(private val conn: Connection, private val base: String) : MangaExtractorDao {
+class MangaExtractorDaoJDBC(private val conn: Connection, private val base: String) : MangaExtractorDao, PageBase() {
 
     companion object {
         private val oLog = LoggerFactory.getLogger(MangaExtractorDaoJDBC::class.java)
@@ -51,17 +55,17 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 + " FROM information_schema.tables WHERE table_schema = '%s' "
                 + " AND Table_Name LIKE '%%_volumes%%' GROUP BY Tabela ")
 
-        private const val UPDATE_VOLUMES = "UPDATE %s_volumes SET manga = ?, volume = ?, linguagem = ?, arquivo = ?, is_processado = ? WHERE id = ?"
-        private const val UPDATE_CAPITULOS = "UPDATE %s_capitulos SET manga = ?, volume = ?, capitulo = ?, linguagem = ?, scan = ?, is_extra = ?, is_raw = ? WHERE id = ?"
-        private const val UPDATE_PAGINAS = "UPDATE %s_paginas SET nome = ?, numero = ?, hash_pagina = ? WHERE id = ?"
-        private const val UPDATE_TEXTO = "UPDATE %s_textos SET sequencia = ?, texto = ?, posicao_x1 = ?, posicao_y1 = ?, posicao_x2 = ?, posicao_y2 = ? WHERE id = ?"
-        private const val UPDATE_CAPA = "UPDATE %s_capas SET manga = ?, volume = ?, linguagem = ?, arquivo = ?, extensao = ?, capa = ? WHERE id = ?"
+        private const val UPDATE_VOLUMES = "UPDATE %s_volumes SET manga = ?, volume = ?, linguagem = ?, arquivo = ?, is_processado = ?, atualizacao = ? WHERE id = ?"
+        private const val UPDATE_CAPITULOS = "UPDATE %s_capitulos SET manga = ?, volume = ?, capitulo = ?, linguagem = ?, scan = ?, is_extra = ?, is_raw = ?, atualizacao = ? WHERE id = ?"
+        private const val UPDATE_PAGINAS = "UPDATE %s_paginas SET nome = ?, numero = ?, hash_pagina = ?, atualizacao = ? WHERE id = ?"
+        private const val UPDATE_TEXTO = "UPDATE %s_textos SET sequencia = ?, texto = ?, posicao_x1 = ?, posicao_y1 = ?, posicao_x2 = ?, posicao_y2 = ?, atualizacao = ? WHERE id = ?"
+        private const val UPDATE_CAPA = "UPDATE %s_capas SET manga = ?, volume = ?, linguagem = ?, arquivo = ?, extensao = ?, capa = ?, atualizacao = ? WHERE id = ?"
 
-        private const val INSERT_VOLUMES = "INSERT INTO %s_volumes (id, manga, volume, linguagem, arquivo, is_processado) VALUES (?,?,?,?,?,?)"
-        private const val INSERT_CAPITULOS = "INSERT INTO %s_capitulos (id, id_volume, manga, volume, capitulo, linguagem, scan, is_extra, is_raw) VALUES (?,?,?,?,?,?,?,?,?)"
-        private const val INSERT_PAGINAS = "INSERT INTO %s_paginas (id, id_capitulo, nome, numero, hash_pagina) VALUES (?,?,?,?,?)"
-        private const val INSERT_TEXTO = "INSERT INTO %s_textos (id, id_pagina, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2) VALUES (?,?,?,?,?,?,?,?)"
-        private const val INSERT_CAPA = "INSERT INTO %s_capas (id, id_volume, manga, volume, linguagem, arquivo, extensao, capa) VALUES (?,?,?,?,?,?,?,?)"
+        private const val INSERT_VOLUMES = "INSERT INTO %s_volumes (id, manga, volume, linguagem, arquivo, is_processado, atualizacao) VALUES (?,?,?,?,?,?,?)"
+        private const val INSERT_CAPITULOS = "INSERT INTO %s_capitulos (id, id_volume, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, atualizacao) VALUES (?,?,?,?,?,?,?,?,?,?)"
+        private const val INSERT_PAGINAS = "INSERT INTO %s_paginas (id, id_capitulo, nome, numero, hash_pagina, atualizacao) VALUES (?,?,?,?,?,?)"
+        private const val INSERT_TEXTO = "INSERT INTO %s_textos (id, id_pagina, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2, atualizacao) VALUES (?,?,?,?,?,?,?,?,?)"
+        private const val INSERT_CAPA = "INSERT INTO %s_capas (id, id_volume, manga, volume, linguagem, arquivo, extensao, capa, atualizacao) VALUES (?,?,?,?,?,?,?,?,?)"
 
         private const val DELETE_VOLUMES = "DELETE v FROM %s_volumes AS v %s"
         private const val DELETE_CAPITULOS = "DELETE c FROM %s_capitulos AS c INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s"
@@ -72,16 +76,16 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         private const val DELETE_CAPAS = "DELETE FROM %s_capas WHERE id_volume = ?"
         private const val DELETE_CAPA = "DELETE FROM %s_capas WHERE id = ?"
 
-        private const val SELECT_VOLUMES = "SELECT id, manga, volume, linguagem, arquivo, is_Processado FROM %s_volumes"
-        private const val SELECT_CAPITULOS = "SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw FROM %s_capitulos WHERE id_volume = ?"
-        private const val SELECT_PAGINAS = "SELECT id, nome, numero, hash_pagina FROM %s_paginas WHERE id_capitulo = ? "
-        private const val SELECT_TEXTOS = "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2 FROM %s_textos WHERE id_pagina = ? "
-        private const val SELECT_CAPA = "SELECT id, manga, volume, linguagem, arquivo, extensao, capa FROM %s_capas WHERE id_volume = ? "
+        private const val SELECT_VOLUMES = "SELECT id, manga, volume, linguagem, arquivo, is_processado, atualizacao FROM %s_volumes"
+        private const val SELECT_CAPITULOS = "SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, atualizacao FROM %s_capitulos WHERE id_volume = ?"
+        private const val SELECT_PAGINAS = "SELECT id, nome, numero, hash_pagina, atualizacao FROM %s_paginas WHERE id_capitulo = ? "
+        private const val SELECT_TEXTOS = "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2, atualizacao FROM %s_textos WHERE id_pagina = ? "
+        private const val SELECT_CAPA = "SELECT id, manga, volume, linguagem, arquivo, extensao, capa, atualizacao FROM %s_capas WHERE id_volume = ? "
 
-        private const val SELECT_VOLUME = "SELECT VOL.id, VOL.manga, VOL.volume, VOL.linguagem, VOL.arquivo, VOL.is_Processado FROM %s_volumes VOL WHERE id = ?"
-        private const val SELECT_CAPITULO = "SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw FROM %s_capitulos WHERE id = ?"
-        private const val SELECT_PAGINA = "SELECT id, nome, numero, hash_pagina FROM %s_paginas WHERE id = ?"
-        private const val SELECT_TEXTO = "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2 FROM %s_textos WHERE id = ?"
+        private const val SELECT_VOLUME = "SELECT id, manga, volume, linguagem, arquivo, is_processado, atualizacao FROM %s_volumes WHERE id = ?"
+        private const val SELECT_CAPITULO = "SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, atualizacao FROM %s_capitulos WHERE id = ?"
+        private const val SELECT_PAGINA = "SELECT id, nome, numero, hash_pagina, atualizacao FROM %s_paginas WHERE id = ?"
+        private const val SELECT_TEXTO = "SELECT id, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2, atualizacao FROM %s_textos WHERE id = ?"
 
         private const val SELECT_VOCABUALARIO = "SELECT id, palavra, portugues, ingles, leitura, revisado, d.atualizacao FROM %s_vocabularios V INNER JOIN _vocabularios D ON V.id_vocabulario = D.id WHERE V.%s = ?;"
         private const val DELETE_VOCABULARIO = "DELETE FROM %s_vocabularios WHERE %s = ?;"
@@ -106,8 +110,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             selectAllCapitulos(base, id).toMutableList(),
             selectVocabulario(base, idVolume = id),
             rs.getString("arquivo"),
-            rs.getBoolean("is_Processado"),
-            selectCapa(base, id)
+            rs.getBoolean("is_processado"),
+            selectCapa(base, id).orElse(null),
+            rs.getObject("atualizacao", LocalDateTime::class.java)
         )
     }
 
@@ -123,7 +128,8 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             selectAllPaginas(base, id).toMutableList(),
             rs.getBoolean("is_extra"),
             rs.getBoolean("is_raw"),
-            selectVocabulario(base, idCapitulo = id)
+            selectVocabulario(base, idCapitulo = id),
+            rs.getObject("atualizacao", LocalDateTime::class.java)
         )
     }
 
@@ -135,7 +141,8 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             rs.getInt("numero"),
             rs.getString("hash_pagina"),
             selectAllTextos(base, id).toMutableList(),
-            selectVocabulario(base, idPagina = id)
+            selectVocabulario(base, idPagina = id),
+            rs.getObject("atualizacao", LocalDateTime::class.java)
         )
     }
 
@@ -147,63 +154,24 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             rs.getInt("posicao_x1"),
             rs.getInt("posicao_y1"),
             rs.getInt("posicao_x2"),
-            rs.getInt("posicao_y2")
+            rs.getInt("posicao_y2"),
+            rs.getObject("atualizacao", LocalDateTime::class.java)
         )
     }
 
-    private fun <E> toPageable(pageable: Pageable, total: Int, list: List<E>) : Page<E> {
-        val page: Pageable = object : Pageable {
-            override fun getPageNumber(): Int {
-                return pageable.pageNumber
-            }
-
-            override fun getPageSize(): Int {
-                return pageable.pageSize
-            }
-
-            override fun getOffset(): Long {
-                return pageable.pageNumber * pageable.pageSize.toLong()
-            }
-
-            override fun getSort(): Sort {
-                return pageable.sort
-            }
-
-            override fun next(): Pageable {
-                return PageRequest.of(this.pageNumber + 1, this.pageSize, this.sort)
-            }
-
-            override fun previousOrFirst(): Pageable {
-                return if (this.pageNumber == 0) this else PageRequest.of(this.pageNumber - 1, this.pageSize, this.sort)
-            }
-
-            override fun first(): Pageable {
-                return PageRequest.of(0, this.pageSize, this.sort)
-            }
-
-            override fun withPage(pageNumber: Int): Pageable {
-                TODO("Not yet implemented")
-            }
-
-            override fun hasPrevious(): Boolean {
-                return pageable.pageNumber > 0
-            }
-        }
-
-        return PageImpl(list, page, total.toLong())
-    }
-
     // -------------------------------------------------------------------------------------------------------------  //
-    override fun updateVolume(base: String, obj: MangaVolume) {
+    override fun updateVolume(base: String, obj: MangaVolume): MangaVolume {
         var st: PreparedStatement? = null
         try {
             st = conn.prepareStatement(String.format(UPDATE_VOLUMES, base), Statement.RETURN_GENERATED_KEYS)
-            st.setString(1, obj.manga)
-            st.setInt(2, obj.volume)
-            st.setString(3, obj.lingua.sigla)
-            st.setString(4, obj.arquivo)
-            st.setBoolean(5, obj.processado)
-            st.setString(6, obj.getId()!!.toString())
+            var index = 0
+            st.setString(++index, obj.manga)
+            st.setInt(++index, obj.volume)
+            st.setString(++index, obj.lingua.sigla)
+            st.setString(++index, obj.arquivo)
+            st.setBoolean(++index, obj.processado)
+            st.setObject(++index, obj.atualizacao)
+            st.setString(++index, obj.getId()!!.toString())
             val rowsAffected = st.executeUpdate()
 
             obj.capa?.let { updateCapa(base, it) }
@@ -214,6 +182,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 println(st.toString())
                 println("Nenhum registro atualizado.")
             }
+            return obj
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -223,7 +192,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun updateCapa(base: String, obj: MangaCapa) {
+    override fun updateCapa(base: String, obj: MangaCapa): MangaCapa {
         var st: PreparedStatement? = null
         try {
             st = conn.prepareStatement(String.format(UPDATE_CAPA, base), Statement.RETURN_GENERATED_KEYS)
@@ -237,6 +206,8 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             val baos = ByteArrayOutputStream()
             ImageIO.write(obj.imagem, obj.extenssao, baos)
             st.setBinaryStream(++index, ByteArrayInputStream(baos.toByteArray()))
+
+            st.setObject(++index, obj.atualizacao)
             st.setString(++index, obj.getId().toString())
 
             val rowsAffected = st.executeUpdate()
@@ -244,6 +215,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 println(st.toString())
                 println("Nenhum registro atualizado.")
             }
+            return obj
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -253,18 +225,20 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun updateCapitulo(base: String, obj: MangaCapitulo) {
+    override fun updateCapitulo(base: String, obj: MangaCapitulo): MangaCapitulo {
         var st: PreparedStatement? = null
         try {
             st = conn.prepareStatement(String.format(UPDATE_CAPITULOS, base), Statement.RETURN_GENERATED_KEYS)
-            st.setString(1, obj.manga)
-            st.setInt(2, obj.volume)
-            st.setFloat(3, obj.capitulo)
-            st.setString(4, obj.lingua.sigla)
-            st.setString(5, obj.scan)
-            st.setBoolean(6, obj.isExtra)
-            st.setBoolean(7, obj.isRaw)
-            st.setString(8, obj.getId()!!.toString())
+            var index = 0
+            st.setString(++index, obj.manga)
+            st.setInt(++index, obj.volume)
+            st.setFloat(++index, obj.capitulo)
+            st.setString(++index, obj.lingua.sigla)
+            st.setString(++index, obj.scan)
+            st.setBoolean(++index, obj.isExtra)
+            st.setBoolean(++index, obj.isRaw)
+            st.setObject(++index, obj.atualizacao)
+            st.setString(++index, obj.getId()!!.toString())
             val rowsAffected = st.executeUpdate()
 
             deleteVocabulario(base, idCapitulo = obj.getId())
@@ -274,6 +248,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 println(st.toString())
                 println("Nenhum registro atualizado.")
             }
+            return obj
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -283,14 +258,16 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun updatePagina(base: String, obj: MangaPagina) {
+    override fun updatePagina(base: String, obj: MangaPagina): MangaPagina {
         var st: PreparedStatement? = null
         try {
             st = conn.prepareStatement(String.format(UPDATE_PAGINAS, base), Statement.RETURN_GENERATED_KEYS)
-            st.setString(1, obj.nomePagina)
-            st.setInt(2, obj.numero)
-            st.setString(3, obj.hash)
-            st.setString(4, obj.getId()!!.toString())
+            var index = 0
+            st.setString(++index, obj.nomePagina)
+            st.setInt(++index, obj.numero)
+            st.setString(++index, obj.hash)
+            st.setObject(++index, obj.atualizacao)
+            st.setString(++index, obj.getId()!!.toString())
             val rowsAffected = st.executeUpdate()
 
             deleteVocabulario(base, idPagina = obj.getId())
@@ -300,6 +277,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 println(st.toString())
                 throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
             }
+            return obj
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -309,7 +287,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun updateTexto(base: String, obj: MangaTexto) {
+    override fun updateTexto(base: String, obj: MangaTexto): MangaTexto {
         var st: PreparedStatement? = null
         try {
             st = conn.prepareStatement(String.format(UPDATE_TEXTO, base), Statement.RETURN_GENERATED_KEYS)
@@ -320,12 +298,14 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setInt(++index, obj.y1)
             st.setInt(++index, obj.x2)
             st.setInt(++index, obj.y2)
+            st.setObject(++index, obj.atualizacao)
             st.setString(++index, obj.getId()!!.toString())
             val rowsAffected = st.executeUpdate()
             if (rowsAffected < 1) {
                 println(st.toString())
                 throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
             }
+            return obj
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -348,6 +328,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(++index, obj.lingua!!.sigla)
             st.setString(++index, obj.arquivo)
             st.setBoolean(++index, obj.processado)
+            st.setObject(++index, obj.atualizacao)
             val rowsAffected = st.executeUpdate()
             if (rowsAffected < 1) {
                 println(st.toString())
@@ -357,7 +338,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 var id: UUID? = null
                 if (rs.next()) {
                     id = UUID.fromString(rs.getString(1))
-                    obj.capa?.let { insertCapa(base, id, it) }
+                    obj.capa?.let { it.setId(insertCapa(base, id, it)) }
                     insertVocabulario(base, idVolume = id, vocabulario = obj.vocabularios)
                 }
                 id
@@ -371,9 +352,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun insertCapa(base: String, idVolume: UUID, obj: MangaCapa) {
+    override fun insertCapa(base: String, idVolume: UUID, obj: MangaCapa): UUID? {
         var st: PreparedStatement? = null
-        try {
+        return try {
             st = conn.prepareStatement(String.format(INSERT_CAPA, base), Statement.RETURN_GENERATED_KEYS)
             var index = 0
             st.setString(++index, obj.getId().toString())
@@ -388,10 +369,17 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             ImageIO.write(obj.imagem, obj.extenssao, baos)
             st.setBinaryStream(++index, ByteArrayInputStream(baos.toByteArray()))
 
+            st.setObject(++index, obj.atualizacao)
             val rowsAffected = st.executeUpdate()
             if (rowsAffected < 1) {
                 println(st.toString())
-                println("Nenhum registro atualizado.")
+                throw ExceptionDb(Mensagens.BD_ERRO_INSERT)
+            } else {
+                val rs = st.generatedKeys
+                var id: UUID? = null
+                if (rs.next())
+                    id = UUID.fromString(rs.getString(1))
+                id
             }
         } catch (e: SQLException) {
             e.printStackTrace()
@@ -417,6 +405,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(++index, obj.scan)
             st.setBoolean(++index, obj.isExtra)
             st.setBoolean(++index, obj.isRaw)
+            st.setObject(++index, obj.atualizacao)
             val rowsAffected = st.executeUpdate()
             if (rowsAffected < 1) {
                 println(st.toString())
@@ -450,6 +439,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(++index, obj.nomePagina)
             st.setInt(++index, obj.numero)
             st.setString(++index, obj.hash)
+            st.setObject(++index, obj.atualizacao)
             val rowsAffected = st.executeUpdate()
             if (rowsAffected < 1) {
                 println(st.toString())
@@ -486,6 +476,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setInt(++index, obj.y1)
             st.setInt(++index, obj.x2)
             st.setInt(++index, obj.y2)
+            st.setObject(++index, obj.atualizacao)
             val rowsAffected = st.executeUpdate()
             if (rowsAffected < 1) {
                 println(st.toString())
@@ -506,7 +497,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
     }
 
     // -------------------------------------------------------------------------------------------------------------  //
-    override fun selectVolume(base: String, id: UUID): MangaVolume? {
+    override fun selectVolume(base: String, id: UUID?): Optional<MangaVolume> {
+        require(id != null) { "O ID não pode ser nulo para a operação." }
+
         var st: PreparedStatement? = null
         var rs: ResultSet? = null
         return try {
@@ -514,9 +507,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(1, id.toString())
             rs = st.executeQuery()
             if (rs.next())
-                getVolume(rs, base)
+                Optional.of(getVolume(rs, base))
             else
-                null
+                Optional.empty()
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -527,7 +520,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun selectCapa(base: String, id: UUID): MangaCapa? {
+    override fun selectCapa(base: String, id: UUID?): Optional<MangaCapa> {
+        require(id != null) { "O ID não pode ser nulo para a operação." }
+
         var st: PreparedStatement? = null
         var rs: ResultSet? = null
         return try {
@@ -537,13 +532,13 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             if (rs.next()) {
                 val input = ByteArrayInputStream(rs.getBinaryStream("capa").readAllBytes())
                 val image: BufferedImage? = ImageIO.read(input)
-                MangaCapa(
+                Optional.of(MangaCapa(
                     UUID.fromString(rs.getString("id")), rs.getString("manga"), rs.getInt("volume"),
                     Linguagens.getEnum(rs.getString("linguagem"))!!, rs.getString("arquivo"), rs.getString("extensao"),
-                    image
-                )
-            }else
-                null
+                    image, rs.getObject("atualizacao", LocalDateTime::class.java)
+                ))
+            } else
+                Optional.empty()
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -554,7 +549,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun selectCapitulo(base: String, id: UUID): MangaCapitulo? {
+    override fun selectCapitulo(base: String, id: UUID?): Optional<MangaCapitulo> {
+        require(id != null) { "O ID não pode ser nulo para a operação." }
+
         var st: PreparedStatement? = null
         var rs: ResultSet? = null
         return try {
@@ -562,9 +559,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(1, id.toString())
             rs = st.executeQuery()
             if (rs.next())
-                getCapitulo(rs, base)
+                Optional.of(getCapitulo(rs, base))
             else
-                null
+                Optional.empty()
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -575,7 +572,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun selectPagina(base: String, id: UUID): MangaPagina? {
+    override fun selectPagina(base: String, id: UUID?): Optional<MangaPagina> {
+        require(id != null) { "O ID não pode ser nulo para a operação." }
+
         var st: PreparedStatement? = null
         var rs: ResultSet? = null
         return try {
@@ -583,9 +582,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(1, id.toString())
             rs = st.executeQuery()
             if (rs.next())
-                getPagina(rs, base)
+                Optional.of(getPagina(rs, base))
             else
-                null
+                Optional.empty()
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -596,7 +595,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun selectTexto(base: String, id: UUID): MangaTexto? {
+    override fun selectTexto(base: String, id: UUID?): Optional<MangaTexto> {
+        require(id != null) { "O ID não pode ser nulo para a operação." }
+
         var st: PreparedStatement? = null
         var rs: ResultSet? = null
         return try {
@@ -604,9 +605,9 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(1, id.toString())
             rs = st.executeQuery()
             if (rs.next())
-                getTexto(rs)
+                Optional.of(getTexto(rs))
             else
-                null
+                Optional.empty()
         } catch (e: SQLException) {
             e.printStackTrace()
             println(st.toString())
@@ -880,7 +881,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 conn.beginRequest()
             }
 
-            deleteVocabulario(base, null, obj.getId(), null)
+            deleteVocabulario(base, idCapitulo = obj.getId())
 
             for (pagina in obj.paginas)
                 deletePagina(base, pagina, false)
@@ -921,7 +922,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 conn.beginRequest()
             }
 
-            deleteVocabulario(base, null, null, obj.getId())
+            deleteVocabulario(base, idPagina = obj.getId())
 
             for (pagina in obj.textos)
                 deleteTexto(base, pagina, false)

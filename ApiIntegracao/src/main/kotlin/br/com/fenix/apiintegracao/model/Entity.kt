@@ -5,5 +5,4 @@ interface Entity<ID, E> {
     fun patch(source: E)
     fun getId(): ID
     fun setId(id: ID)
-    fun create(id: ID): E
 }

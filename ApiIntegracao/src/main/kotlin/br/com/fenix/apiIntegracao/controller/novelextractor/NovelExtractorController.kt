@@ -5,7 +5,10 @@ import br.com.fenix.apiintegracao.controller.ControllerJdbcBaseTabela
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.DECK_SUBTITLE
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.NOVEL_EXTRACTOR
 import br.com.fenix.apiintegracao.dto.decsubtitle.LegendaDto
+import br.com.fenix.apiintegracao.dto.novelextractor.NovelVolumeDto
 import br.com.fenix.apiintegracao.model.decksubtitle.Legenda
+import br.com.fenix.apiintegracao.model.novelextractor.NovelVolume
+import br.com.fenix.apiintegracao.model.textojapones.VocabularioJapones
 import br.com.fenix.apiintegracao.repository.decksubtitle.DeckSubtitleRepository
 import br.com.fenix.apiintegracao.repository.novelextractor.NovelExtractorRepository
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -16,6 +19,6 @@ import java.util.*
 @RestController
 @RequestMapping(NOVEL_EXTRACTOR)
 @Tag(name = "Novel Extractor", description = "Endpoint para base novel extractor")
-class NovelExtractorController(registry: DynamicJdbcRegistry) : ControllerJdbcBaseTabela<UUID?, Legenda, LegendaDto, NovelExtractorController>(NovelExtractorRepository(registry)) {
+class NovelExtractorController(registry: DynamicJdbcRegistry) : ControllerJdbcBaseTabela<UUID?, NovelVolume, NovelVolumeDto, NovelExtractorController>(NovelExtractorRepository(registry), NovelVolume.Companion) {
 
 }

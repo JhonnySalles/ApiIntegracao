@@ -5,6 +5,7 @@ import br.com.fenix.apiintegracao.controller.Endpoints.Companion.TABLES_URL
 import br.com.fenix.apiintegracao.converters.MediaTypes
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcTabela
 import br.com.fenix.apiintegracao.service.ServiceJdbcTabela
 import io.swagger.v3.oas.annotations.Operation
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
-abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseTabela<ID, E, D, C>>(repository: RepositoryJdbcTabela<E, ID>) : ControllerJdbcBase<ID, E, D, C>(repository), ControllerJdbcTabela<ID, E, D, C> {
+abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseTabela<ID, E, D, C>>(repository: RepositoryJdbcTabela<E, ID>, factory: EntityFactory<ID, E>) : ControllerJdbcBase<ID, E, D, C>(repository, factory), ControllerJdbcTabela<ID, E, D, C> {
     private val service: ServiceJdbcTabela<ID, E, D, C>
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
@@ -30,7 +31,7 @@ abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<I
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : ServiceJdbcTabela<ID, E, D, C>(repository, clazzEntity, clazzDto, clazzController) {}
+        service = object : ServiceJdbcTabela<ID, E, D, C>(repository, factory, clazzEntity, clazzDto, clazzController) {}
     }
 
     @Operation(summary = "Tabelas disponíveis para a consulta.", description = "Tabelas disponíveis para a consulta.")

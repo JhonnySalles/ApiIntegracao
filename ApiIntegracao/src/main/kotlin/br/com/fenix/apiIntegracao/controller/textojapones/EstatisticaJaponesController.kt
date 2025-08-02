@@ -15,7 +15,7 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_ESTATISTICA)
 @Tag(name = "Estatística Japônes", description = "Endpoint de estatísticas japônes")
-class EstatisticaJaponesController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, EstatisticaJapones, EstatisticaDto, EstatisticaJaponesController, EstatisticaJaponesRepository>() {
+class EstatisticaJaponesController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, EstatisticaJapones, EstatisticaDto, EstatisticaJaponesController, EstatisticaJaponesRepository>(EstatisticaJapones.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_JAPONES
 }

@@ -1,6 +1,9 @@
 package br.com.fenix.apiintegracao.model.textojapones
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.decksubtitle.Legenda
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -33,6 +36,10 @@ data class VocabularioJapones(
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, EntityBase<UUID?, VocabularioJapones>() {
+
+    companion object : EntityFactory<UUID?, VocabularioJapones> {
+        override fun create(id: UUID?): VocabularioJapones = VocabularioJapones(id, "", "", "", "", "", "",0)
+    }
 
     override fun merge(source: VocabularioJapones) {
         this.formaBasica = source.formaBasica
@@ -69,10 +76,6 @@ data class VocabularioJapones(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): VocabularioJapones {
-        return VocabularioJapones(id, "", "", "", "", "", "",0)
     }
 
     override fun equals(other: Any?): Boolean {

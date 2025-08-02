@@ -1,6 +1,9 @@
 package br.com.fenix.apiintegracao.model.textojapones
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.decksubtitle.Legenda
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -74,6 +77,41 @@ data class KanjaxPt(
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, EntityBase<UUID?, KanjaxPt>() {
+
+    companion object : EntityFactory<UUID?, KanjaxPt> {
+        override fun create(id: UUID?): KanjaxPt = KanjaxPt(
+            id,
+            0,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            0,
+            0,
+            0,
+            0,
+            "",
+            "",
+            "",
+            "",
+            "",
+            false,
+            false,
+            false,
+            false,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            "",
+            false,
+            "",
+            ""
+        )
+    }
 
     override fun merge(source: KanjaxPt) {
         this.sequencia = source.sequencia
@@ -181,41 +219,6 @@ data class KanjaxPt(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): KanjaxPt {
-        return KanjaxPt(
-            id,
-            0,
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            0,
-            0,
-            0,
-            0,
-            "",
-            "",
-            "",
-            "",
-            "",
-            false,
-            false,
-            false,
-            false,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            "",
-            false,
-            "",
-            ""
-        )
     }
 
     override fun equals(other: Any?): Boolean {

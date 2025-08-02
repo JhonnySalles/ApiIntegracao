@@ -1,19 +1,28 @@
 package br.com.fenix.apiintegracao.model.novelextractor
 
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
 import com.google.gson.annotations.Expose
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class NovelTexto(
     private var id: UUID? = null,
     @Expose var texto: String = "",
-    @Expose var sequencia: Int = 0
+    @Expose var sequencia: Int = 0,
+    var atualizacao: LocalDateTime? = null
 ) : Serializable, EntityBase<UUID?, NovelTexto>() {
+
+    companion object : EntityFactory<UUID?, NovelTexto> {
+        override fun create(id: UUID?): NovelTexto = NovelTexto(id, "", 0, LocalDateTime.now())
+    }
 
     override fun merge(source: NovelTexto) {
         this.sequencia = source.sequencia
         this.texto = source.texto
+        this.atualizacao = source.atualizacao
     }
 
     override fun patch(source: NovelTexto) {
@@ -22,6 +31,9 @@ data class NovelTexto(
 
         if (source.texto.isNotEmpty())
             this.texto = source.texto
+
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -32,23 +44,11 @@ data class NovelTexto(
         this.id = id;
     }
 
-    override fun create(id: UUID?): NovelTexto {
-        return NovelTexto(id, "", 0)
-    }
-
-    override fun toString(): String {
-        return "MangaTexto [id=$id, texto=$texto, sequencia=$sequencia]"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as NovelTexto
-
-        if (id != other.id) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {

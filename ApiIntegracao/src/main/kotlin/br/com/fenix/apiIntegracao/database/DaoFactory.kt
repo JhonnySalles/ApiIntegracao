@@ -3,9 +3,11 @@ package br.com.fenix.apiintegracao.database
 import br.com.fenix.apiintegracao.database.dao.ComicInfoDao
 import br.com.fenix.apiintegracao.database.dao.DeckSubtitleDao
 import br.com.fenix.apiintegracao.database.dao.MangaExtractorDao
+import br.com.fenix.apiintegracao.database.dao.NovelExtractorDao
 import br.com.fenix.apiintegracao.database.dao.implement.ComicInfoDaoJDBC
 import br.com.fenix.apiintegracao.database.dao.implement.DeckSubtitleDaoJDBC
 import br.com.fenix.apiintegracao.database.dao.implement.MangaExtractorDaoJDBC
+import br.com.fenix.apiintegracao.database.dao.implement.NovelExtractorDaoJDBC
 import br.com.fenix.apiintegracao.model.api.DadosConexao
 import org.slf4j.LoggerFactory
 import java.sql.Connection
@@ -31,11 +33,11 @@ object DaoFactory {
         }
     }
 
-    fun createNovelExtractorDao(source: Pair<DadosConexao, Connection>): MangaExtractorDao {
+    fun createNovelExtractorDao(source: Pair<DadosConexao, Connection>): NovelExtractorDao {
         try {
-            return MangaExtractorDaoJDBC(source.second, source.first.base)
+            return NovelExtractorDaoJDBC(source.second, source.first.base)
         } catch (e: Exception) {
-            oLog.error("Error connect manga extractor database", e)
+            oLog.error("Error connect novel extractor database", e)
             throw e
         }
     }

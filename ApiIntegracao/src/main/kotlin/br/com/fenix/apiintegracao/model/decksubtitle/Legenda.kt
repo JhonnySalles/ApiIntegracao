@@ -2,7 +2,10 @@ package br.com.fenix.apiintegracao.model.decksubtitle
 
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class Legenda(
@@ -15,6 +18,10 @@ data class Legenda(
     var traducao: String,
     var vocabulario: String
 ) : Serializable, EntityBase<UUID?, Legenda>() {
+
+    companion object : EntityFactory<UUID?, Legenda> {
+        override fun create(id: UUID?): Legenda = Legenda(id, 0, 0, Linguagens.PORTUGUESE, "", "", "", "")
+    }
 
     override fun merge(source: Legenda) {
         this.sequencia = source.sequencia
@@ -52,10 +59,6 @@ data class Legenda(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): Legenda {
-        return Legenda(id, 0, 0, Linguagens.PORTUGUESE, "", "", "", "")
     }
 
     override fun equals(other: Any?): Boolean {

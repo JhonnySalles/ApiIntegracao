@@ -2,9 +2,11 @@ package br.com.fenix.apiintegracao.model.novelextractor
 
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaVolume
 import com.google.gson.annotations.Expose
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class NovelVolume(
@@ -19,12 +21,17 @@ data class NovelVolume(
     @Expose var autor: String = "",
     @Expose var volume: Float = 0f,
     @Expose var lingua: Linguagens = Linguagens.PORTUGUESE,
-    var capa: NovelCapa? = null,
     var favorito: Boolean = false,
+    var processado: Boolean = false,
+    var capa: NovelCapa? = null,
     @Expose var capitulos: MutableList<NovelCapitulo> = mutableListOf(),
     @Expose var vocabularios: MutableSet<NovelVocabulario> = mutableSetOf(),
-    var processado: Boolean = false
+    var atualizacao: LocalDateTime? = null
 ) : Serializable, EntityBase<UUID?, NovelVolume>() {
+
+    companion object : EntityFactory<UUID?, NovelVolume> {
+        override fun create(id: UUID?): NovelVolume = NovelVolume(id, "", "", "", "", "", "", "", "", 0f, Linguagens.PORTUGUESE, false, false, null, mutableListOf(), mutableSetOf(), LocalDateTime.now())
+    }
 
     override fun merge(source: NovelVolume) {
         this.novel = source.novel
@@ -42,6 +49,7 @@ data class NovelVolume(
         this.capa = source.capa
         this.processado = source.processado
         this.favorito = source.favorito
+        this.atualizacao = source.atualizacao
     }
 
     override fun patch(source: NovelVolume) {
@@ -80,6 +88,9 @@ data class NovelVolume(
 
         if (source.capa != null)
             this.capa = source.capa
+
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -90,10 +101,6 @@ data class NovelVolume(
         this.id = id;
     }
 
-    override fun create(id: UUID?): NovelVolume {
-        return NovelVolume(id, "", "", "", "", "", "", "", "", 0f, Linguagens.PORTUGUESE, null, false, mutableListOf(), mutableSetOf(), false)
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -101,6 +108,7 @@ data class NovelVolume(
         other as NovelVolume
 
         if (novel != other.novel) return false
+        if (volume != other.volume) return false
         if (lingua != other.lingua) return false
 
         return true
@@ -108,6 +116,7 @@ data class NovelVolume(
 
     override fun hashCode(): Int {
         var result = novel.hashCode()
+        result = 31 * result + volume.hashCode()
         result = 31 * result + lingua.hashCode()
         return result
     }

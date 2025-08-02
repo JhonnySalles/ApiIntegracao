@@ -2,8 +2,10 @@ package br.com.fenix.apiintegracao.model.mangaextractor
 
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import com.google.gson.annotations.Expose
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class MangaVolume(
@@ -15,8 +17,13 @@ data class MangaVolume(
     @Expose var vocabularios: MutableSet<MangaVocabulario> = mutableSetOf(),
     @Expose var arquivo: String = "",
     var processado: Boolean = false,
-    var capa: MangaCapa? = null
+    var capa: MangaCapa? = null,
+    var atualizacao: LocalDateTime? = null
 ) : Serializable, EntityBase<UUID?, MangaVolume>() {
+
+    companion object : EntityFactory<UUID?, MangaVolume> {
+        override fun create(id: UUID?): MangaVolume = MangaVolume(id, "", 0, Linguagens.PORTUGUESE, mutableListOf(), mutableSetOf(), "", false, null, LocalDateTime.now())
+    }
 
     override fun merge(source: MangaVolume) {
         this.manga = source.manga
@@ -27,6 +34,7 @@ data class MangaVolume(
         this.arquivo = source.arquivo
         this.processado = source.processado
         this.capa = source.capa
+        this.atualizacao = source.atualizacao
     }
 
     override fun patch(source: MangaVolume) {
@@ -47,6 +55,9 @@ data class MangaVolume(
 
         if (source.capa != null)
             this.capa = source.capa
+
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -55,10 +66,6 @@ data class MangaVolume(
 
     override fun setId(id: UUID?) {
         this.id = id;
-    }
-
-    override fun create(id: UUID?): MangaVolume {
-        return MangaVolume(id, "", 0, Linguagens.PORTUGUESE, mutableListOf(), mutableSetOf(), "", false)
     }
 
     override fun equals(other: Any?): Boolean {

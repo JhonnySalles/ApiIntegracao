@@ -15,7 +15,7 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_KANJAX_PT)
 @Tag(name = "Vocabulário Japônes", description = "Endpoint de vocabulários japônes")
-class KanjaxController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, KanjaxController, VocabularioJaponesRepository>() {
+class KanjaxController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, VocabularioJapones, VocabularioDto, KanjaxController, VocabularioJaponesRepository>(VocabularioJapones.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_JAPONES
 }

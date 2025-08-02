@@ -4,6 +4,7 @@ import br.com.fenix.apiintegracao.enums.comicinfo.AgeRating
 import br.com.fenix.apiintegracao.enums.comicinfo.Manga
 import br.com.fenix.apiintegracao.enums.comicinfo.YesNo
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import jakarta.persistence.*
 import jakarta.xml.bind.annotation.*
 import org.hibernate.annotations.JdbcTypeCode
@@ -161,6 +162,16 @@ data class ComicInfo(
     var review: String? = null,
 ) : Serializable, EntityBase<UUID?, ComicInfo>() {
 
+    companion object : EntityFactory<UUID?, ComicInfo> {
+        override fun create(id: UUID?): ComicInfo = ComicInfo(
+            id, null, "", "", "", 0F, 0, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null, null,
+            null,null, null, null, null, null, null, null, null,
+            null, "", null, null, null, null, Manga.Unknown, null, null,
+            null, null, null, null
+        )
+    }
+
     constructor(
         id: UUID?, idMal: Long?, comic: String, title: String, series: String, publisher: String?, alternateSeries: String?,
         storyArc: String?, seriesGroup: String?, imprint: String?, genre: String?, languageISO: String,
@@ -193,15 +204,6 @@ data class ComicInfo(
     }
 
     override fun getId(): UUID? = id
-    override fun create(id: UUID?): ComicInfo {
-        return ComicInfo(
-            id, null, "", "", "", 0F, 0, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null, null, null, null,
-            null,null, null, null, null, null, null, null, null,
-            null, "", null, null, null, null, Manga.Unknown, null, null,
-            null, null, null, null
-        )
-    }
 
     override fun setId(id: UUID?) {
         this.id = id

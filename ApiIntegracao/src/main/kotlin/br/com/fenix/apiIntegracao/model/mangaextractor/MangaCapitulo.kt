@@ -2,8 +2,10 @@ package br.com.fenix.apiintegracao.model.mangaextractor
 
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
 import com.google.gson.annotations.Expose
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 data class MangaCapitulo(
@@ -16,8 +18,13 @@ data class MangaCapitulo(
     @Expose var paginas: MutableList<MangaPagina> = mutableListOf(),
     @Expose var isExtra: Boolean = false,
     @Expose var isRaw: Boolean = false,
-    @Expose var vocabularios: MutableSet<MangaVocabulario> = mutableSetOf()
+    @Expose var vocabularios: MutableSet<MangaVocabulario> = mutableSetOf(),
+    var atualizacao: LocalDateTime? = null
 ) : Serializable, EntityBase<UUID?, MangaCapitulo>() {
+
+    companion object : EntityFactory<UUID?, MangaCapitulo> {
+        override fun create(id: UUID?): MangaCapitulo = MangaCapitulo(id, "", 0, 0f, Linguagens.PORTUGUESE, "", mutableListOf(), isExtra = false, isRaw = false, mutableSetOf(), LocalDateTime.now())
+    }
 
     override fun merge(source: MangaCapitulo) {
         this.manga = source.manga
@@ -28,6 +35,7 @@ data class MangaCapitulo(
         this.isExtra = source.isExtra
         this.isRaw = source.isRaw
         this.vocabularios = source.vocabularios
+        this.atualizacao = source.atualizacao
     }
 
     override fun patch(source: MangaCapitulo) {
@@ -45,6 +53,9 @@ data class MangaCapitulo(
 
         if (source.vocabularios.isNotEmpty())
             this.vocabularios = source.vocabularios
+
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -53,10 +64,6 @@ data class MangaCapitulo(
 
     override fun setId(id: UUID?) {
         this.id = id;
-    }
-
-    override fun create(id: UUID?): MangaCapitulo {
-        return MangaCapitulo(id, "", 0, 0f, Linguagens.PORTUGUESE, "", mutableListOf(), isExtra = false, isRaw = false, mutableSetOf())
     }
 
     override fun equals(other: Any?): Boolean {

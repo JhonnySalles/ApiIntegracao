@@ -15,7 +15,7 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_EXCLUSAO)
 @Tag(name = "Exclusão Japônes", description = "Endpoint de vocabulários excluidos japônes")
-class ExclusaoJaponesController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, ExclusaoJapones, ExclusaoDto, ExclusaoJaponesController, ExclusaoJaponesRepository>() {
+class ExclusaoJaponesController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, ExclusaoJapones, ExclusaoDto, ExclusaoJaponesController, ExclusaoJaponesRepository>(ExclusaoJapones.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_JAPONES
 }

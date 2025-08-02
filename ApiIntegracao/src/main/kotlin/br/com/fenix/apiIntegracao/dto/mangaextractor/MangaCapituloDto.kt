@@ -1,24 +1,28 @@
 package br.com.fenix.apiintegracao.dto.mangaextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.dto.novelextractor.NovelCapituloDto
 import br.com.fenix.apiintegracao.enums.Linguagens
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaPagina
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaVocabulario
+import java.time.LocalDateTime
 import java.util.*
 
-data class CapituloDto(
+data class MangaCapituloDto(
     private var id: UUID?,
     var manga: String,
     var volume: Int,
-    var capitulo: Double,
-    var linguagem: Linguagens?,
+    var capitulo: Float,
+    var lingua: Linguagens,
     var scan: String,
+    var paginas: MutableList<MangaPagina>,
     var isExtra: Boolean,
     var isRaw: Boolean,
-    var isProcessado: Boolean,
-    var paginas: List<PaginaDto> = listOf(),
-    var vocabulario: Set<VocabularioDto> = setOf()
+    var vocabularios: MutableSet<MangaVocabulario>,
+    var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 
-    constructor(): this(null, "", 0,0.0,null,"",false,false,false)
+    constructor(): this(null, "", 0,0f,Linguagens.PORTUGUESE,"", mutableListOf(),false,false, mutableSetOf(), LocalDateTime.now())
 
     override fun getId(): UUID? {
         return id
@@ -31,12 +35,8 @@ data class CapituloDto(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
-        other as CapituloDto
-
-        if (id != other.id) return false
-
-        return true
+        other as MangaCapituloDto
+        return id == other.id
     }
 
     override fun hashCode(): Int {

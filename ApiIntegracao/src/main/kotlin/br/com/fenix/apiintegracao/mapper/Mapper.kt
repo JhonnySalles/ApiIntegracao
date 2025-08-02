@@ -3,7 +3,6 @@ package br.com.fenix.apiintegracao.mapper
 import org.modelmapper.ModelMapper
 import org.springframework.data.domain.Page
 
-
 class Mapper {
     companion object {
         val mapper: ModelMapper = ModelMapper()

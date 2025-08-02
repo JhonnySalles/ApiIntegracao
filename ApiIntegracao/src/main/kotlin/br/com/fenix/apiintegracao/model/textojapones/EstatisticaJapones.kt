@@ -1,6 +1,9 @@
 package br.com.fenix.apiintegracao.model.textojapones
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.decksubtitle.Legenda
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -34,6 +37,10 @@ data class EstatisticaJapones(
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : EntityBase<UUID?, EstatisticaJapones>(), Serializable {
+
+    companion object : EntityFactory<UUID?, EstatisticaJapones> {
+        override fun create(id: UUID?): EstatisticaJapones = EstatisticaJapones(id, 0, "", "", "", 0.0, 0f, 0.0, 0f, 0)
+    }
 
     override fun merge(source: EstatisticaJapones) {
         this.sequencial = source.sequencial
@@ -82,10 +89,6 @@ data class EstatisticaJapones(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): EstatisticaJapones {
-        return EstatisticaJapones(id, 0, "", "", "", 0.0, 0f, 0.0, 0f, 0)
     }
 
     override fun equals(other: Any?): Boolean {

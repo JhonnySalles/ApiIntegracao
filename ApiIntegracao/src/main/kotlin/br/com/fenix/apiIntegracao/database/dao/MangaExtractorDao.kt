@@ -2,36 +2,28 @@ package br.com.fenix.apiintegracao.database.dao
 
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.model.mangaextractor.*
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import java.time.LocalDateTime
 import java.util.*
 
-interface MangaExtractorDao {
-
-    // -------------------------------------------------------------------------------------------------------------  //
-    @Throws(ExceptionDb::class)
-    fun updateVolume(base: String, obj: MangaVolume)
-
-    @Throws(ExceptionDb::class)
-    fun updateCapa(base: String, obj: MangaCapa)
-
-    @Throws(ExceptionDb::class)
-    fun updateCapitulo(base: String, obj: MangaCapitulo)
-
-    @Throws(ExceptionDb::class)
-    fun updatePagina(base: String, obj: MangaPagina)
-
-    @Throws(ExceptionDb::class)
-    fun updateTexto(base: String, obj: MangaTexto)
+interface MangaExtractorDao : ExtractorDaoBase<MangaVolume, UUID?> {
 
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun insertVolume(base: String, obj: MangaVolume): UUID?
+    fun updateCapa(base: String, obj: MangaCapa): MangaCapa
 
     @Throws(ExceptionDb::class)
-    fun insertCapa(base: String, idVolume: UUID, obj: MangaCapa)
+    fun updateCapitulo(base: String, obj: MangaCapitulo): MangaCapitulo
+
+    @Throws(ExceptionDb::class)
+    fun updatePagina(base: String, obj: MangaPagina): MangaPagina
+
+    @Throws(ExceptionDb::class)
+    fun updateTexto(base: String, obj: MangaTexto): MangaTexto
+
+    // -------------------------------------------------------------------------------------------------------------  //
+
+    @Throws(ExceptionDb::class)
+    fun insertCapa(base: String, idVolume: UUID, obj: MangaCapa): UUID?
 
     @Throws(ExceptionDb::class)
     fun insertCapitulo(base: String, idVolume: UUID, obj: MangaCapitulo): UUID?
@@ -45,31 +37,16 @@ interface MangaExtractorDao {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun selectVolume(base: String, id: UUID): MangaVolume?
+    fun selectCapa(base: String, id: UUID?): Optional<MangaCapa>
 
     @Throws(ExceptionDb::class)
-    fun selectCapa(base: String, id: UUID): MangaCapa?
+    fun selectCapitulo(base: String, id: UUID?): Optional<MangaCapitulo>
 
     @Throws(ExceptionDb::class)
-    fun selectCapitulo(base: String, id: UUID): MangaCapitulo?
+    fun selectPagina(base: String, id: UUID?): Optional<MangaPagina>
 
     @Throws(ExceptionDb::class)
-    fun selectPagina(base: String, id: UUID): MangaPagina?
-
-    @Throws(ExceptionDb::class)
-    fun selectTexto(base: String, id: UUID): MangaTexto?
-
-    @Throws(ExceptionDb::class)
-    fun selectAllVolumes(base: String): List<MangaVolume>
-
-    @Throws(ExceptionDb::class)
-    fun selectAllVolumes(base: String, pageable: Pageable): Page<MangaVolume>
-
-    @Throws(ExceptionDb::class)
-    fun selectAllVolumes(base: String, dateTime: LocalDateTime): List<MangaVolume>
-
-    @Throws(ExceptionDb::class)
-    fun selectAllVolumes(base: String, dateTime: LocalDateTime, pageable: Pageable): Page<MangaVolume>
+    fun selectTexto(base: String, id: UUID?): Optional<MangaTexto>
 
     @Throws(ExceptionDb::class)
     fun selectAllCapitulos(base: String, idVolume: UUID): List<MangaCapitulo>
@@ -83,9 +60,6 @@ interface MangaExtractorDao {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun deleteVolume(base: String, obj: MangaVolume)
-
-    @Throws(ExceptionDb::class)
     fun deleteCapa(base: String, obj: MangaCapa, transaction : Boolean = true)
 
     @Throws(ExceptionDb::class)
@@ -96,17 +70,6 @@ interface MangaExtractorDao {
 
     @Throws(ExceptionDb::class)
     fun deleteTexto(base: String, obj: MangaTexto, transaction : Boolean = true)
-
-    // -------------------------------------------------------------------------------------------------------------  //
-
-    @Throws(ExceptionDb::class)
-    fun createTable(nome: String)
-
-    @Throws(ExceptionDb::class)
-    fun existTable(nome: String):Boolean
-
-    @get:Throws(ExceptionDb::class)
-    val tables: List<String>
 
     // -------------------------------------------------------------------------------------------------------------  //
 

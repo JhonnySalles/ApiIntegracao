@@ -1,7 +1,10 @@
 package br.com.fenix.apiintegracao.model.textoingles
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ResourceNonUpgradeableException
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -20,6 +23,10 @@ data class ValidoIngles(
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, EntityBase<UUID?, ValidoIngles>() {
 
+    companion object : EntityFactory<UUID?, ValidoIngles> {
+        override fun create(id: UUID?): ValidoIngles = ValidoIngles(id, "")
+    }
+
     override fun merge(source: ValidoIngles) {
         throw ResourceNonUpgradeableException("Recurso não atualizável: $source")
     }
@@ -34,10 +41,6 @@ data class ValidoIngles(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): ValidoIngles {
-        return ValidoIngles(id, "")
     }
 
     override fun equals(other: Any?): Boolean {

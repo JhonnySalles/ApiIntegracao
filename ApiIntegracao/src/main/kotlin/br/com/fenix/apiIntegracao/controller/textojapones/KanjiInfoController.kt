@@ -15,7 +15,7 @@ import java.util.*
 @RestController
 @RequestMapping(TEXTO_JAPONES_KANJI_INFO)
 @Tag(name = "Kanji", description = "Endpoint de informações de kanji")
-class KanjiInfoController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, KanjiInfo, KanjiInfoDto, KanjiInfoController, KanjiInfoRepository>() {
+class KanjiInfoController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, KanjiInfo, KanjiInfoDto, KanjiInfoController, KanjiInfoRepository>(KanjiInfo.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_JAPONES
 }

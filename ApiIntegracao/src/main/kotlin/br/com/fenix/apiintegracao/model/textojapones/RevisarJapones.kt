@@ -1,6 +1,9 @@
 package br.com.fenix.apiintegracao.model.textojapones
 
+import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.decksubtitle.Legenda
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -36,6 +39,10 @@ data class RevisarJapones(
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : Serializable, EntityBase<UUID?, RevisarJapones>() {
+
+    companion object : EntityFactory<UUID?, RevisarJapones> {
+        override fun create(id: UUID?): RevisarJapones = RevisarJapones(id, "", "", "", "", "", "", false, 0, isAnime = false, isManga = false)
+    }
 
     override fun merge(source: RevisarJapones) {
         this.formaBasica = source.formaBasica
@@ -75,10 +82,6 @@ data class RevisarJapones(
 
     override fun setId(id: UUID?) {
         this.id = id
-    }
-
-    override fun create(id: UUID?): RevisarJapones {
-        return RevisarJapones(id, "", "", "", "", "", "", false, 0, isAnime = false, isManga = false)
     }
 
     override fun equals(other: Any?): Boolean {

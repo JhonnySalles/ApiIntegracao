@@ -14,6 +14,6 @@ import java.util.*
 @RestController
 @RequestMapping(COMIC_INFO)
 @Tag(name = "Comic Info", description = "Endpoint de comic info")
-class ComicInfoController(registry: DynamicJdbcRegistry) : ControllerJdbcBase<UUID?, ComicInfo, ComicInfoDto, ComicInfoController>(ComicInfoRepository(registry)) {
+class ComicInfoController(registry: DynamicJdbcRegistry) : ControllerJdbcBase<UUID?, ComicInfo, ComicInfoDto, ComicInfoController>(ComicInfoRepository(registry), ComicInfo.Companion) {
 
 }

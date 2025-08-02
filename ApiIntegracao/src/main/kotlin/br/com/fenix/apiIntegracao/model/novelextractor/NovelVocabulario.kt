@@ -1,6 +1,9 @@
 package br.com.fenix.apiintegracao.model.novelextractor
 
 import br.com.fenix.apiintegracao.model.EntityBase
+import br.com.fenix.apiintegracao.model.EntityFactory
+import br.com.fenix.apiintegracao.model.mangaextractor.MangaVocabulario
+import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -17,41 +20,34 @@ data class NovelVocabulario(
     @Column(length = 36)
     private var id: UUID?,
     @Column(length = 250, nullable = false)
-    val vocabulario: String,
-    @Column(name = "forma_basica", length = 250, nullable = false)
-    var formaBasica: String,
+    val palavra: String,
     @Column(length = 250, nullable = false)
     var leitura: String,
-    @Column(name = "leitura_novel", length = 250, nullable = false)
-    var leituraNovel: String,
     @Column(length = 250, nullable = false)
     var ingles: String,
     @Column(nullable = false)
     var portugues: String,
-    @Column(nullable = false)
-    var jlpt: Int,
     @Column
-    var atualizacao: LocalDateTime = LocalDateTime.now()
+    var revisado: Boolean,
+    @Column
+    var atualizacao: LocalDateTime?
 ) : Serializable, EntityBase<UUID?, NovelVocabulario>() {
 
+    companion object : EntityFactory<UUID?, NovelVocabulario> {
+        override fun create(id: UUID?): NovelVocabulario = NovelVocabulario(id, "", "", "", "", false, LocalDateTime.now())
+    }
+
     override fun merge(source: NovelVocabulario) {
-        this.formaBasica = source.formaBasica
         this.leitura = source.leitura
-        this.leituraNovel = source.leituraNovel
         this.ingles = source.ingles
         this.portugues = source.portugues
-        this.jlpt = source.jlpt
+        this.revisado = source.revisado
+        this.atualizacao = source.atualizacao
     }
 
     override fun patch(source: NovelVocabulario) {
-        if (source.formaBasica.isNotEmpty())
-            this.formaBasica = source.formaBasica
-
         if (source.leitura.isNotEmpty())
             this.leitura = source.leitura
-
-        if (source.leituraNovel.isNotEmpty())
-            this.leituraNovel = source.leituraNovel
 
         if (source.ingles.isNotEmpty())
             this.ingles = source.ingles
@@ -59,8 +55,8 @@ data class NovelVocabulario(
         if (source.portugues.isNotEmpty())
             this.portugues = source.portugues
 
-        if (source.jlpt > 0)
-            this.jlpt = source.jlpt
+        if (source.atualizacao != null)
+            this.atualizacao = source.atualizacao
     }
 
     override fun getId(): UUID? {
@@ -71,18 +67,14 @@ data class NovelVocabulario(
         this.id = id
     }
 
-    override fun create(id: UUID?): NovelVocabulario {
-        return NovelVocabulario(id, "", "", "", "", "", "",0)
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as NovelVocabulario
-        return vocabulario == other.vocabulario
+        other as MangaVocabulario
+        return palavra == other.palavra
     }
 
     override fun hashCode(): Int {
-        return vocabulario.hashCode()
+        return palavra.hashCode()
     }
 }
