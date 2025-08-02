@@ -2,15 +2,12 @@ package br.com.fenix.apiintegracao.database.dao.implement
 
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeResultSet
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeStatement
-import br.com.fenix.apiintegracao.database.dao.ExtractorDaoBase
 import br.com.fenix.apiintegracao.database.dao.MangaExtractorDao
 import br.com.fenix.apiintegracao.database.dao.PageBase
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.messages.Mensagens
-import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.mangaextractor.*
-import br.com.fenix.apiintegracao.model.novelextractor.NovelTexto
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.*
 import java.awt.image.BufferedImage

@@ -5,7 +5,6 @@ import br.com.fenix.apiintegracao.controller.ControllerJpaBase
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.TEXTO_JAPONES_VOCABULARIO
 import br.com.fenix.apiintegracao.dto.textojapones.VocabularioDto
 import br.com.fenix.apiintegracao.enums.Conexao
-import br.com.fenix.apiintegracao.model.mangaextractor.MangaVolume
 import br.com.fenix.apiintegracao.model.textojapones.VocabularioJapones
 import br.com.fenix.apiintegracao.repository.textojapones.VocabularioJaponesRepository
 import io.swagger.v3.oas.annotations.tags.Tag

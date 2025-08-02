@@ -1,7 +1,6 @@
 package br.com.fenix.apiintegracao.dto.mangaextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
-import br.com.fenix.apiintegracao.dto.novelextractor.NovelVocabularioDto
 import java.time.LocalDateTime
 import java.util.*
 

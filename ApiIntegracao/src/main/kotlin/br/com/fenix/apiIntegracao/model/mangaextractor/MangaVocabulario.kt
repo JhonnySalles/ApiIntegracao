@@ -1,6 +1,5 @@
 package br.com.fenix.apiintegracao.model.mangaextractor
 
-import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import jakarta.persistence.*

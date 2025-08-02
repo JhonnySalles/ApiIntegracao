@@ -5,7 +5,6 @@ import br.com.fenix.apiintegracao.controller.ControllerJpaBase
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.TEXTO_INGLES_EXCLUSAO
 import br.com.fenix.apiintegracao.dto.textoingles.ExclusaoDto
 import br.com.fenix.apiintegracao.enums.Conexao
-import br.com.fenix.apiintegracao.model.novelextractor.NovelVolume
 import br.com.fenix.apiintegracao.model.textojapones.ExclusaoJapones
 import br.com.fenix.apiintegracao.repository.textojapones.ExclusaoJaponesRepository
 import io.swagger.v3.oas.annotations.tags.Tag

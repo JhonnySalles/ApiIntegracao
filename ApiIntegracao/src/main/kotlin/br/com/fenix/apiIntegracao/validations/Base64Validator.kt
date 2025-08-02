@@ -2,7 +2,7 @@ package br.com.fenix.apiintegracao.validations
 
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
-import java.util.Base64
+import java.util.*
 
 class Base64Validator : ConstraintValidator<IsBase64, String> {
     override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {

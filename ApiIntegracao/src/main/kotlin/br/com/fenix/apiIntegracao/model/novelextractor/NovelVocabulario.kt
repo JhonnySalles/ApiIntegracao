@@ -3,7 +3,6 @@ package br.com.fenix.apiintegracao.model.novelextractor
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaVocabulario
-import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes

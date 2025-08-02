@@ -1,9 +1,7 @@
 package br.com.fenix.apiintegracao.model.textoingles
 
-import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
-import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import jakarta.persistence.*
 import java.io.Serializable
 import java.time.LocalDateTime

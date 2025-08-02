@@ -2,7 +2,6 @@ package br.com.fenix.apiintegracao.model.novelextractor
 
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
-import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
 import com.google.gson.annotations.Expose
 import java.io.Serializable
 import java.time.LocalDateTime

@@ -6,7 +6,6 @@ import br.com.fenix.apiintegracao.controller.Endpoints.Companion.TEXTO_INGLES_RE
 import br.com.fenix.apiintegracao.dto.textoingles.RevisarDto
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.model.textoingles.RevisarIngles
-import br.com.fenix.apiintegracao.model.textojapones.ExclusaoJapones
 import br.com.fenix.apiintegracao.repository.textoingles.RevisarInglesRepository
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.RequestMapping

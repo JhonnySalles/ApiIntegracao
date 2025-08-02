@@ -3,9 +3,7 @@ package br.com.fenix.apiintegracao.model.decksubtitle
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
-import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import java.io.Serializable
-import java.time.LocalDateTime
 import java.util.*
 
 data class Legenda(

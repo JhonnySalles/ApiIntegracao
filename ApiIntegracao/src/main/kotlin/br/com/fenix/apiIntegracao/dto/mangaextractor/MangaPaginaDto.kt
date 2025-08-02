@@ -3,7 +3,6 @@ package br.com.fenix.apiintegracao.dto.mangaextractor
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaTexto
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaVocabulario
-import com.google.gson.annotations.Expose
 import java.time.LocalDateTime
 import java.util.*
 

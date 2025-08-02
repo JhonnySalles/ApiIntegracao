@@ -1,11 +1,8 @@
 package br.com.fenix.apiintegracao.dto.mangaextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
-import br.com.fenix.apiintegracao.dto.novelextractor.NovelCapaDto
-import br.com.fenix.apiintegracao.dto.novelextractor.NovelVocabularioDto
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.validations.IsBase64
-import java.awt.image.BufferedImage
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 import java.util.*

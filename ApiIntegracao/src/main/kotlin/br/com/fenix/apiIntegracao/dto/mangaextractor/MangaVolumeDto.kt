@@ -1,7 +1,6 @@
 package br.com.fenix.apiintegracao.dto.mangaextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
-import br.com.fenix.apiintegracao.dto.novelextractor.NovelVolumeDto
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapa
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapitulo

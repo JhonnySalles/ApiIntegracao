@@ -1,7 +1,6 @@
 package br.com.fenix.apiintegracao.dto.novelextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
-import br.com.fenix.apiintegracao.dto.mangaextractor.MangaPaginaDto
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.validations.IsBase64
 import io.swagger.v3.oas.annotations.media.Schema
