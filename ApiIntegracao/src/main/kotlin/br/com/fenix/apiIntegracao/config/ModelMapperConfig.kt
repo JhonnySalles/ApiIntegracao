@@ -23,34 +23,34 @@ class ModelMapperConfig {
 
         modelMapper.configuration.matchingStrategy = MatchingStrategies.STRICT
 
-        val toBufferedImageConverter = Converter<String?, BufferedImage?> { context ->
-            val source = context.source
-            if (source.isNullOrBlank() || !source.contains(","))
-                return@Converter null
-
-            try {
-                val base64Data = source.substringAfter(',')
-                val imageBytes = Base64.getDecoder().decode(base64Data)
-                ByteArrayInputStream(imageBytes).use { inputStream ->
-                    ImageIO.read(inputStream)
-                }
-            } catch (e: Exception) {
+        val convertBase64ToImage = { base64String: String? ->
+            if (base64String.isNullOrBlank() || !base64String.contains(","))
                 null
+            else {
+                try {
+                    val base64Data = base64String.substringAfter(',')
+                    val imageBytes = Base64.getDecoder().decode(base64Data)
+                    ByteArrayInputStream(imageBytes).use { inputStream -> ImageIO.read(inputStream) }
+                } catch (e: Exception) {
+                    null
+                }
             }
         }
 
-        modelMapper.typeMap(MangaCapaDto::class.java, MangaCapa::class.java).addMappings { mapper ->
-            mapper.using(toBufferedImageConverter).map(
-                { dto -> dto.imagem },
-                { destino, valor : BufferedImage? -> destino.imagem = valor }
-            )
+        // --- Mapeamento para MangaCapa ---
+        modelMapper.createTypeMap(MangaCapaDto::class.java, MangaCapa::class.java).setPostConverter { context ->
+            val dto = context.source
+            val entidade = context.destination
+            entidade.imagem = convertBase64ToImage(dto.imagem)
+
+            entidade
         }
 
-        modelMapper.typeMap(NovelCapaDto::class.java, NovelCapa::class.java).addMappings { mapper ->
-            mapper.using(toBufferedImageConverter).map(
-                { dto -> dto.imagem },
-                { destino, valor : BufferedImage? -> destino.imagem = valor }
-            )
+        modelMapper.createTypeMap(NovelCapaDto::class.java, NovelCapa::class.java).setPostConverter { context ->
+            val dto = context.source
+            val entidade = context.destination
+            entidade.imagem = convertBase64ToImage(dto.imagem)
+            entidade
         }
 
         return modelMapper

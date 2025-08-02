@@ -30,6 +30,8 @@ springdoc:
     - /api/**
   swagger-ui:
     use-root-path: true
+    tags-sorter: alpha
+    operations-sorter: alpha
 logging:
   file:
     name: api.log

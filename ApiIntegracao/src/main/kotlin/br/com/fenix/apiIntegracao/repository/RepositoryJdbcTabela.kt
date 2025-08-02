@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 interface RepositoryJdbcTabela<E : EntityBase<ID, E>, ID> : RepositoryJdbc<E, ID> {
+
     @Throws(ExceptionDb::class)
     fun update(tabela: String, obj: E): E
 

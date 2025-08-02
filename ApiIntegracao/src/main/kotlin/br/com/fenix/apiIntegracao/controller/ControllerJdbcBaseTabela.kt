@@ -21,7 +21,7 @@ import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
 abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseTabela<ID, E, D, C>>(repository: RepositoryJdbcTabela<E, ID>, factory: EntityFactory<ID, E>) : ControllerJdbcBase<ID, E, D, C>(repository, factory), ControllerJdbcTabela<ID, E, D, C> {
-    private val service: ServiceJdbcTabela<ID, E, D, C>
+    protected val service: ServiceJdbcTabela<ID, E, D, C>
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
     private val clazzController: Class<C>
@@ -108,7 +108,7 @@ abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<I
 
     @Operation(summary = "Pesquisa por id", description = "Pesquisa por id")
     @GetMapping(
-        TABLES_URL + "/{id}",
+        "$TABLES_URL/{id}",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -259,7 +259,7 @@ abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<I
 
     @Operation(summary = "Deletar vários registros", description = "Deletar vários registros")
     @DeleteMapping(
-        TABLES_URL + "/lista",
+        "$TABLES_URL/lista",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,

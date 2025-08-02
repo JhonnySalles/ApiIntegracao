@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class NovelExtractorRepository(private val registry : DynamicJdbcRegistry): ExtractorRepositoryBase<NovelVolume, UUID?>(NovelVolume.Companion) {
+class NovelVolumeRepository(private val registry : DynamicJdbcRegistry): ExtractorRepositoryBase<NovelVolume, UUID?>(NovelVolume.Companion) {
 
     override val dao : NovelExtractorDao by lazy { DaoFactory.createNovelExtractorDao(registry.getSource(Conexao.NOVEL_EXTRACTOR)) }
 

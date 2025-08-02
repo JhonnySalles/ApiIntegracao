@@ -8,7 +8,7 @@ import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
-data class NovelCapa(
+open class NovelCapa(
     private var id: UUID? = null,
     var novel: String = "",
     var volume: Int = 0,

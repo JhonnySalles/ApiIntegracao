@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MangaExtractorRepository(private val registry : DynamicJdbcRegistry): ExtractorRepositoryBase<MangaVolume, UUID?>(MangaVolume.Companion) {
+class MangaVolumeRepository(private val registry : DynamicJdbcRegistry): ExtractorRepositoryBase<MangaVolume, UUID?>(MangaVolume.Companion) {
 
     override val dao : ExtractorDaoBase<MangaVolume, UUID?> by lazy { DaoFactory.createMangaExtractorDao(registry.getSource(Conexao.MANGA_EXTRACTOR)) }
 

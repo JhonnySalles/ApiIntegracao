@@ -8,7 +8,7 @@ import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
-data class MangaCapa(
+open class MangaCapa(
     private var id: UUID? = null,
     var manga: String = "",
     var volume: Int = 0,

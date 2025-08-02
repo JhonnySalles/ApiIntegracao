@@ -14,3 +14,5 @@ springdoc:
   pathsToMatch: /api/**
   swagger-ui:
     use-root-path: true
+    tags-sorter: alpha
+    operations-sorter: alpha

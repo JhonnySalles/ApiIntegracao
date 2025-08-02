@@ -14,7 +14,7 @@ import java.util.*
 
 @RestController
 @RequestMapping(TEXTO_INGLES_VALIDO)
-@Tag(name = "Inglês Válido", description = "Endpoint de vocabulários validos em inglês")
+@Tag(name = "Vocabulário Inglês — Válido", description = "Endpoint de vocabulários validos em inglês")
 class ValidoController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, ValidoIngles, ValidoDto, ValidoController, ValidoInglesRepository>(ValidoIngles.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_INGLES

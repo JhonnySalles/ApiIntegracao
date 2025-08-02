@@ -22,10 +22,17 @@ class Endpoints {
         const val TEXTO_INGLES_EXCLUSAO   = "$TEXTO_INGLES/exclusao"
         const val TEXTO_INGLES_VOCABULARIO   = "$TEXTO_INGLES/vocabulario"
 
-        const val TABLES_URL = "/tabela/{table}/"
+        const val TABLES_URL = "/tabela/{table}"
 
         const val MANGA_EXTRACTOR = "$API/manga-extractor"
+        const val MANGA_EXTRACTOR_CAPITULO = "$MANGA_EXTRACTOR/capitulo"
+        const val MANGA_EXTRACTOR_PAGINA = "$MANGA_EXTRACTOR/pagina"
+        const val MANGA_EXTRACTOR_TEXTO = "$MANGA_EXTRACTOR/texto"
+
         const val NOVEL_EXTRACTOR = "$API/novel-extractor"
+        const val NOVEL_EXTRACTOR_CAPITULO = "$NOVEL_EXTRACTOR/capitulo"
+        const val NOVEL_EXTRACTOR_TEXTO = "$NOVEL_EXTRACTOR/texto"
+
         const val DECK_SUBTITLE = "$API/deck-subtitle"
         const val COMIC_INFO = "$API/comic-info"
     }
