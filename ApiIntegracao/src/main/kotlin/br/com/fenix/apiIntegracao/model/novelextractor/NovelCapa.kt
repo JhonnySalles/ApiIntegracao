@@ -15,7 +15,7 @@ open class NovelCapa(
     var lingua: Linguagens = Linguagens.PORTUGUESE,
     var arquivo: String = "",
     var extenssao: String = "",
-    var imagem: BufferedImage? = null,
+    var imagem: ByteArray? = null,
     var atualizacao: LocalDateTime? = null
 ) : Serializable, EntityBase<UUID?, NovelCapa>() {
 
