@@ -106,7 +106,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             Linguagens.getEnum(rs.getString("linguagem"))!!,
             selectAllCapitulos(base, id).toMutableList(),
             selectVocabulario(base, idVolume = id),
-            rs.getString("arquivo"),
+            rs.getString("arquivo") ?: "",
             rs.getBoolean("is_processado"),
             selectCapa(base, id).orElse(null),
             rs.getObject("atualizacao", LocalDateTime::class.java)
@@ -648,8 +648,18 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             if (total < 1)
                 total = 1
 
-            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(
-                LIMIT, pageable.pageSize, pageable.pageNumber))
+            var order = ""
+            if (!pageable.sort.isEmpty) {
+                for (sort in pageable.sort)
+                    order += "${sort.property} ${if (sort.direction.isAscending) "ASC" else "DESC"}, "
+
+                if (order.trim().isEmpty())
+                    order = "1,"
+
+                order = String.format(ORDER_BY, order.substringBeforeLast(","))
+            }
+
+            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + order + String.format(LIMIT, pageable.pageSize, pageable.pageNumber))
             rs = st.executeQuery()
             val list: MutableList<MangaVolume> = mutableListOf()
             while (rs.next())
@@ -701,8 +711,18 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             if (total < 1)
                 total = 1
 
-            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + WHERE_DATE_SYNC + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(
-                LIMIT, pageable.pageSize, pageable.pageNumber) )
+            var order = ""
+            if (!pageable.sort.isEmpty) {
+                for (sort in pageable.sort)
+                    order += "${sort.property} ${if (sort.direction.isAscending) "ASC" else "DESC"}, "
+
+                if (order.trim().isEmpty())
+                    order = "1,"
+
+                order = String.format(ORDER_BY, order.substringBeforeLast(","))
+            }
+
+            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + WHERE_DATE_SYNC + order + String.format(LIMIT, pageable.pageSize, pageable.pageNumber) )
             st.setTimestamp(1, time)
             rs = st.executeQuery()
             val list: MutableList<MangaVolume> = mutableListOf()

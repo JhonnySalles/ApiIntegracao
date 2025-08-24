@@ -4,6 +4,7 @@ import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeR
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeStatement
 import br.com.fenix.apiintegracao.database.dao.NovelExtractorDao
 import br.com.fenix.apiintegracao.database.dao.PageBase
+import br.com.fenix.apiintegracao.database.dao.implement.MangaExtractorDaoJDBC.Companion
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.messages.Mensagens
@@ -66,14 +67,13 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         private const val DELETE_CAPITULOS = "DELETE c FROM %s_capitulos AS c INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s"
         private const val DELETE_PAGINAS = ("DELETE p FROM %s_paginas p "
                 + "INNER JOIN %s_capitulos AS c ON c.id = p.id_capitulo INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s")
-        private const val DELETE_TEXTOS = ("DELETE t FROM %s_textos AS t INNER JOIN %s_paginas AS p ON p.id = t.id_pagina "
-                + "INNER JOIN %s_capitulos AS c ON c.id = p.id_capitulo INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s")
+        private const val DELETE_TEXTOS = ("DELETE t FROM %s_textos AS t INNER JOIN %s_capitulos AS c ON c.id = t.id_capitulo INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s")
         private const val DELETE_CAPAS = "DELETE FROM %s_capas WHERE id_volume = ?"
         private const val DELETE_CAPA = "DELETE FROM %s_capas WHERE id = ?"
 
         private const val SELECT_VOLUMES = "SELECT id, novel, titulo, titulo_alternativo, serie, descricao, editora, autor, volume, linguagem, arquivo, is_favorito, is_processado, atualizacao FROM %s_volumes"
         private const val SELECT_CAPITULOS = "SELECT id, novel, volume, capitulo, descricao, sequencia, linguagem, atualizacao FROM %s_capitulos WHERE id_volume = ?"
-        private const val SELECT_TEXTOS = "SELECT id, sequencia, texto, atualizacao FROM %s_textos WHERE id_pagina = ? "
+        private const val SELECT_TEXTOS = "SELECT id, sequencia, texto, atualizacao FROM %s_textos WHERE id_capitulo = ? "
         private const val SELECT_CAPA = "SELECT id, novel, volume, linguagem, arquivo, extensao, capa, atualizacao FROM %s_capas WHERE id_volume = ? "
 
         private const val SELECT_VOLUME = "SELECT id, novel, titulo, titulo_alternativo, serie, descricao, editora, autor, volume, linguagem, arquivo, is_favorito, is_processado, atualizacao FROM %s_volumes WHERE id = ?"
@@ -100,11 +100,11 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             rs.getString("novel"),
             rs.getString("titulo"),
             rs.getString("titulo_alternativo"),
-            rs.getString("serie"),
+            rs.getString("serie") ?: "",
             rs.getString("descricao"),
             rs.getString("arquivo"),
             rs.getString("editora"),
-            rs.getString("autor"),
+            rs.getString("autor") ?: "",
             rs.getFloat("volume"),
             Linguagens.getEnum(rs.getString("linguagem"))!!,
             rs.getBoolean("is_favorito"),
@@ -550,8 +550,18 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             if (total < 1)
                 total = 1
 
-            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(
-                LIMIT, pageable.pageSize, pageable.pageNumber))
+            var order = ""
+            if (!pageable.sort.isEmpty) {
+                for (sort in pageable.sort)
+                    order += "${sort.property} ${if (sort.direction.isAscending) "ASC" else "DESC"}, "
+
+                if (order.trim().isEmpty())
+                    order = "1,"
+
+                order = String.format(ORDER_BY, order.substringBeforeLast(","))
+            }
+
+            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + order + String.format(LIMIT, pageable.pageSize, pageable.pageNumber))
             rs = st.executeQuery()
             val list: MutableList<NovelVolume> = mutableListOf()
             while (rs.next())
@@ -603,8 +613,18 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             if (total < 1)
                 total = 1
 
-            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + WHERE_DATE_SYNC + (if (pageable.sort.isEmpty) ""  else String.format(ORDER_BY, pageable.sort.toString())) + String.format(
-                LIMIT, pageable.pageSize, pageable.pageNumber) )
+            var order = ""
+            if (!pageable.sort.isEmpty) {
+                for (sort in pageable.sort)
+                    order += "${sort.property} ${if (sort.direction.isAscending) "ASC" else "DESC"}, "
+
+                if (order.trim().isEmpty())
+                    order = "1,"
+
+                order = String.format(ORDER_BY, order.substringBeforeLast(","))
+            }
+
+            st = conn.prepareStatement(String.format(SELECT_VOLUMES, base) + WHERE_DATE_SYNC + order + String.format(LIMIT, pageable.pageSize, pageable.pageNumber) )
             st.setTimestamp(1, time)
             rs = st.executeQuery()
             val list: MutableList<NovelVolume> = mutableListOf()
