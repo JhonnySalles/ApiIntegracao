@@ -1,7 +1,9 @@
 package br.com.fenix.apiintegracao.repository
 
 import br.com.fenix.apiintegracao.database.dao.RepositoryDaoBase
+import br.com.fenix.apiintegracao.enums.Igualdade
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
+import br.com.fenix.apiintegracao.model.Condicao
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.utils.Utils
 import org.springframework.data.domain.Page
@@ -46,13 +48,13 @@ abstract class RepositoryJdbcBase<E : EntityBase<ID, E>, ID> : RepositoryJdbc<E,
 
     @Throws(ExceptionDb::class)
     override fun findAllByAtualizacaoGreaterThanEqual(dateTime: LocalDateTime): List<E> {
-        return dao.findAll(mapOf(Pair("atualizacao", dateTime)))
+        return dao.findAll(mapOf(Pair("atualizacao", Condicao(dateTime, Igualdade.MAIOR_IGUAL))))
     }
 
     @Throws(ExceptionDb::class)
     override fun findAllByAtualizacaoGreaterThanEqual(dateTime: LocalDateTime, pageable: Pageable?): Page<E> {
         val pageable = pageable ?: Utils.defaultPageable()
-        return dao.findAll(mapOf(Pair("atualizacao", dateTime)), pageable)
+        return dao.findAll(mapOf(Pair("atualizacao", Condicao(dateTime, Igualdade.MAIOR_IGUAL))), pageable)
     }
 
     @Throws(ExceptionDb::class)

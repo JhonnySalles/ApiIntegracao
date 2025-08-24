@@ -1,7 +1,9 @@
 package br.com.fenix.apiintegracao.database.dao
 
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry
+import br.com.fenix.apiintegracao.enums.Igualdade
 import br.com.fenix.apiintegracao.messages.Mensagens
+import br.com.fenix.apiintegracao.model.Condicao
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.utils.Utils
 import jakarta.persistence.Column
@@ -101,6 +103,8 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
         }
     }
 
+    private fun toParams(params: Map<String, Condicao?>) = params.map { it.key to it.value?.valor }.toMap()
+
     /**
      * Consulta a quantidade de registros em uma tabela e retorna a quantidade
      * @param table tabela em string
@@ -108,17 +112,17 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
      * @return a quantidade de registros existentes
      * @throws SQLException caso o sql esteja errado ou não tenha nenhuma linha alterada
      */
-    private fun count(table: String, params: Map<String, Any?>): Int {
+    private fun count(table: String, params: Map<String, Condicao?>): Int {
         var st: PreparedStatement? = null
         var rs: ResultSet? = null
         return try {
             var condicao = "1>0 AND "
-            for (param in params.keys)
-                condicao += "$param = ? AND "
+            for (param in params)
+                condicao += "${param.key} ${(param.value?.igualdade ?: Igualdade.IGUAL).valor} ? AND "
 
             st = conn.prepareStatement(String.format(SELECT_COUNT, table, condicao.substringBeforeLast(" AND ")))
             if (params.isNotEmpty())
-                setParams(st, params)
+                setParams(st, toParams(params))
 
             rs = st.executeQuery()
             return if (rs.next())
@@ -439,7 +443,17 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
      * @return retorna um objeto se encontrado
      * @throws SQLException caso o sql esteja errado
      */
-    override fun find(id: ID, column: String): Optional<E> {
+    override fun find(id: ID, column: String): Optional<E> = find(id, column, Igualdade.IGUAL)
+
+    /**
+     * Localiza um registro e retorna o objeto selecionado, caso não informmado será utilizado pela tag @Id.
+     * @param id id do objeto
+     * @param column campo no banco referente ao id, padrão (id)
+     * @param igualdade campo no banco referente a condição para a consulta da coluna e id
+     * @return retorna um objeto se encontrado
+     * @throws SQLException caso o sql esteja errado
+     */
+    override fun find(id: ID, column: String, igualdade: Igualdade): Optional<E> {
         val entity = clazzEntity.newInstance()
         val parametros = getParametros(entity)
         var campos = ""
@@ -447,13 +461,14 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
             campos += "$param,"
 
         var condicao = Pair(column, id)
-        var chave = "$column = ?"
+        var chave = "$column ${igualdade.valor} ?"
         if (column.isEmpty()) {
             val ids = getIds(entity)
             val campo = ids.keys.first()
-            chave = "$campo = ?"
+            chave = "$campo ${igualdade.valor} ?"
             condicao = Pair(campo, id)
         }
+
         val sql = String.format(SELECT + WHERE, campos.substringBeforeLast(","), getTabela(entity), chave)
         //LOGGER.info("Gerado SQL Select By Id: $sql")
         return queryEntity(sql, mapOf(condicao))
@@ -465,16 +480,20 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
      * @return retorna um objeto se encontrado
      * @throws SQLException caso o sql esteja errado
      */
-    override fun find(params: Map<String, Any>): Optional<E> {
+    override fun find(params: Map<String, Condicao>): Optional<E> {
         val entity = clazzEntity.newInstance()
         val parametros = getParametros(entity)
         var campos = ""
         for (param in parametros.keys)
             campos += "$param,"
 
-        val sql = String.format(SELECT, campos.substringBeforeLast(","), getTabela(entity))
+        var condicao = "1>0 AND "
+        for (column in params)
+            condicao += "${column.key} ${(column.value.igualdade ?: Igualdade.IGUAL).valor} ? AND "
+
+        val sql = String.format(SELECT + WHERE, campos.substringBeforeLast(","), getTabela(entity), condicao.substringBeforeLast(" AND "))
         //LOGGER.info("Gerado SQL Select: $sql")
-        return queryEntity(sql, params)
+        return queryEntity(sql, toParams(params))
     }
 
     /**
@@ -483,16 +502,20 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
      * @return retorna um objeto se encontrado
      * @throws SQLException caso o sql esteja errado
      */
-    override fun findAll(params: Map<String, Any>): List<E> {
+    override fun findAll(params: Map<String, Condicao>): List<E> {
         val entity = clazzEntity.newInstance()
         val parametros = getParametros(entity)
         var campos = ""
         for (param in parametros.keys)
             campos += "$param,"
 
-        val sql = String.format(SELECT, campos.substringBeforeLast(","), getTabela(entity))
+        var condicao = "1>0 AND "
+        for (column in params)
+            condicao += "${column.key} ${(column.value.igualdade ?: Igualdade.IGUAL).valor} ? AND "
+
+        val sql = String.format(SELECT + WHERE, campos.substringBeforeLast(","), getTabela(entity), condicao.substringBeforeLast(" AND "))
         //LOGGER.info("Gerado SQL Select: $sql")
-        return queryList(sql, params)
+        return queryList(sql, toParams(params))
     }
 
     /**
@@ -512,6 +535,12 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
         return queryList(sql, mapOf())
     }
 
+    /**
+     * Retorna todos os objetos do banco de dados
+     * @param pageable paginação da página para consulta
+     * @return uma lista paginada com os objetos encontrados
+     * @throws SQLException caso o sql esteja errado
+     */
     override fun findAll(pageable: Pageable): Page<E> {
         val entity = clazzEntity.newInstance()
         val parametros = getParametros(entity)
@@ -536,8 +565,14 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
         return toPageable(pageable, count(tabela, mapOf()), queryList(sql, mapOf()))
     }
 
-    //Adicionar um novo parametro para identificar se o valor é igual, menor, maior ou menor igual, maior igual para a condicional key
-    override fun findAll(params: Map<String, Any>, pageable: Pageable): Page<E> {
+    /**
+     * Retorna todos os objetos do banco de dados
+     * @param params parametros do objeto a ser localizado
+     * @param pageable paginação da página para consulta
+     * @return uma lista paginada com os objetos encontrados
+     * @throws SQLException caso o sql esteja errado
+     */
+    override fun findAll(params: Map<String, Condicao>, pageable: Pageable): Page<E> {
         val entity = clazzEntity.newInstance()
         val parametros = getParametros(entity)
         var campos = ""
@@ -545,8 +580,8 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
             campos += "$param,"
 
         var condicao = "1>0 AND "
-        for (column in params)
-            condicao += "${column.key} = ? AND "
+        for (param in params)
+            condicao += "${param.key} ${(param.value.igualdade ?: Igualdade.IGUAL).valor} ? AND "
 
         val tabela = getTabela(entity)
         val sql = if (!pageable.sort.isEmpty) {
@@ -562,7 +597,7 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
             String.format(SELECT + WHERE + PAGE, campos.substringBeforeLast(","), tabela, condicao.substringBeforeLast(" AND "), pageable.pageNumber, pageable.pageSize)
 
         //LOGGER.info("Gerado SQL Select: $sql")
-        return toPageable(pageable, count(tabela, params), queryList(sql, params))
+        return toPageable(pageable, count(tabela, params), queryList(sql, toParams(params)))
     }
 
     private fun <E> toPageable(pageable: Pageable, total: Int, list: List<E>) : Page<E> {
