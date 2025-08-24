@@ -4,7 +4,6 @@ import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeR
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeStatement
 import br.com.fenix.apiintegracao.database.dao.NovelExtractorDao
 import br.com.fenix.apiintegracao.database.dao.PageBase
-import br.com.fenix.apiintegracao.database.dao.implement.MangaExtractorDaoJDBC.Companion
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.messages.Mensagens

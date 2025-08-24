@@ -24,7 +24,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.lang.reflect.ParameterizedType
-import java.time.LocalDateTime
 
 abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(factory: EntityFactory<ID, E>) {
     private val service: ServiceJpaBase<ID, E, D, C, R>

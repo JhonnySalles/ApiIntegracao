@@ -5,7 +5,6 @@ import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
-import br.com.fenix.apiintegracao.exceptions.RequiredParametersInvalidException
 import br.com.fenix.apiintegracao.exceptions.ServerErrorException
 import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.Entity
@@ -13,7 +12,6 @@ import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJpaBase
 import br.com.fenix.apiintegracao.utils.Utils
-import org.modelmapper.ModelMapper
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

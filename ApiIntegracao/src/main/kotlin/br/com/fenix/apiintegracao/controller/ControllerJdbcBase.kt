@@ -20,7 +20,6 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.reflect.ParameterizedType
-import java.time.LocalDateTime
 
 abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBase<ID, E, D, C>>(repository: RepositoryJdbc<E, ID>, factory: EntityFactory<ID, E>) : ControllerJdbc<ID, E, D, C> {
     private val service: ServiceJdbcBase<ID, E, D, C>

@@ -2,8 +2,6 @@ package br.com.fenix.apiintegracao.dto.novelextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.enums.Linguagens
-import br.com.fenix.apiintegracao.model.novelextractor.NovelTexto
-import br.com.fenix.apiintegracao.model.novelextractor.NovelVocabulario
 import java.time.LocalDateTime
 import java.util.*
 
