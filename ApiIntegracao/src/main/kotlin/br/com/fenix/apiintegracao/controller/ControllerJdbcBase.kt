@@ -7,6 +7,7 @@ import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbc
 import br.com.fenix.apiintegracao.service.ServiceJdbcBase
+import br.com.fenix.apiintegracao.utils.Utils
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -135,7 +136,7 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
             )
     )
     fun getAllLastSync(@PathVariable updateDate: String): ResponseEntity<List<D>> {
-        return ResponseEntity.ok(service.getAll(LocalDateTime.parse(updateDate)))
+        return ResponseEntity.ok(service.getAll(Utils.updateDateToLocalDateTime(updateDate)))
     }
 
     @Operation(summary = "Atualizar registro", description = "Atualizar registro")
@@ -229,7 +230,7 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
         return ResponseEntity.ok("Ok")
     }
 
-    @Operation(summary = "Deletar registro", description = "Deletar registro")
+    @Operation(summary = "Deletar registro por id", description = "Deletar registro por id")
     @DeleteMapping(
         "/{id}",
         consumes = arrayOf(

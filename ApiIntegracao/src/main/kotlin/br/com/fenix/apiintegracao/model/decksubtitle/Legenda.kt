@@ -14,7 +14,7 @@ data class Legenda(
     var tempo: String,
     var texto: String,
     var traducao: String,
-    var vocabulario: String
+    var vocabulario: String?
 ) : Serializable, EntityBase<UUID?, Legenda>() {
 
     companion object : EntityFactory<UUID?, Legenda> {
@@ -44,7 +44,7 @@ data class Legenda(
         if (source.traducao.isNotEmpty())
             this.traducao = source.traducao
 
-        if (source.vocabulario.isNotEmpty())
+        if (!source.vocabulario.isNullOrEmpty())
             this.vocabulario = source.vocabulario
 
         if (source.texto.isNotEmpty())

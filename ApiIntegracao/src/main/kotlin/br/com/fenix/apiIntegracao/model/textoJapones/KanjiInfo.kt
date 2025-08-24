@@ -18,7 +18,7 @@ data class KanjiInfo(
     var sequencia: Long,
     @Column(length = 100, nullable = false)
     var word: String,
-    @Column(length = 350, nullable = false)
+    @Column(name = "read_info", length = 350, nullable = false)
     var readInfo: String,
     @Column(nullable = false)
     var frequency: Int,

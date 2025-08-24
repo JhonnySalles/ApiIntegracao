@@ -48,15 +48,15 @@ class DeckSubtitleRepository(private val registry : DynamicJdbcRegistry): Reposi
     }
 
     override fun update(obj: Legenda): Legenda {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun insert(obj: Legenda): Legenda {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun select(id: UUID?): Optional<Legenda> {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun findAll(tabela: String): List<Legenda> {
@@ -71,11 +71,11 @@ class DeckSubtitleRepository(private val registry : DynamicJdbcRegistry): Reposi
     }
 
     override fun findAll(): List<Legenda> {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun findAll(pageable: Pageable?): Page<Legenda> {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime): List<Legenda> {
@@ -90,19 +90,19 @@ class DeckSubtitleRepository(private val registry : DynamicJdbcRegistry): Reposi
     }
 
     override fun findAllByAtualizacaoGreaterThanEqual(dateTime: LocalDateTime): List<Legenda> {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun findAllByAtualizacaoGreaterThanEqual(dateTime: LocalDateTime, pageable: Pageable?): Page<Legenda> {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun delete(id: UUID?) {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun delete(obj: Legenda) {
-        TODO("Not yet implemented")
+        TODO("Não implementado esta consulta, use o endpoint por tabela")
     }
 
     override fun delete(tabela: String, id: UUID?) {

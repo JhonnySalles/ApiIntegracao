@@ -2,7 +2,7 @@ package br.com.fenix.apiintegracao.repository
 
 import br.com.fenix.apiintegracao.database.dao.ExtractorDaoBase
 import br.com.fenix.apiintegracao.exceptions.EndpointUnavailableException
-import br.com.fenix.apiintegracao.exceptions.RequiredParameterstIsNullException
+import br.com.fenix.apiintegracao.exceptions.RequiredParametersIsNullException
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
@@ -43,7 +43,7 @@ abstract class ExtractorRepositoryBase<E : EntityBase<ID, E>, ID>(private val fa
 
     override fun select(id: ID): Optional<E> = throw EndpointUnavailableException()
 
-    override fun select(tabela: String, id: ID): Optional<E> = dao.selectVolume(tabela, id ?: throw RequiredParameterstIsNullException())
+    override fun select(tabela: String, id: ID): Optional<E> = dao.selectVolume(tabela, id ?: throw RequiredParametersIsNullException())
 
     override fun findAll(): List<E> = throw EndpointUnavailableException()
 
@@ -51,7 +51,7 @@ abstract class ExtractorRepositoryBase<E : EntityBase<ID, E>, ID>(private val fa
 
     override fun findAll(tabela: String): List<E> = dao.selectAllVolumes(tabela)
 
-    override fun findAll(tabela: String, pageable: Pageable?): Page<E> = dao.selectAllVolumes(tabela, pageable ?: throw RequiredParameterstIsNullException())
+    override fun findAll(tabela: String, pageable: Pageable?): Page<E> = dao.selectAllVolumes(tabela, pageable ?: throw RequiredParametersIsNullException())
 
     override fun findAllByAtualizacaoGreaterThanEqual(dateTime: LocalDateTime): List<E> = throw EndpointUnavailableException()
 
@@ -59,7 +59,7 @@ abstract class ExtractorRepositoryBase<E : EntityBase<ID, E>, ID>(private val fa
 
     override fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime): List<E> = dao.selectAllVolumes(tabela, dateTime)
 
-    override fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime, pageable: Pageable?): Page<E> = dao.selectAllVolumes(tabela, dateTime, pageable ?: throw RequiredParameterstIsNullException())
+    override fun findAllByAtualizacaoGreaterThanEqual(tabela: String, dateTime: LocalDateTime, pageable: Pageable?): Page<E> = dao.selectAllVolumes(tabela, dateTime, pageable ?: throw RequiredParametersIsNullException())
 
     override fun createtabela(tabela: String) = dao.createTable(tabela)
 
@@ -77,7 +77,7 @@ abstract class ExtractorRepositoryBase<E : EntityBase<ID, E>, ID>(private val fa
             throw NotFoundException()
     }
 
-    override fun delete(tabela: String, id: ID) = dao.deleteVolume(tabela, factory.create(id ?: throw RequiredParameterstIsNullException()))
+    override fun delete(tabela: String, id: ID) = dao.deleteVolume(tabela, factory.create(id ?: throw RequiredParametersIsNullException()))
 
     override fun delete(tabela: String, obj: E) = dao.deleteVolume(tabela, obj)
 

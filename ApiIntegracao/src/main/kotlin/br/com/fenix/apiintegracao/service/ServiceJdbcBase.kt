@@ -5,12 +5,14 @@ import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
+import br.com.fenix.apiintegracao.exceptions.RequiredParametersInvalidException
 import br.com.fenix.apiintegracao.exceptions.ServerErrorException
 import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.Entity
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbc
+import br.com.fenix.apiintegracao.utils.Utils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -42,7 +44,7 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
     }
 
     open fun getLastSyncPage(updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
-        val dateTime = LocalDateTime.parse(updateDate)
+        val dateTime : LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
         val list = toDtoLink(repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable))
         val link = linkTo(clazzController).slash(ATUALIZACAO).slash(updateDate).withSelfRel()
         return assembler.toModel(list, link)

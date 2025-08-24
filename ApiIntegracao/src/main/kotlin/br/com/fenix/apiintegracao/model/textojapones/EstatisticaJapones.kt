@@ -28,9 +28,9 @@ data class EstatisticaJapones(
     var percentual: Float,
     @Column(nullable = false)
     var media: Double,
-    @Column(nullable = false)
+    @Column(name = "percentual_medio", nullable = false)
     var percentualMedio: Float,
-    @Column(name = "CorSequencial", nullable = false)
+    @Column(name = "cor_sequencial", nullable = false)
     var corSequencial: Int,
     @Column
     var atualizacao: LocalDateTime = LocalDateTime.now()

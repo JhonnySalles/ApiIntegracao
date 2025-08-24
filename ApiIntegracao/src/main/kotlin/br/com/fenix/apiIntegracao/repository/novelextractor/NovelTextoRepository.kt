@@ -4,7 +4,7 @@ import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry
 import br.com.fenix.apiintegracao.database.DaoFactory
 import br.com.fenix.apiintegracao.database.dao.NovelExtractorDao
 import br.com.fenix.apiintegracao.enums.Conexao
-import br.com.fenix.apiintegracao.exceptions.RequiredParameterstIsNullException
+import br.com.fenix.apiintegracao.exceptions.RequiredParametersIsNullException
 import br.com.fenix.apiintegracao.model.novelextractor.NovelTexto
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
 import org.springframework.stereotype.Repository
@@ -20,11 +20,11 @@ class NovelTextoRepository(private val registry : DynamicJdbcRegistry): Reposito
     override fun update(tabela: String, obj: NovelTexto): NovelTexto = dao.updateTexto(tabela, obj)
 
     override fun insert(tabela: String, idParent: UUID?, obj: NovelTexto): NovelTexto {
-        obj.setId(dao.insertTexto(tabela, idParent ?: throw RequiredParameterstIsNullException(), obj))
+        obj.setId(dao.insertTexto(tabela, idParent ?: throw RequiredParametersIsNullException(), obj))
         return obj
     }
 
-    override fun findAll(tabela: String, idParent: UUID?): List<NovelTexto> = dao.selectAllTextos(tabela, idParent ?: throw RequiredParameterstIsNullException())
+    override fun findAll(tabela: String, idParent: UUID?): List<NovelTexto> = dao.selectAllTextos(tabela, idParent ?: throw RequiredParametersIsNullException())
 
     override fun delete(tabela: String, obj: NovelTexto) = dao.deleteTexto(tabela, obj)
 

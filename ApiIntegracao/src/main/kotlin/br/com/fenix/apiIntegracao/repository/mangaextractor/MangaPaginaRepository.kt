@@ -4,7 +4,7 @@ import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry
 import br.com.fenix.apiintegracao.database.DaoFactory
 import br.com.fenix.apiintegracao.database.dao.MangaExtractorDao
 import br.com.fenix.apiintegracao.enums.Conexao
-import br.com.fenix.apiintegracao.exceptions.RequiredParameterstIsNullException
+import br.com.fenix.apiintegracao.exceptions.RequiredParametersIsNullException
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaPagina
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
 import org.springframework.stereotype.Repository
@@ -20,11 +20,11 @@ class MangaPaginaRepository(private val registry : DynamicJdbcRegistry): Reposit
     override fun update(tabela: String, obj: MangaPagina): MangaPagina = dao.updatePagina(tabela, obj)
 
     override fun insert(tabela: String, idParent: UUID?, obj: MangaPagina): MangaPagina {
-        obj.setId(dao.insertPagina(tabela, idParent ?: throw RequiredParameterstIsNullException(), obj))
+        obj.setId(dao.insertPagina(tabela, idParent ?: throw RequiredParametersIsNullException(), obj))
         return obj
     }
 
-    override fun findAll(tabela: String, idParent: UUID?): List<MangaPagina> = dao.selectAllPaginas(tabela, idParent ?: throw RequiredParameterstIsNullException())
+    override fun findAll(tabela: String, idParent: UUID?): List<MangaPagina> = dao.selectAllPaginas(tabela, idParent ?: throw RequiredParametersIsNullException())
 
     override fun delete(tabela: String, obj: MangaPagina) = dao.deletePagina(tabela, obj)
 

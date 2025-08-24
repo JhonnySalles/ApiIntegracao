@@ -4,7 +4,7 @@ import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry
 import br.com.fenix.apiintegracao.database.DaoFactory
 import br.com.fenix.apiintegracao.database.dao.NovelExtractorDao
 import br.com.fenix.apiintegracao.enums.Conexao
-import br.com.fenix.apiintegracao.exceptions.RequiredParameterstIsNullException
+import br.com.fenix.apiintegracao.exceptions.RequiredParametersIsNullException
 import br.com.fenix.apiintegracao.model.novelextractor.NovelCapitulo
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
 import org.springframework.stereotype.Repository
@@ -20,11 +20,11 @@ class NovelCapituloRepository(private val registry : DynamicJdbcRegistry): Repos
     override fun update(tabela: String, obj: NovelCapitulo): NovelCapitulo = dao.updateCapitulo(tabela, obj)
 
     override fun insert(tabela: String, idParent: UUID?, obj: NovelCapitulo): NovelCapitulo {
-        obj.setId(dao.insertCapitulo(tabela, idParent ?: throw RequiredParameterstIsNullException(), obj))
+        obj.setId(dao.insertCapitulo(tabela, idParent ?: throw RequiredParametersIsNullException(), obj))
         return obj
     }
 
-    override fun findAll(tabela: String, idParent: UUID?): List<NovelCapitulo> = dao.selectAllCapitulos(tabela, idParent ?: throw RequiredParameterstIsNullException())
+    override fun findAll(tabela: String, idParent: UUID?): List<NovelCapitulo> = dao.selectAllCapitulos(tabela, idParent ?: throw RequiredParametersIsNullException())
 
     override fun delete(tabela: String, obj: NovelCapitulo) = dao.deleteCapitulo(tabela, obj)
 

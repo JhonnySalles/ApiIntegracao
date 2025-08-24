@@ -10,8 +10,7 @@ import jakarta.persistence.Table
 import jakarta.transaction.Transactional
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.*
 import java.lang.reflect.ParameterizedType
 import java.math.BigDecimal
 import java.sql.*
@@ -40,7 +39,10 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
     private val UPDATE : String = "UPDATE %s SET %s WHERE %s"
     private val DELETE : String = "DELETE FROM %s WHERE %s"
     private val SELECT : String = "SELECT %s FROM %s "
-    private val SELECT_BY_ID : String = SELECT + " WHERE %s "
+    private val WHERE : String = " WHERE %s "
+    private val ORDER : String = " ORDER BY %s "
+    private val PAGE : String = " LIMIT %d,%d"
+    private val SELECT_COUNT = "SELECT count(*) as total FROM %s WHERE %s"
 
     abstract fun toEntity(rs: ResultSet): E
 
@@ -96,6 +98,39 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
                     is Blob -> st.setBlob(++index, params[p] as Blob)
                     is Objects -> st.setString(++index, getCustomParam(params[p] as Objects))
                 }
+        }
+    }
+
+    /**
+     * Consulta a quantidade de registros em uma tabela e retorna a quantidade
+     * @param table tabela em string
+     * @param sql parametros da consulta
+     * @return a quantidade de registros existentes
+     * @throws SQLException caso o sql esteja errado ou não tenha nenhuma linha alterada
+     */
+    private fun count(table: String, params: Map<String, Any?>): Int {
+        var st: PreparedStatement? = null
+        var rs: ResultSet? = null
+        return try {
+            var condicao = "1>0 AND "
+            for (param in params.keys)
+                condicao += "$param = ? AND "
+
+            st = conn.prepareStatement(String.format(SELECT_COUNT, table, condicao.substringBeforeLast(" AND ")))
+            if (params.isNotEmpty())
+                setParams(st, params)
+
+            rs = st.executeQuery()
+            return if (rs.next())
+                rs.getInt(1)
+            else
+                0
+        } catch (e: SQLException) {
+            oLog.error(e.message, e)
+            throw SQLException(Mensagens.BD_ERRO_QUERRY)
+        } finally {
+            DynamicJdbcRegistry.closeStatement(st)
+            DynamicJdbcRegistry.closeResultSet(rs)
         }
     }
 
@@ -419,7 +454,7 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
             chave = "$campo = ?"
             condicao = Pair(campo, id)
         }
-        val sql = String.format(SELECT_BY_ID, campos.substringBeforeLast(","), getTabela(entity), chave)
+        val sql = String.format(SELECT + WHERE, campos.substringBeforeLast(","), getTabela(entity), chave)
         //LOGGER.info("Gerado SQL Select By Id: $sql")
         return queryEntity(sql, mapOf(condicao))
     }
@@ -478,11 +513,98 @@ abstract class RepositoryDaoBase<ID, E : EntityBase<ID, E>>(conexao: Connection)
     }
 
     override fun findAll(pageable: Pageable): Page<E> {
-        TODO("Not yet implemented")
+        val entity = clazzEntity.newInstance()
+        val parametros = getParametros(entity)
+        var campos = ""
+        for (param in parametros.keys)
+            campos += "$param,"
+
+        val tabela = getTabela(entity)
+        val sql = if (!pageable.sort.isEmpty) {
+            var order = ""
+            for (sort in pageable.sort)
+                order += "${sort.property} ${if (sort.direction.isAscending) "ASC" else "DESC"}, "
+
+            if (order.trim().isEmpty())
+                order = "1,"
+
+            String.format(SELECT + ORDER + PAGE, campos.substringBeforeLast(","), tabela, order.substringBeforeLast(","), pageable.pageNumber, pageable.pageSize)
+        } else
+            String.format(SELECT + PAGE, campos.substringBeforeLast(","), tabela, pageable.pageNumber, pageable.pageSize)
+
+        //LOGGER.info("Gerado SQL Select: $sql")
+        return toPageable(pageable, count(tabela, mapOf()), queryList(sql, mapOf()))
     }
 
+    //Adicionar um novo parametro para identificar se o valor é igual, menor, maior ou menor igual, maior igual para a condicional key
     override fun findAll(params: Map<String, Any>, pageable: Pageable): Page<E> {
-        TODO("Not yet implemented")
+        val entity = clazzEntity.newInstance()
+        val parametros = getParametros(entity)
+        var campos = ""
+        for (param in parametros.keys)
+            campos += "$param,"
+
+        var condicao = "1>0 AND "
+        for (column in params)
+            condicao += "${column.key} = ? AND "
+
+        val tabela = getTabela(entity)
+        val sql = if (!pageable.sort.isEmpty) {
+            var order = ""
+            for (sort in pageable.sort)
+                order += "${sort.property} ${if (sort.direction.isAscending) "ASC" else "DESC"}, "
+
+            if (order.trim().isEmpty())
+                order = "1,"
+
+            String.format(SELECT + WHERE + ORDER + PAGE, campos.substringBeforeLast(","), tabela, condicao.substringBeforeLast(" AND "), order.substringBeforeLast(","), pageable.pageNumber, pageable.pageSize)
+        } else
+            String.format(SELECT + WHERE + PAGE, campos.substringBeforeLast(","), tabela, condicao.substringBeforeLast(" AND "), pageable.pageNumber, pageable.pageSize)
+
+        //LOGGER.info("Gerado SQL Select: $sql")
+        return toPageable(pageable, count(tabela, params), queryList(sql, params))
+    }
+
+    private fun <E> toPageable(pageable: Pageable, total: Int, list: List<E>) : Page<E> {
+        val page: Pageable = object : Pageable {
+            override fun getPageNumber(): Int {
+                return pageable.pageNumber
+            }
+
+            override fun getPageSize(): Int {
+                return pageable.pageSize
+            }
+
+            override fun getOffset(): Long {
+                return pageable.pageNumber * pageable.pageSize.toLong()
+            }
+
+            override fun getSort(): Sort {
+                return pageable.sort
+            }
+
+            override fun next(): Pageable {
+                return PageRequest.of(this.pageNumber + 1, this.pageSize, this.sort)
+            }
+
+            override fun previousOrFirst(): Pageable {
+                return if (this.pageNumber == 0) this else PageRequest.of(this.pageNumber - 1, this.pageSize, this.sort)
+            }
+
+            override fun first(): Pageable {
+                return PageRequest.of(0, this.pageSize, this.sort)
+            }
+
+            override fun withPage(pageNumber: Int): Pageable {
+                TODO("Not yet implemented")
+            }
+
+            override fun hasPrevious(): Boolean {
+                return pageable.pageNumber > 0
+            }
+        }
+
+        return PageImpl(list, page, total.toLong())
     }
 
 }

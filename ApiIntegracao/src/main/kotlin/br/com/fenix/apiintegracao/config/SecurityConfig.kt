@@ -59,7 +59,7 @@ class SecurityConfig(private var userDetailsService: UsuarioService, private val
                 authorize
                     .requestMatchers(
                         "/auth/signin",
-                        "/auth/refresh",
+                        "/auth/refresh/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/v3/api-docs/**"

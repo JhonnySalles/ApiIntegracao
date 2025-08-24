@@ -3,13 +3,13 @@ package br.com.fenix.apiintegracao.service
 import br.com.fenix.apiintegracao.controller.ControllerJdbcBaseTabela
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO
 import br.com.fenix.apiintegracao.dto.DtoBase
-import br.com.fenix.apiintegracao.exceptions.InvalidAuthenticationException
-import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
-import br.com.fenix.apiintegracao.exceptions.TableNotExistsException
+import br.com.fenix.apiintegracao.exceptions.*
 import br.com.fenix.apiintegracao.model.Entity
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcTabela
+import br.com.fenix.apiintegracao.service.ServiceJdbcBase.Companion
+import br.com.fenix.apiintegracao.utils.Utils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -59,7 +59,7 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
 
     fun getLastSyncPage(table: String, updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         validTable(table)
-        val dateTime = LocalDateTime.parse(updateDate)
+        val dateTime : LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
         val list = toDtoLink(table, repo.findAllByAtualizacaoGreaterThanEqual(table, dateTime, pageable))
         val link = linkTo(clazzController).slash(ATUALIZACAO).slash(updateDate).withSelfRel()
         return assembler.toModel(list, link)

@@ -120,7 +120,7 @@ abstract class ControllerJdbcBaseParent<ID, E : EntityBase<ID, E>, D : DtoBase<I
         return ResponseEntity.ok(service.create(table, idParent, create))
     }
 
-    @Operation(summary = "Deletar registro", description = "Deletar registro")
+    @Operation(summary = "Deletar registro por id", description = "Deletar registro por id")
     @DeleteMapping(
         "$TABLES_URL/{id}",
         consumes = arrayOf(
