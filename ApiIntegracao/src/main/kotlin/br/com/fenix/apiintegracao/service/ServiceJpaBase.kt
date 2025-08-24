@@ -13,6 +13,7 @@ import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJpaBase
 import br.com.fenix.apiintegracao.utils.Utils
+import org.modelmapper.ModelMapper
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -29,6 +30,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
     }
 
     abstract val repository: RepositoryJpaBase<E, ID>
+    abstract val mapper : Mapper
 
     fun getPage(pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
@@ -178,11 +180,11 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
     private fun addLink(list: Page<D>): Page<D> = list.map { addLink(it) }
     private fun toDtoLink(list: Page<E>): Page<D> = list.map { addLink(toDto(it)) }
 
-    fun toDto(obj: E): D = Mapper.parse(obj, clazzDto)
-    fun toDto(list: Page<E>): Page<D> = Mapper.parse(list, clazzDto)
-    fun toDto(list: List<E>): List<D> = Mapper.parse(list, clazzDto)
+    fun toDto(obj: E): D = mapper.parse(obj, clazzDto)
+    fun toDto(list: Page<E>): Page<D> = mapper.parse(list, clazzDto)
+    fun toDto(list: List<E>): List<D> = mapper.parse(list, clazzDto)
 
-    fun toEntity(obj: D): E = Mapper.parse(obj, clazzEntity)
-    fun toEntity(list: Page<D>): Page<E> = Mapper.parse(list, clazzEntity)
-    fun toEntity(list: List<D>): List<E> = Mapper.parse(list, clazzEntity)
+    fun toEntity(obj: D): E = mapper.parse(obj, clazzEntity)
+    fun toEntity(list: Page<D>): Page<E> = mapper.parse(list, clazzEntity)
+    fun toEntity(list: List<D>): List<E> = mapper.parse(list, clazzEntity)
 }

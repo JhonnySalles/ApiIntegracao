@@ -20,4 +20,8 @@ class MapperConverterKanjiInfoTest() : MapperConvertBase<UUID?, KanjiInfo, Kanji
         return inputObject
     }
 
+    override fun mapper(): Mapper {
+        TODO("Not yet implemented")
+    }
+
 }

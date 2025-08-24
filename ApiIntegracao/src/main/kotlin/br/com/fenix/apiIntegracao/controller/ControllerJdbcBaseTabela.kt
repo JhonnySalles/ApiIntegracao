@@ -4,12 +4,14 @@ import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO_URL
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.TABLES_URL
 import br.com.fenix.apiintegracao.converters.MediaTypes
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbcTabela
 import br.com.fenix.apiintegracao.service.ServiceJdbcTabela
 import br.com.fenix.apiintegracao.utils.Utils
 import io.swagger.v3.oas.annotations.Operation
+import org.modelmapper.ModelMapper
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PagedResourcesAssembler
@@ -27,12 +29,17 @@ abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<I
     private val clazzDto: Class<D>
     private val clazzController: Class<C>
 
+    abstract override fun getMapper() : ModelMapper
+
     init {
         val superclass = (javaClass.genericSuperclass as ParameterizedType)
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : ServiceJdbcTabela<ID, E, D, C>(repository, factory, clazzEntity, clazzDto, clazzController) {}
+        service = object : ServiceJdbcTabela<ID, E, D, C>(repository, factory, clazzEntity, clazzDto, clazzController) {
+            override val mapper: Mapper
+                get() = Mapper(getMapper())
+        }
     }
 
     @Operation(summary = "Tabelas disponíveis para a consulta.", description = "Tabelas disponíveis para a consulta.")

@@ -20,4 +20,8 @@ class MapperConverterRevisarTest() : MapperConvertBase<UUID?, RevisarJapones, Re
         return inputObject
     }
 
+    override fun mapper(): Mapper {
+        TODO("Not yet implemented")
+    }
+
 }

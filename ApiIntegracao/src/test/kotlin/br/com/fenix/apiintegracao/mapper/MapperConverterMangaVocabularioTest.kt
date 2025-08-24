@@ -20,4 +20,8 @@ class MapperConverterMangaVocabularioTest() : MapperConvertBase<UUID?, Vocabular
         return inputObject
     }
 
+    override fun mapper(): Mapper {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 import java.util.*
 
-open class MangaCapaDto(
+data class MangaCapaDto(
     private var id: UUID?,
     var manga: String,
     var volume: Int,

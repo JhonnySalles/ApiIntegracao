@@ -8,6 +8,8 @@ import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.model.textojapones.EstatisticaJapones
 import br.com.fenix.apiintegracao.repository.textojapones.EstatisticaJaponesRepository
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.modelmapper.ModelMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
@@ -18,4 +20,8 @@ import java.util.*
 class EstatisticaJaponesController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, EstatisticaJapones, EstatisticaDto, EstatisticaJaponesController, EstatisticaJaponesRepository>(EstatisticaJapones.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_JAPONES
+
+    @Autowired
+    private lateinit var modelMapper: ModelMapper
+    override fun getMapper(): ModelMapper = modelMapper
 }

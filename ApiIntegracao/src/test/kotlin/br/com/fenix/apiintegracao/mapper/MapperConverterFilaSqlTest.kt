@@ -20,4 +20,8 @@ class MapperConverterFilaSqlTest() : MapperConvertBase<UUID?, FilaSqlJapones, Fi
         return inputObject
     }
 
+    override fun mapper(): Mapper {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -23,6 +23,8 @@ abstract class ServiceJdbcParent<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcParent::class.java)
     }
 
+    abstract val mapper : Mapper
+
     private fun existTable(table: String) : Boolean = repo.existstabela(table)
 
     fun validTable(table: String) {
@@ -94,10 +96,10 @@ abstract class ServiceJdbcParent<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
     private fun addLink(table: String, obj : D) : D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it}
     private fun addLink(table: String, list : List<D>) : List<D> = list.let { l -> l.parallelStream().forEach{ addLink(table, it) }; l }
 
-    fun toDto(obj: E): D = Mapper.parse(obj, clazzDto)
-    fun toDto(list: List<E>): List<D> = Mapper.parse(list, clazzDto)
+    fun toDto(obj: E): D = mapper.parse(obj, clazzDto)
+    fun toDto(list: List<E>): List<D> = mapper.parse(list, clazzDto)
 
-    fun toEntity(obj: D): E = Mapper.parse(obj, clazzEntity)
-    fun toEntity(list: List<D>): List<E> = Mapper.parse(list, clazzEntity)
+    fun toEntity(obj: D): E = mapper.parse(obj, clazzEntity)
+    fun toEntity(list: List<D>): List<E> = mapper.parse(list, clazzEntity)
 
 }

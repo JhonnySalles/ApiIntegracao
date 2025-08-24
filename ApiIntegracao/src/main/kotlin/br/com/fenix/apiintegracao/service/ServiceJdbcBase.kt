@@ -5,7 +5,6 @@ import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.exceptions.InvalidAuthenticationException
 import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
-import br.com.fenix.apiintegracao.exceptions.RequiredParametersInvalidException
 import br.com.fenix.apiintegracao.exceptions.ServerErrorException
 import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.Entity
@@ -31,6 +30,8 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
     companion object {
         private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcBase::class.java)
     }
+
+    abstract val mapper : Mapper
 
     fun getPage(pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
@@ -154,11 +155,11 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
     private fun addLink(list: Page<D>): Page<D> = list.map { addLink(it) }
     private fun toDtoLink(list: Page<E>): Page<D> = list.map { addLink(toDto(it)) }
 
-    fun toDto(obj: E): D = Mapper.parse(obj, clazzDto)
-    fun toDto(list: Page<E>): Page<D> = Mapper.parse(list, clazzDto)
-    fun toDto(list: List<E>): List<D> = Mapper.parse(list, clazzDto)
+    fun toDto(obj: E): D = mapper.parse(obj, clazzDto)
+    fun toDto(list: Page<E>): Page<D> = mapper.parse(list, clazzDto)
+    fun toDto(list: List<E>): List<D> = mapper.parse(list, clazzDto)
 
-    fun toEntity(obj: D): E = Mapper.parse(obj, clazzEntity)
-    fun toEntity(list: Page<D>): Page<E> = Mapper.parse(list, clazzEntity)
-    fun toEntity(list: List<D>): List<E> = Mapper.parse(list, clazzEntity)
+    fun toEntity(obj: D): E = mapper.parse(obj, clazzEntity)
+    fun toEntity(list: Page<D>): Page<E> = mapper.parse(list, clazzEntity)
+    fun toEntity(list: List<D>): List<E> = mapper.parse(list, clazzEntity)
 }

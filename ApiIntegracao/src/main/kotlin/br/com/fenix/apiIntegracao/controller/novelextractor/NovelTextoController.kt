@@ -7,6 +7,8 @@ import br.com.fenix.apiintegracao.dto.novelextractor.NovelTextoDto
 import br.com.fenix.apiintegracao.model.novelextractor.NovelTexto
 import br.com.fenix.apiintegracao.repository.novelextractor.NovelTextoRepository
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.modelmapper.ModelMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
@@ -15,5 +17,9 @@ import java.util.*
 @RequestMapping(NOVEL_EXTRACTOR_TEXTO)
 @Tag(name = "Novel Volume — Textos", description = "Endpoint para consultas de texto de novel")
 class NovelTextoController(registry: DynamicJdbcRegistry) : ControllerJdbcBaseParent<UUID?, NovelTexto, NovelTextoDto, NovelTextoController>(NovelTextoRepository(registry), NovelTexto.Companion) {
+
+    @Autowired
+    private lateinit var modelMapper: ModelMapper
+    override fun getMapper(): ModelMapper = modelMapper
 
 }

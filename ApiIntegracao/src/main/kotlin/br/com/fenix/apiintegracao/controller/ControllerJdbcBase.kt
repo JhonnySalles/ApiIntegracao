@@ -3,12 +3,14 @@ package br.com.fenix.apiintegracao.controller
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO_URL
 import br.com.fenix.apiintegracao.converters.MediaTypes
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJdbc
 import br.com.fenix.apiintegracao.service.ServiceJdbcBase
 import br.com.fenix.apiintegracao.utils.Utils
 import io.swagger.v3.oas.annotations.Operation
+import org.modelmapper.ModelMapper
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PagedResourcesAssembler
@@ -26,12 +28,17 @@ abstract class ControllerJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C 
     private val clazzDto: Class<D>
     private val clazzController: Class<C>
 
+    abstract fun getMapper() : ModelMapper
+
     init {
         val superclass = (javaClass.genericSuperclass as ParameterizedType)
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : ServiceJdbcBase<ID, E, D, C>(repository, factory, clazzEntity, clazzDto, clazzController) {}
+        service = object : ServiceJdbcBase<ID, E, D, C>(repository, factory, clazzEntity, clazzDto, clazzController) {
+            override val mapper: Mapper
+                get() = Mapper(getMapper())
+        }
     }
 
     @Operation(summary = "Pesquisa paginada", description = "Pesquisa paginada com retorno em JSON, XMl, YML e CSV.")

@@ -20,4 +20,8 @@ class MapperConverterEstatisticaTest() : MapperConvertBase<UUID?, EstatisticaJap
         return inputObject
     }
 
+    override fun mapper(): Mapper {
+        TODO("Not yet implemented")
+    }
+
 }

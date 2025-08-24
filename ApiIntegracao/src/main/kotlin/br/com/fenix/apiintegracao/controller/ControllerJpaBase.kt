@@ -5,12 +5,14 @@ import br.com.fenix.apiintegracao.controller.Endpoints.Companion.ATUALIZACAO_URL
 import br.com.fenix.apiintegracao.converters.MediaTypes
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.enums.Conexao
+import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
 import br.com.fenix.apiintegracao.repository.RepositoryJpaBase
 import br.com.fenix.apiintegracao.service.ServiceJpaBase
 import br.com.fenix.apiintegracao.utils.Utils
 import io.swagger.v3.oas.annotations.Operation
+import org.modelmapper.ModelMapper
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PagedResourcesAssembler
@@ -32,6 +34,7 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
     private val clazzController: Class<C>
     private val clazzRepository: Class<R>
 
+    abstract fun getMapper() : ModelMapper
     abstract fun getDynamicRegistry() : DynamicJpaRepositoryRegistry
     abstract val conexao : Conexao
 
@@ -44,6 +47,8 @@ abstract class ControllerJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         service = object : ServiceJpaBase<ID, E, D, C, R>(factory, clazzEntity, clazzDto, clazzController) {
             override val repository: RepositoryJpaBase<E, ID>
                 get() = getDynamicRegistry().getRepository(conexao, clazzRepository) ?: throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço indisponível no momento.")
+            override val mapper: Mapper
+                get() = Mapper(getMapper())
         }
     }
 

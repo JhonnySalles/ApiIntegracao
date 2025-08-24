@@ -8,6 +8,8 @@ import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.model.textoingles.ValidoIngles
 import br.com.fenix.apiintegracao.repository.textoingles.ValidoInglesRepository
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.modelmapper.ModelMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
@@ -18,4 +20,8 @@ import java.util.*
 class ValidoController(private val registry: DynamicJpaRepositoryRegistry) : ControllerJpaBase<UUID?, ValidoIngles, ValidoDto, ValidoController, ValidoInglesRepository>(ValidoIngles.Companion) {
     override fun getDynamicRegistry(): DynamicJpaRepositoryRegistry = registry
     override val conexao: Conexao = Conexao.TEXTO_INGLES
+
+    @Autowired
+    private lateinit var modelMapper: ModelMapper
+    override fun getMapper(): ModelMapper = modelMapper
 }

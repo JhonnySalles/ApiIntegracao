@@ -20,4 +20,8 @@ class MapperConverterExclusaoTest() : MapperConvertBase<UUID?, ExclusaoJapones, 
         return inputObject
     }
 
+    override fun mapper(): Mapper {
+        TODO("Not yet implemented")
+    }
+
 }
