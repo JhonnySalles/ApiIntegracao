@@ -15,8 +15,8 @@ data class NovelCapituloDto(
     var descricao: String,
     var sequencia: Int,
     var lingua: Linguagens,
-    var textos: MutableList<NovelTexto>,
-    var vocabularios: MutableSet<NovelVocabulario>,
+    var textos: MutableList<NovelTextoDto>,
+    var vocabularios: MutableSet<NovelVocabularioDto>,
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 

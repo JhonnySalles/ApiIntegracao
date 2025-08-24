@@ -13,11 +13,11 @@ data class MangaVolumeDto(
     var manga: String,
     var volume: Int,
     var lingua: Linguagens,
-    var capitulos: MutableList<MangaCapitulo>,
-    var vocabularios: MutableSet<MangaVocabulario>,
+    var capitulos: MutableList<MangaCapituloDto>,
+    var vocabularios: MutableSet<MangaVocabularioDto>,
     var arquivo: String,
     var processado: Boolean,
-    var capa: MangaCapa?,
+    var capa: MangaCapaDto?,
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 

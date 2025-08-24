@@ -11,8 +11,8 @@ data class MangaPaginaDto(
     var nomePagina: String,
     var numero: Int,
     var hash: String,
-    var textos: MutableList<MangaTexto>,
-    var vocabularios: MutableSet<MangaVocabulario>,
+    var textos: MutableList<MangaTextoDto>,
+    var vocabularios: MutableSet<MangaVocabularioDto>,
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 

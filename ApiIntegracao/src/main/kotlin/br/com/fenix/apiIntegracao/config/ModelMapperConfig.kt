@@ -23,7 +23,7 @@ class ModelMapperConfig {
 
         modelMapper.configuration.matchingStrategy = MatchingStrategies.STRICT
 
-        val convertBase64ToImage = { base64String: String? ->
+        val convertBase64ToByteArray = { base64String: String? ->
             if (base64String.isNullOrBlank() || !base64String.contains(","))
                 null
             else {
@@ -57,7 +57,7 @@ class ModelMapperConfig {
         modelMapper.createTypeMap(MangaCapaDto::class.java, MangaCapa::class.java).setPostConverter { context ->
             val dto = context.source
             val entidade = context.destination
-            entidade.imagem = convertBase64ToImage(dto.imagem)
+            entidade.imagem = convertBase64ToByteArray(dto.imagem)
             entidade
         }
 
@@ -72,7 +72,7 @@ class ModelMapperConfig {
         modelMapper.createTypeMap(NovelCapaDto::class.java, NovelCapa::class.java).setPostConverter { context ->
             val dto = context.source
             val entidade = context.destination
-            entidade.imagem = convertBase64ToImage(dto.imagem)
+            entidade.imagem = convertBase64ToByteArray(dto.imagem)
             entidade
         }
 

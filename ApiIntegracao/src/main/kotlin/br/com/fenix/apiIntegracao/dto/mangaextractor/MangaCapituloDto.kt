@@ -14,10 +14,10 @@ data class MangaCapituloDto(
     var capitulo: Float,
     var lingua: Linguagens,
     var scan: String,
-    var paginas: MutableList<MangaPagina>,
+    var paginas: MutableList<MangaPaginaDto>,
     var isExtra: Boolean,
     var isRaw: Boolean,
-    var vocabularios: MutableSet<MangaVocabulario>,
+    var vocabularios: MutableSet<MangaVocabularioDto>,
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 

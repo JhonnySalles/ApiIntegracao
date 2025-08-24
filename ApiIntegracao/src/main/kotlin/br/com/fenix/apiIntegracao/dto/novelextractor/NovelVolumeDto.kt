@@ -22,9 +22,9 @@ data class NovelVolumeDto(
     var lingua: Linguagens,
     var favorito: Boolean,
     var processado: Boolean,
-    var capa: NovelCapa?,
-    var capitulos: MutableList<NovelCapitulo>,
-    var vocabularios: MutableSet<NovelVocabulario>,
+    var capa: NovelCapaDto?,
+    var capitulos: MutableList<NovelCapituloDto>,
+    var vocabularios: MutableSet<NovelVocabularioDto>,
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 
