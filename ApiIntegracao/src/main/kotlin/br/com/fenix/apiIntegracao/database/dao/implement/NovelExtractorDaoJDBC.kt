@@ -190,7 +190,11 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(++index, obj.lingua.sigla)
             st.setString(++index, obj.arquivo)
             st.setString(++index, obj.extenssao)
-            st.setBytes(++index, obj.imagem)
+
+            val baos = ByteArrayOutputStream()
+            ImageIO.write(obj.imagem, obj.extenssao, baos)
+            st.setBinaryStream(++index, ByteArrayInputStream(baos.toByteArray()))
+
             st.setObject(++index, obj.atualizacao)
             st.setString(++index, obj.getId().toString())
 
@@ -321,7 +325,11 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(++index, obj.lingua.sigla)
             st.setString(++index, obj.arquivo)
             st.setString(++index, obj.extenssao)
-            st.setBytes(++index, obj.imagem)
+
+            val baos = ByteArrayOutputStream()
+            ImageIO.write(obj.imagem, obj.extenssao, baos)
+            st.setBinaryStream(++index, ByteArrayInputStream(baos.toByteArray()))
+
             st.setObject(++index, obj.atualizacao)
             val rowsAffected = st.executeUpdate()
             if (rowsAffected < 1) {
@@ -444,10 +452,12 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st.setString(1, id.toString())
             rs = st.executeQuery()
             if (rs.next()) {
+                val input = ByteArrayInputStream(rs.getBinaryStream("capa").readAllBytes())
+                val image: BufferedImage? = ImageIO.read(input)
                 Optional.of(NovelCapa(
                     UUID.fromString(rs.getString("id")), rs.getString("Novel"), rs.getInt("volume"),
                     Linguagens.getEnum(rs.getString("linguagem"))!!, rs.getString("arquivo"), rs.getString("extensao"),
-                    rs.getBinaryStream("capa").readAllBytes(), rs.getObject("atualizacao", LocalDateTime::class.java)
+                    image, rs.getObject("atualizacao", LocalDateTime::class.java)
                 ))
             }else
                 Optional.empty()
