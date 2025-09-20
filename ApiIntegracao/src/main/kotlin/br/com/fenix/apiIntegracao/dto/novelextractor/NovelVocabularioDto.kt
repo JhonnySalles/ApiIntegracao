@@ -14,6 +14,8 @@ data class NovelVocabularioDto(
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 
+    constructor(): this(null,  "", "", "", "", false, LocalDateTime.now())
+
     override fun getId(): UUID? {
         return id
     }
