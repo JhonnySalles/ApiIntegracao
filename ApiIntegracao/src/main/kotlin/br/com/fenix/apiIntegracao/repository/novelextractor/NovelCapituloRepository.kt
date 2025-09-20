@@ -6,12 +6,12 @@ import br.com.fenix.apiintegracao.database.dao.NovelExtractorDao
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.exceptions.RequiredParametersIsNullException
 import br.com.fenix.apiintegracao.model.novelextractor.NovelCapitulo
-import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
+import br.com.fenix.apiintegracao.repository.RepositoryJdbcItemFull
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class NovelCapituloRepository(private val registry : DynamicJdbcRegistry): RepositoryJdbcParent<NovelCapitulo, UUID?> {
+class NovelCapituloRepository(private val registry : DynamicJdbcRegistry): RepositoryJdbcItemFull<NovelCapitulo, UUID?> {
 
     private val dao : NovelExtractorDao by lazy { DaoFactory.createNovelExtractorDao(registry.getSource(Conexao.NOVEL_EXTRACTOR)) }
 

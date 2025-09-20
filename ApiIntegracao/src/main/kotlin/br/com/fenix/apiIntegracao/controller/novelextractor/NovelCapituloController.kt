@@ -1,7 +1,7 @@
 package br.com.fenix.apiintegracao.controller.novelextractor
 
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry
-import br.com.fenix.apiintegracao.controller.ControllerJdbcBaseParent
+import br.com.fenix.apiintegracao.controller.ControllerJdbcBaseItemFull
 import br.com.fenix.apiintegracao.controller.Endpoints.Companion.NOVEL_EXTRACTOR_CAPITULO
 import br.com.fenix.apiintegracao.dto.novelextractor.NovelCapituloDto
 import br.com.fenix.apiintegracao.model.novelextractor.NovelCapitulo
@@ -16,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping(NOVEL_EXTRACTOR_CAPITULO)
 @Tag(name = "Novel Volume — Capítulos", description = "Endpoint para consultas de capítulos de novel")
-class NovelCapituloController(registry: DynamicJdbcRegistry) : ControllerJdbcBaseParent<UUID?, NovelCapitulo, NovelCapituloDto, NovelCapituloController>(NovelCapituloRepository(registry), NovelCapitulo.Companion) {
+class NovelCapituloController(registry: DynamicJdbcRegistry) : ControllerJdbcBaseItemFull<UUID?, NovelCapitulo, NovelCapituloDto, NovelCapituloController>(NovelCapituloRepository(registry), NovelCapitulo.Companion) {
 
     @Autowired
     private lateinit var modelMapper: ModelMapper

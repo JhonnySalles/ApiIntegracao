@@ -4,7 +4,7 @@ import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.model.EntityBase
 import java.util.*
 
-interface RepositoryJdbcParent<E : EntityBase<ID, E>, ID> {
+interface RepositoryJdbcItemSmall<E : EntityBase<ID, E>, ID> {
 
     @Throws(ExceptionDb::class)
     fun select(tabela: String, id: ID): Optional<E>
@@ -17,12 +17,6 @@ interface RepositoryJdbcParent<E : EntityBase<ID, E>, ID> {
 
     @Throws(ExceptionDb::class)
     fun findAll(tabela: String, idParent : ID): List<E>
-
-    @Throws(ExceptionDb::class)
-    fun delete(tabela: String, obj: E)
-
-    @Throws(ExceptionDb::class)
-    fun delete(tabela: String, id: ID)
 
     // -------------------------------------------------------------------------------------------------------------  //
 

@@ -48,13 +48,7 @@ interface NovelExtractorDao : ExtractorDaoBase<NovelVolume, UUID?> {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun deleteCapa(base: String, obj: NovelCapa, transaction : Boolean = true)
-
-    @Throws(ExceptionDb::class)
-    fun deleteCapitulo(base: String, obj: NovelCapitulo, transaction : Boolean = true)
-
-    @Throws(ExceptionDb::class)
-    fun deleteTexto(base: String, obj: NovelTexto, transaction : Boolean = true)
+    fun deleteCapitulo(base: String, obj: NovelCapitulo)
 
     // -------------------------------------------------------------------------------------------------------------  //
 

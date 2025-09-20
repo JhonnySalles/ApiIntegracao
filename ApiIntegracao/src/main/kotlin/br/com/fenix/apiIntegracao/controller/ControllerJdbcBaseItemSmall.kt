@@ -6,8 +6,8 @@ import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
-import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
-import br.com.fenix.apiintegracao.service.ServiceJdbcParent
+import br.com.fenix.apiintegracao.repository.RepositoryJdbcItemSmall
+import br.com.fenix.apiintegracao.service.ServiceJdbcItemSmall
 import io.swagger.v3.oas.annotations.Operation
 import org.modelmapper.ModelMapper
 import org.springframework.http.MediaType
@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.reflect.ParameterizedType
 
-abstract class ControllerJdbcBaseParent<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseParent<ID, E, D, C>>(repository: RepositoryJdbcParent<E, ID>, factory: EntityFactory<ID, E>) {
-    protected val service: ServiceJdbcParent<ID, E, D, C>
+abstract class ControllerJdbcBaseItemSmall<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseItemSmall<ID, E, D, C>>(repository: RepositoryJdbcItemSmall<E, ID>, factory: EntityFactory<ID, E>) {
+    protected val service: ServiceJdbcItemSmall<ID, E, D, C>
     private val clazzEntity: Class<E>
     private val clazzDto: Class<D>
     private val clazzController: Class<C>
@@ -28,7 +28,7 @@ abstract class ControllerJdbcBaseParent<ID, E : EntityBase<ID, E>, D : DtoBase<I
         clazzEntity = superclass.actualTypeArguments[1] as Class<E>
         clazzDto = superclass.actualTypeArguments[2] as Class<D>
         clazzController = superclass.actualTypeArguments[3] as Class<C>
-        service = object : ServiceJdbcParent<ID, E, D, C>(repository, factory, clazzEntity, clazzDto, clazzController) {
+        service = object : ServiceJdbcItemSmall<ID, E, D, C>(repository, factory, clazzEntity, clazzDto, clazzController) {
             override val mapper: Mapper
                 get() = Mapper(getMapper())
         }
@@ -127,43 +127,4 @@ abstract class ControllerJdbcBaseParent<ID, E : EntityBase<ID, E>, D : DtoBase<I
         return ResponseEntity.ok(service.create(table, idParent, create))
     }
 
-    @Operation(summary = "Deletar registro por id", description = "Deletar registro por id")
-    @DeleteMapping(
-        "$TABLES_URL/{id}",
-        consumes = arrayOf(
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE,
-            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-            ),
-        produces = arrayOf(
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE,
-            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-            )
-    )
-    fun delete(@PathVariable table: String, @PathVariable id: ID): ResponseEntity<String> {
-        service.validTable(table)
-        service.delete(table, id)
-        return ResponseEntity.ok("Ok")
-    }
-
-    @Operation(summary = "Deletar vários registros", description = "Deletar vários registros")
-    @DeleteMapping(
-        "$TABLES_URL/lista",
-        consumes = arrayOf(
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE,
-            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-            ),
-        produces = arrayOf(
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE,
-            MediaTypes.MEDIA_TYPE_APPLICATION_YML_VALUE,
-            )
-    )
-    fun delete(@PathVariable table: String, @RequestBody delete: List<ID>): ResponseEntity<String> {
-        service.validTable(table)
-        service.delete(table, delete)
-        return ResponseEntity.ok("Ok")
-    }
 }

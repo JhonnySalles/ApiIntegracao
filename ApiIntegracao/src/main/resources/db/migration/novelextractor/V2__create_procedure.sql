@@ -243,4 +243,23 @@ BEGIN
 
 END$$
 
+
+CREATE DEFINER=`admin`@`%` PROCEDURE `vocabulary_exists`(IN _tablename VARCHAR(255), IN _name VARCHAR(255))
+BEGIN
+    SELECT Table_Name AS Tabela
+    FROM information_schema.tables
+    WHERE table_schema = _tablename
+      AND Table_Name LIKE '%_vocabularios%'
+      AND Table_Name LIKE '%%%s%%'
+    GROUP BY Tabela;
+END$$
+
+
+CREATE DEFINER=`admin`@`%` PROCEDURE `list_tables`(IN _tablename VARCHAR(255))
+BEGIN
+    SELECT REPLACE(Table_Name, '_volumes', '') AS Tabela
+    FROM information_schema.tables
+    WHERE table_schema = _tablename AND Table_Name LIKE '%_volumes%';
+END$$
+
 DELIMITER ;

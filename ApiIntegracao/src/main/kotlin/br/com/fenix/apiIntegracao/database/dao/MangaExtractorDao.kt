@@ -60,16 +60,7 @@ interface MangaExtractorDao : ExtractorDaoBase<MangaVolume, UUID?> {
     // -------------------------------------------------------------------------------------------------------------  //
 
     @Throws(ExceptionDb::class)
-    fun deleteCapa(base: String, obj: MangaCapa, transaction : Boolean = true)
-
-    @Throws(ExceptionDb::class)
-    fun deleteCapitulo(base: String, obj: MangaCapitulo, transaction : Boolean = true)
-
-    @Throws(ExceptionDb::class)
-    fun deletePagina(base: String, obj: MangaPagina, transaction : Boolean = true)
-
-    @Throws(ExceptionDb::class)
-    fun deleteTexto(base: String, obj: MangaTexto, transaction : Boolean = true)
+    fun deleteCapitulo(base: String, obj: MangaCapitulo)
 
     // -------------------------------------------------------------------------------------------------------------  //
 

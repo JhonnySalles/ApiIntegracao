@@ -1,6 +1,6 @@
 package br.com.fenix.apiintegracao.service
 
-import br.com.fenix.apiintegracao.controller.ControllerJdbcBaseParent
+import br.com.fenix.apiintegracao.controller.ControllerJdbcBaseItemSmall
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.exceptions.RequiredObjectIsNullException
 import br.com.fenix.apiintegracao.exceptions.TableNotExistsException
@@ -8,19 +8,19 @@ import br.com.fenix.apiintegracao.mapper.Mapper
 import br.com.fenix.apiintegracao.model.Entity
 import br.com.fenix.apiintegracao.model.EntityBase
 import br.com.fenix.apiintegracao.model.EntityFactory
-import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
+import br.com.fenix.apiintegracao.repository.RepositoryJdbcItemSmall
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.transaction.annotation.Transactional
 
-abstract class ServiceJdbcParent<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseParent<ID, E, D, C>>(
-    var repo: RepositoryJdbcParent<E, ID>, val factory: EntityFactory<ID, E>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>
+abstract class ServiceJdbcItemSmall<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseItemSmall<ID, E, D, C>>(
+    var repo: RepositoryJdbcItemSmall<E, ID>, val factory: EntityFactory<ID, E>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>
 ) {
 
     companion object {
-        private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcParent::class.java)
+        private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcItemSmall::class.java)
     }
 
     abstract val mapper : Mapper
@@ -87,11 +87,6 @@ abstract class ServiceJdbcParent<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         }
         return addLink(table, saved)
     }
-
-    @Transactional
-    open fun delete(table: String, id: ID) = repo.delete(table, id)
-
-    open fun delete(table: String, delete: List<ID>) = delete.forEach { delete(table, it) }
 
     private fun addLink(table: String, obj : D) : D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it}
     private fun addLink(table: String, list : List<D>) : List<D> = list.let { l -> l.parallelStream().forEach{ addLink(table, it) }; l }

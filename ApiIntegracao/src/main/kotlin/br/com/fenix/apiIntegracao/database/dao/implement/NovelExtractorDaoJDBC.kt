@@ -62,13 +62,8 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         private const val INSERT_TEXTO = "INSERT INTO %s_textos (id, id_capitulo, sequencia, texto, atualizacao) VALUES (?,?,?,?,?)"
         private const val INSERT_CAPA = "INSERT INTO %s_capas (id, id_volume, novel, volume, linguagem, arquivo, extensao, capa, atualizacao) VALUES (?,?,?,?,?,?,?,?,?)"
 
-        private const val DELETE_VOLUMES = "DELETE v FROM %s_volumes AS v %s"
-        private const val DELETE_CAPITULOS = "DELETE c FROM %s_capitulos AS c INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s"
-        private const val DELETE_PAGINAS = ("DELETE p FROM %s_paginas p "
-                + "INNER JOIN %s_capitulos AS c ON c.id = p.id_capitulo INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s")
-        private const val DELETE_TEXTOS = ("DELETE t FROM %s_textos AS t INNER JOIN %s_capitulos AS c ON c.id = t.id_capitulo INNER JOIN %s_volumes AS v ON v.id = c.id_volume %s")
-        private const val DELETE_CAPAS = "DELETE FROM %s_capas WHERE id_volume = ?"
-        private const val DELETE_CAPA = "DELETE FROM %s_capas WHERE id = ?"
+        private const val DELETE_VOLUMES = "CALL delete_volume('%s', '%s')"
+        private const val DELETE_CAPITULOS = "CALL delete_capitulos('%s', '%s')"
 
         private const val SELECT_VOLUMES = "SELECT id, novel, titulo, titulo_alternativo, serie, descricao, editora, autor, volume, linguagem, arquivo, is_favorito, is_processado, atualizacao FROM %s_volumes"
         private const val SELECT_CAPITULOS = "SELECT id, novel, volume, capitulo, descricao, sequencia, linguagem, atualizacao FROM %s_capitulos WHERE id_volume = ?"
@@ -687,42 +682,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
     override fun deleteVolume(base: String, obj: NovelVolume) {
         var st: PreparedStatement? = null
         try {
-            st = conn.prepareStatement(String.format(DELETE_VOLUMES, base))
-            st.setString(1, obj.getId().toString())
-            conn.autoCommit = false
-            conn.beginRequest()
-
-            deleteCapa(base, obj.getId()!!)
-            deleteVocabulario(base, idVolume = obj.getId())
-
-            for (capitulo in obj.capitulos)
-                deleteCapitulo(base, capitulo, false)
-
-            st.executeUpdate()
-            conn.commit()
-        } catch (e: SQLException) {
-            try {
-                conn.rollback()
-            } catch (e1: SQLException) {
-                e1.printStackTrace()
-            }
-            e.printStackTrace()
-            throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
-        } finally {
-            try {
-                conn.autoCommit = true
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            }
-            closeStatement(st)
-        }
-    }
-
-    private fun deleteCapa(base: String, idVolume: UUID) {
-        var st: PreparedStatement? = null
-        try {
-            st = conn.prepareStatement(String.format(DELETE_CAPAS, base))
-            st.setString(1, idVolume.toString())
+            st = conn.prepareStatement(String.format(DELETE_VOLUMES, base, obj.getId().toString()))
             st.executeUpdate()
         } catch (e: SQLException) {
             e.printStackTrace()
@@ -732,114 +692,15 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         }
     }
 
-    override fun deleteCapa(base: String, obj: NovelCapa, transaction: Boolean) {
+    override fun deleteCapitulo(base: String, obj: NovelCapitulo) {
         var st: PreparedStatement? = null
         try {
-            st = conn.prepareStatement(String.format(DELETE_CAPA, base))
-            st.setString(1, obj.getId().toString())
-
-            if (transaction) {
-                conn.autoCommit = false
-                conn.beginRequest()
-            }
-
+            st = conn.prepareStatement(String.format(DELETE_CAPITULOS, base, obj.getId().toString()))
             st.executeUpdate()
-
-            if (transaction)
-                conn.commit()
         } catch (e: SQLException) {
-            try {
-                if (transaction)
-                    conn.rollback()
-            } catch (e1: SQLException) {
-                e1.printStackTrace()
-            }
             e.printStackTrace()
             throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
         } finally {
-            try {
-                if (transaction)
-                    conn.autoCommit = true
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            }
-            closeStatement(st)
-        }
-    }
-
-    override fun deleteCapitulo(base: String, obj: NovelCapitulo, transaction : Boolean) {
-        var st: PreparedStatement? = null
-        try {
-            st = conn.prepareStatement(String.format(DELETE_CAPITULOS, base))
-            st.setString(1, obj.getId().toString())
-
-            if (transaction) {
-                conn.autoCommit = false
-                conn.beginRequest()
-            }
-
-            deleteVocabulario(base, idCapitulo = obj.getId())
-
-            for (texto in obj.textos)
-                deleteTexto(base, texto, false)
-
-            st.executeUpdate()
-
-            if (transaction)
-                conn.commit()
-
-        } catch (e: SQLException) {
-            try {
-                if (transaction)
-                    conn.rollback()
-            } catch (e1: SQLException) {
-                e1.printStackTrace()
-            }
-            e.printStackTrace()
-            throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
-        } finally {
-            try {
-                if (transaction)
-                    conn.autoCommit = true
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            }
-            closeStatement(st)
-        }
-    }
-
-    override fun deleteTexto(base: String, obj: NovelTexto, transaction : Boolean) {
-        var st: PreparedStatement? = null
-        try {
-            st = conn.prepareStatement(String.format(DELETE_TEXTOS, base))
-            st.setString(1, obj.getId().toString())
-
-            if (transaction) {
-                conn.autoCommit = false
-                conn.beginRequest()
-            }
-
-            st.executeUpdate()
-
-            if (transaction)
-                conn.commit()
-
-        } catch (e: SQLException) {
-            try {
-                if (transaction)
-                    conn.rollback()
-            } catch (e1: SQLException) {
-                e1.printStackTrace()
-            }
-            e.printStackTrace()
-            throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
-        } finally {
-            try {
-                if (transaction)
-                    conn.autoCommit = true
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            }
             closeStatement(st)
         }
     }

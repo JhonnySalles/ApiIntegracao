@@ -6,12 +6,12 @@ import br.com.fenix.apiintegracao.database.dao.MangaExtractorDao
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.exceptions.RequiredParametersIsNullException
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaCapitulo
-import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
+import br.com.fenix.apiintegracao.repository.RepositoryJdbcItemFull
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MangaCapituloRepository(private val registry : DynamicJdbcRegistry): RepositoryJdbcParent<MangaCapitulo, UUID?> {
+class MangaCapituloRepository(private val registry : DynamicJdbcRegistry): RepositoryJdbcItemFull<MangaCapitulo, UUID?> {
 
     private val dao : MangaExtractorDao by lazy { DaoFactory.createMangaExtractorDao(registry.getSource(Conexao.MANGA_EXTRACTOR)) }
 

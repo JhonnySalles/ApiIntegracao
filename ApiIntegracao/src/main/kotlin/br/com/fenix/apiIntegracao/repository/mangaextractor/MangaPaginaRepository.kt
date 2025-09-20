@@ -6,12 +6,13 @@ import br.com.fenix.apiintegracao.database.dao.MangaExtractorDao
 import br.com.fenix.apiintegracao.enums.Conexao
 import br.com.fenix.apiintegracao.exceptions.RequiredParametersIsNullException
 import br.com.fenix.apiintegracao.model.mangaextractor.MangaPagina
-import br.com.fenix.apiintegracao.repository.RepositoryJdbcParent
+import br.com.fenix.apiintegracao.repository.RepositoryJdbcItemFull
+import br.com.fenix.apiintegracao.repository.RepositoryJdbcItemSmall
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MangaPaginaRepository(private val registry : DynamicJdbcRegistry): RepositoryJdbcParent<MangaPagina, UUID?> {
+class MangaPaginaRepository(private val registry : DynamicJdbcRegistry): RepositoryJdbcItemSmall<MangaPagina, UUID?> {
 
     private val dao : MangaExtractorDao by lazy { DaoFactory.createMangaExtractorDao(registry.getSource(Conexao.MANGA_EXTRACTOR)) }
 
@@ -25,10 +26,6 @@ class MangaPaginaRepository(private val registry : DynamicJdbcRegistry): Reposit
     }
 
     override fun findAll(tabela: String, idParent: UUID?): List<MangaPagina> = dao.selectAllPaginas(tabela, idParent ?: throw RequiredParametersIsNullException())
-
-    override fun delete(tabela: String, obj: MangaPagina) = dao.deletePagina(tabela, obj)
-
-    override fun delete(tabela: String, id: UUID?) = dao.deletePagina(tabela, MangaPagina(id))
 
     override fun existstabela(tabela: String): Boolean = dao.existTable(tabela)
 
