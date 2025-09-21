@@ -4,6 +4,7 @@ import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeR
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeStatement
 import br.com.fenix.apiintegracao.database.dao.NovelExtractorDao
 import br.com.fenix.apiintegracao.database.dao.PageBase
+import br.com.fenix.apiintegracao.database.dao.implement.MangaExtractorDaoJDBC.Companion
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.messages.Mensagens
@@ -166,8 +167,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             }
             return obj
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
         } finally {
             closeStatement(st)
@@ -199,8 +199,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             }
             return obj
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
         } finally {
             closeStatement(st)
@@ -231,8 +230,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             }
             return obj
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
         } finally {
             closeStatement(st)
@@ -256,8 +254,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             }
             return obj
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
         } finally {
             closeStatement(st)
@@ -299,8 +296,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 id
             }
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_INSERT)
         } finally {
             closeStatement(st)
@@ -337,8 +333,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 id
             }
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
         } finally {
             closeStatement(st)
@@ -374,8 +369,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 id
             }
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_INSERT)
         } finally {
             closeStatement(st)
@@ -403,8 +397,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                     return UUID.fromString(rs.getString(0))
             }
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_INSERT)
         } finally {
             closeStatement(st)
@@ -427,8 +420,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             else
                 Optional.empty()
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -456,8 +448,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             }else
                 Optional.empty()
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -479,8 +470,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             else
                 Optional.empty()
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -502,8 +492,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             else
                 Optional.empty()
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -523,8 +512,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 list.add(getVolume(rs, base))
             list
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -563,8 +551,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
 
             toPageable(pageable, total, list)
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -584,8 +571,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 list.add(getVolume(rs, base))
             list
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -627,8 +613,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
 
             toPageable(pageable, total, list)
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -648,8 +633,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 list.add(getCapitulo(rs, base))
             list
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -669,8 +653,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 list.add(getTexto(rs))
             list
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -685,7 +668,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st = conn.prepareStatement(String.format(DELETE_VOLUMES, base, obj.getId().toString()))
             st.executeUpdate()
         } catch (e: SQLException) {
-            e.printStackTrace()
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
         } finally {
             closeStatement(st)
@@ -698,7 +681,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st = conn.prepareStatement(String.format(DELETE_CAPITULOS, base, obj.getId().toString()))
             st.executeUpdate()
         } catch (e: SQLException) {
-            e.printStackTrace()
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
         } finally {
             closeStatement(st)
@@ -713,8 +696,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st = conn.prepareStatement(String.format(CREATE_TRIGGER_INSERT, nome, nome))
             st.execute()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -723,8 +705,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st = conn.prepareStatement(String.format(CREATE_TRIGGER_UPDATE, nome, nome))
             st.execute()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -737,8 +718,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st = conn.prepareStatement(String.format(CREATE_TABELA, nome))
             st.execute()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -752,8 +732,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             st = conn.prepareStatement(String.format(CREATE_TRIGGER_UPDATE, nome + TABELA_VOCABULARIO, nome + TABELA_VOCABULARIO))
             st.execute()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -768,8 +747,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
             rs = st.executeQuery()
             return rs.next()
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -789,8 +767,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 while (rs.next()) list.add(rs.getString("Tabela"))
                 list
             } catch (e: SQLException) {
-                e.printStackTrace()
-                println(st.toString())
+                oLog.error("Error ao executar o comando: " + st.toString(), e)
                 throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
             } finally {
                 closeStatement(st)
@@ -833,8 +810,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 ))
             list
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -869,8 +845,7 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 st.executeUpdate()
             }
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_INSERT)
         } finally {
             closeStatement(st)
@@ -909,17 +884,16 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 if (transaction)
                     conn.rollback()
             } catch (e1: SQLException) {
-                e1.printStackTrace()
+                oLog.error(e1.message, e1)
             }
-            println(st.toString())
-            e.printStackTrace()
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
         } finally {
             try {
                 if (transaction)
                     conn.autoCommit = true
             } catch (e: SQLException) {
-                e.printStackTrace()
+                oLog.error(e.message, e)
             }
             closeStatement(st)
         }

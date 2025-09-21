@@ -4,6 +4,7 @@ import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeR
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeStatement
 import br.com.fenix.apiintegracao.database.dao.ComicInfoDao
 import br.com.fenix.apiintegracao.database.dao.RepositoryDaoBase
+import br.com.fenix.apiintegracao.database.dao.implement.DeckSubtitleDaoJDBC.Companion
 import br.com.fenix.apiintegracao.enums.comicinfo.AgeRating
 import br.com.fenix.apiintegracao.messages.Mensagens
 import br.com.fenix.apiintegracao.model.processatexto.ComicInfo
@@ -81,8 +82,7 @@ class ComicInfoDaoJDBC(conexao: Connection) : ComicInfoDao, RepositoryDaoBase<UU
                 throw SQLException(Mensagens.BD_ERRO_INSERT)
             }
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_INSERT)
         } finally {
             closeStatement(st)
@@ -121,8 +121,7 @@ class ComicInfoDaoJDBC(conexao: Connection) : ComicInfoDao, RepositoryDaoBase<UU
                 //throw SQLException(Mensagens.BD_ERRO_UPDATE)
             }
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_UPDATE)
         } finally {
             closeStatement(st)
@@ -143,7 +142,7 @@ class ComicInfoDaoJDBC(conexao: Connection) : ComicInfoDao, RepositoryDaoBase<UU
             else
                 Optional.empty<ComicInfo>()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -168,7 +167,7 @@ class ComicInfoDaoJDBC(conexao: Connection) : ComicInfoDao, RepositoryDaoBase<UU
             else
                 Optional.empty<ComicInfo>()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -188,7 +187,7 @@ class ComicInfoDaoJDBC(conexao: Connection) : ComicInfoDao, RepositoryDaoBase<UU
                 list.add(toEntity(rs))
             list
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)

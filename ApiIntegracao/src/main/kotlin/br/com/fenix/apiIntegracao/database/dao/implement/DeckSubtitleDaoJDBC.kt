@@ -3,6 +3,7 @@ package br.com.fenix.apiintegracao.database.dao.implement
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeResultSet
 import br.com.fenix.apiintegracao.component.DynamicJdbcRegistry.Companion.closeStatement
 import br.com.fenix.apiintegracao.database.dao.DeckSubtitleDao
+import br.com.fenix.apiintegracao.database.dao.implement.ComicInfoDaoJDBC.Companion
 import br.com.fenix.apiintegracao.enums.Linguagens
 import br.com.fenix.apiintegracao.exceptions.ExceptionDb
 import br.com.fenix.apiintegracao.messages.Mensagens
@@ -128,8 +129,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
                 println("Nenhum registro atualizado.")
             }
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_UPDATE)
         } finally {
             closeStatement(st)
@@ -161,8 +161,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
                 return null
             }
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_INSERT)
         } finally {
             closeStatement(st)
@@ -181,8 +180,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             else
                 null
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -201,8 +199,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
                 list.add(getLegenda(rs))
             list
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -234,8 +231,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
 
             toPageable(pageable, total, list)
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -255,8 +251,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
                 list.add(getLegenda(rs))
             list
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -291,8 +286,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
 
             toPageable(pageable, total, list)
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
         } finally {
             closeStatement(st)
@@ -313,7 +307,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             try {
                 conn.rollback()
             } catch (e1: SQLException) {
-                e1.printStackTrace()
+                oLog.error(e1.message, e1)
             }
             e.printStackTrace()
             throw ExceptionDb(Mensagens.BD_ERRO_DELETE)
@@ -321,7 +315,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             try {
                 conn.autoCommit = true
             } catch (e: SQLException) {
-                e.printStackTrace()
+                oLog.error(e.message, e)
             }
             closeStatement(st)
         }
@@ -337,8 +331,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             rs = st.executeQuery()
             return rs.next()
         } catch (e: SQLException) {
-            e.printStackTrace()
-            println(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -352,8 +345,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             st = conn.prepareStatement(String.format(CREATE_TABELA, nome))
             st.execute()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -362,8 +354,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             st = conn.prepareStatement(String.format(CREATE_TRIGGER_INSERT, nome, nome))
             st.execute()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -372,8 +363,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
             st = conn.prepareStatement(String.format(CREATE_TRIGGER_UPDATE, nome, nome))
             st.execute()
         } catch (e: SQLException) {
-            oLog.error(e.message, e)
-            oLog.info(st.toString())
+            oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw SQLException(Mensagens.BD_ERRO_CREATE_DATABASE)
         } finally {
             closeStatement(st)
@@ -392,8 +382,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
                 while (rs.next()) list.add(rs.getString("Tabela"))
                 list
             } catch (e: SQLException) {
-                e.printStackTrace()
-                println(st.toString())
+                oLog.error("Error ao executar o comando: " + st.toString(), e)
                 throw ExceptionDb(Mensagens.BD_ERRO_SELECT)
             } finally {
                 closeStatement(st)
