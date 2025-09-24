@@ -1,6 +1,8 @@
 server:
   port: 8888
 spring:
+  application:
+    name: ApiIntegracao
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -16,3 +18,4 @@ springdoc:
     use-root-path: true
     tags-sorter: alpha
     operations-sorter: alpha
+descobertaLocal: false
