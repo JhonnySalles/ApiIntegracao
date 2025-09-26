@@ -2,26 +2,46 @@ package br.com.fenix.apiintegracao.dto.novelextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.enums.Linguagens
+import br.com.fenix.apiintegracao.views.Views
+import com.fasterxml.jackson.annotation.JsonFilter
+import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDateTime
 import java.util.*
 
 data class NovelVolumeDto(
+    @JsonView(Views.Summary::class)
     private var id: UUID?,
+    @JsonView(Views.Detail::class)
     var novel: String,
+    @JsonView(Views.Detail::class)
     var titulo: String,
+    @JsonView(Views.Detail::class)
     var tituloAlternativo: String,
+    @JsonView(Views.Detail::class)
     var serie: String,
+    @JsonView(Views.Detail::class)
     var descricao: String,
+    @JsonView(Views.Detail::class)
     var arquivo: String,
+    @JsonView(Views.Detail::class)
     var editora: String,
+    @JsonView(Views.Detail::class)
     var autor: String,
+    @JsonView(Views.Detail::class)
     var volume: Float,
+    @JsonView(Views.Detail::class)
     var lingua: Linguagens,
+    @JsonView(Views.Detail::class)
     var favorito: Boolean,
+    @JsonView(Views.Detail::class)
     var processado: Boolean,
+    @JsonView(Views.Summary::class)
     var capa: NovelCapaDto?,
+    @JsonView(Views.Summary::class)
     var capitulos: MutableList<NovelCapituloDto>,
+    @JsonView(Views.Summary::class)
     var vocabularios: MutableSet<NovelVocabularioDto>,
+    @JsonView(Views.Summary::class)
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 

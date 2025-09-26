@@ -1,16 +1,26 @@
 package br.com.fenix.apiintegracao.dto.decsubtitle
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.views.Views
+import com.fasterxml.jackson.annotation.JsonView
 import java.util.*
 
 data class LegendaDto(
+    @JsonView(Views.Summary::class)
     private var id: UUID?,
+    @JsonView(Views.Detail::class)
     var episodio: Int,
+    @JsonView(Views.Detail::class)
     var linguagem: String,
+    @JsonView(Views.Detail::class)
     var tempoInicial: String,
+    @JsonView(Views.Detail::class)
     var tempoFinal: String?,
+    @JsonView(Views.Detail::class)
     var texto: String,
+    @JsonView(Views.Detail::class)
     var traducao: String,
+    @JsonView(Views.Detail::class)
     var vocabulario: String?
 ) : DtoBase<UUID?>() {
 

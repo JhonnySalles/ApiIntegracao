@@ -1,15 +1,22 @@
 package br.com.fenix.apiintegracao.dto.textoingles
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.views.Views
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDateTime
 import java.util.*
 
 data class VocabularioDto(
+    @JsonView(Views.Summary::class)
     private var id: UUID?,
+    @JsonView(Views.Detail::class)
     val vocabulario: String,
+    @JsonView(Views.Detail::class)
     var leitura: String,
+    @JsonView(Views.Detail::class)
     var portugues: String,
+    @JsonView(Views.Summary::class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {

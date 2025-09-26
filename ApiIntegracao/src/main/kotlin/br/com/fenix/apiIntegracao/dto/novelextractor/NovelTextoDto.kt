@@ -1,13 +1,20 @@
 package br.com.fenix.apiintegracao.dto.novelextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.views.Views
+import com.fasterxml.jackson.annotation.JsonFilter
+import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDateTime
 import java.util.*
 
 data class NovelTextoDto(
+    @JsonView(Views.Summary::class)
     private var id: UUID?,
+    @JsonView(Views.Detail::class)
     var texto: String,
+    @JsonView(Views.Detail::class)
     var sequencia: Int,
+    @JsonView(Views.Summary::class)
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 

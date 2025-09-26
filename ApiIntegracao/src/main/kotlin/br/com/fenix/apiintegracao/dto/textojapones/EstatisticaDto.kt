@@ -1,21 +1,34 @@
 package br.com.fenix.apiintegracao.dto.textojapones
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.views.Views
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDateTime
 import java.util.*
 
 data class EstatisticaDto(
+    @JsonView(Views.Summary::class)
     private var id: UUID?,
+    @JsonView(Views.Detail::class)
     var sequencial: Long?,
+    @JsonView(Views.Detail::class)
     var kanji: String,
+    @JsonView(Views.Detail::class)
     var leitura: String,
+    @JsonView(Views.Detail::class)
     var tipo: String,
+    @JsonView(Views.Detail::class)
     var quantidade: Double,
+    @JsonView(Views.Detail::class)
     var percentual: Float,
+    @JsonView(Views.Detail::class)
     var media: Double,
+    @JsonView(Views.Detail::class)
     var percentualMedio: Float,
+    @JsonView(Views.Detail::class)
     var corSequencial: Int,
+    @JsonView(Views.Summary::class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     var atualizacao: LocalDateTime = LocalDateTime.now()
 ) : DtoBase<UUID?>() {

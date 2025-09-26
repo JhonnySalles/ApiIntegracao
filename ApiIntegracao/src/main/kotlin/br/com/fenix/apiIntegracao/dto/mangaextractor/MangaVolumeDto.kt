@@ -2,19 +2,31 @@ package br.com.fenix.apiintegracao.dto.mangaextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
 import br.com.fenix.apiintegracao.enums.Linguagens
+import br.com.fenix.apiintegracao.views.Views
+import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDateTime
 import java.util.*
 
 data class MangaVolumeDto(
+    @JsonView(Views.Summary::class)
     private var id: UUID?,
+    @JsonView(Views.Detail::class)
     var manga: String,
+    @JsonView(Views.Detail::class)
     var volume: Int,
+    @JsonView(Views.Detail::class)
     var lingua: Linguagens,
+    @JsonView(Views.Summary::class)
     var capitulos: MutableList<MangaCapituloDto>,
+    @JsonView(Views.Summary::class)
     var vocabularios: MutableSet<MangaVocabularioDto>,
+    @JsonView(Views.Detail::class)
     var arquivo: String,
+    @JsonView(Views.Detail::class)
     var processado: Boolean,
+    @JsonView(Views.Summary::class)
     var capa: MangaCapaDto?,
+    @JsonView(Views.Summary::class)
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 

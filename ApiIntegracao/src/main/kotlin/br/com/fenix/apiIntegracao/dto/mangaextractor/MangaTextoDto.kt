@@ -1,17 +1,27 @@
 package br.com.fenix.apiintegracao.dto.mangaextractor
 
 import br.com.fenix.apiintegracao.dto.DtoBase
+import br.com.fenix.apiintegracao.views.Views
+import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDateTime
 import java.util.*
 
 data class MangaTextoDto(
+    @JsonView(Views.Summary::class)
     private var id: UUID?,
+    @JsonView(Views.Detail::class)
     var texto: String,
+    @JsonView(Views.Detail::class)
     var sequencia: Int,
+    @JsonView(Views.Detail::class)
     var x1: Int,
+    @JsonView(Views.Detail::class)
     var y1: Int,
+    @JsonView(Views.Detail::class)
     var x2: Int,
+    @JsonView(Views.Detail::class)
     var y2: Int,
+    @JsonView(Views.Summary::class)
     var atualizacao: LocalDateTime?
 ) : DtoBase<UUID?>() {
 
