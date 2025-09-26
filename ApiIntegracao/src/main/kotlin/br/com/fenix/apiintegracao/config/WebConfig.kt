@@ -8,6 +8,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
 import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
@@ -36,6 +37,11 @@ class WebConfig : WebMvcConfigurer {
             .mediaType("json", MediaType.APPLICATION_JSON)
             .mediaType("xml", MediaType.APPLICATION_XML)
             .mediaType("x-yaml", MediaTypes.MEDIA_TYPE_APPLICATION_YML)
+    }
+
+    override fun addViewControllers(registry: ViewControllerRegistry) {
+        registry.addRedirectViewController("/docs", "/swagger-ui/index.html")
+        registry.addRedirectViewController("/documentacao", "/swagger-ui/index.html")
     }
 
 }

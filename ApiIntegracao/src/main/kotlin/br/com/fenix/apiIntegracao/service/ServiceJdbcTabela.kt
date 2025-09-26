@@ -21,18 +21,23 @@ import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.*
 
 abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseTabela<ID, E, D, C>>(
-    var repo: RepositoryJdbcTabela<E, ID>, override val factory: EntityFactory<ID, E>, override val clazzEntity: Class<E>, override val clazzDto: Class<D>, override val clazzController: Class<C>
+    var repo: RepositoryJdbcTabela<E, ID>,
+    override val factory: EntityFactory<ID, E>,
+    override val clazzEntity: Class<E>,
+    override val clazzDto: Class<D>,
+    override val clazzController: Class<C>
 ) : ServiceJdbcBase<ID, E, D, C>(repo, factory, clazzEntity, clazzDto, clazzController) {
 
     companion object {
         private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcTabela::class.java)
     }
 
-    fun getTables() : List<String> = repo.tabelas()
+    fun getTables(): List<String> = repo.tabelas()
 
-    private fun existTable(table: String) : Boolean = repo.existstabela(table)
+    private fun existTable(table: String): Boolean = repo.existstabela(table)
 
     private fun createTable(table: String) = repo.createtabela(table)
 
@@ -60,7 +65,7 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
 
     fun getLastSyncPage(table: String, updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         validTable(table)
-        val dateTime : LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
+        val dateTime: LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
         val list = toDtoLink(table, repo.findAllByAtualizacaoGreaterThanEqual(table, dateTime, pageable))
         val link = linkTo(clazzController).slash(ATUALIZACAO).slash(updateDate).withSelfRel()
         return assembler.toModel(list, link)
@@ -87,15 +92,34 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
 
     fun getAll(table: String, updateDate: LocalDateTime): List<D> = addLink(table, toDto(findAllByAtualizacaoGreaterThanEqual(table, updateDate)))
 
+    private fun saveOrUpdate(table: String, id: ID?, entity: E): E {
+        val idEntity = if (id != null)
+            id
+        else
+            (entity as Entity<ID, E>).getId()
+        val dbEntity = if (idEntity == null)
+            Optional.empty()
+        else
+            repo.select(table, idEntity)
+
+        val newEntity = if (dbEntity.isPresent)
+            dbEntity.get()
+        else
+            factory.create(idEntity)
+
+        (newEntity as Entity<ID, E>).merge(entity)
+        return if (dbEntity.isPresent)
+            repo.update(table, newEntity)
+        else
+            repo.insert(table, newEntity)
+    }
+
     @Transactional
-    open fun update(table: String, dto: D?): D {
+    open fun update(table: String, id: ID, dto: D?): D {
         if (dto == null)
             throw RequiredObjectIsNullException()
         validTable(table)
-        val entity = toEntity(dto)
-        val dbEntity = getById(table, (entity as Entity<ID, E>).getId())
-        (dbEntity as Entity<ID, E>).merge(entity)
-        return addLink(table, toDto(repo.update(table, dbEntity)))
+        return addLink(table, toDto(saveOrUpdate(table, id, toEntity(dto))))
     }
 
     @Transactional
@@ -104,9 +128,7 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
         val entities = toEntity(dtos)
         val saved = mutableListOf<D>()
         entities.forEach {
-            val dbEntity = getById(table, (it as Entity<ID, E>).getId())
-            (dbEntity as Entity<ID, E>).merge(it)
-            saved.add(toDto(repo.update(table, dbEntity)))
+            saved.add(toDto(saveOrUpdate(table, (it as Entity<ID, E>).getId(), it)))
         }
         return addLink(table, saved)
     }
@@ -143,8 +165,8 @@ abstract class ServiceJdbcTabela<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C :
 
     open fun delete(table: String, delete: List<ID>) = delete.forEach { delete(table, it) }
 
-    private fun addLink(table: String, obj : D) : D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it}
-    private fun addLink(table: String, list : List<D>) : List<D> = list.let { l -> l.parallelStream().forEach{ addLink(table, it) }; l }
+    private fun addLink(table: String, obj: D): D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it }
+    private fun addLink(table: String, list: List<D>): List<D> = list.let { l -> l.parallelStream().forEach { addLink(table, it) }; l }
     private fun addLink(table: String, list: Page<D>): Page<D> = list.map { addLink(table, it) }
     private fun toDtoLink(table: String, list: Page<E>): Page<D> = list.map { addLink(table, toDto(it)) }
 

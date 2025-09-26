@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 abstract class ServiceJdbcItemSmall<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbcBaseItemSmall<ID, E, D, C>>(
     var repo: RepositoryJdbcItemSmall<E, ID>, val factory: EntityFactory<ID, E>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>
@@ -39,27 +40,43 @@ abstract class ServiceJdbcItemSmall<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, 
 
     fun getAll(table: String, idParent : ID): List<D> = addLink(table, toDto(findAll(table, idParent)))
 
-    @Transactional
-    open fun update(table: String, dto: D?): D {
-        if (dto == null)
-            throw RequiredObjectIsNullException()
-        validTable(table)
-        val entity = toEntity(dto)
-        val dbEntity = repo.select(table, (entity as Entity<ID, E>).getId()).orElseThrow { NotFoundException() }
-        (dbEntity as Entity<ID, E>).merge(entity)
-        return addLink(table, toDto(repo.update(table, dbEntity)))
+    private fun saveOrUpdate(table: String, idParent: ID, id: ID?, entity: E): E {
+        val idEntity = if (id != null)
+            id
+        else
+            (entity as Entity<ID, E>).getId()
+        val dbEntity = if (idEntity == null)
+            Optional.empty()
+        else
+            repo.select(table, idEntity)
+
+        val newEntity = if (dbEntity.isPresent)
+            dbEntity.get()
+        else
+            factory.create(idEntity)
+
+        (newEntity as Entity<ID, E>).merge(entity)
+        return if (dbEntity.isPresent)
+            repo.update(table, newEntity)
+        else
+            repo.insert(table, idParent, newEntity)
     }
 
     @Transactional
-    open fun update(table: String, dtos: List<D>): List<D> {
+    open fun update(table: String, idParent: ID, id: ID, dto: D?): D {
+        if (dto == null)
+            throw RequiredObjectIsNullException()
+        validTable(table)
+        return addLink(table, toDto(saveOrUpdate(table, idParent, id, toEntity(dto))))
+    }
+
+    @Transactional
+    open fun update(table: String, idParent: ID, dtos: List<D>): List<D> {
         validTable(table)
         val entities = toEntity(dtos)
         val saved = mutableListOf<D>()
         entities.forEach {
-            repo.select(table, (it as Entity<ID, E>).getId()).ifPresent { dbEntity ->
-                (dbEntity as Entity<ID, E>).merge(it)
-                saved.add(toDto(repo.update(table, dbEntity)))
-            }
+            saved.add(toDto(saveOrUpdate(table, idParent, it.getId(), it)))
         }
         return addLink(table, saved)
     }

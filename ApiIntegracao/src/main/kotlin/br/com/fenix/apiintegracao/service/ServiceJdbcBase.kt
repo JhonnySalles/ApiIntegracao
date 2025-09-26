@@ -22,16 +22,21 @@ import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.*
 
 abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJdbc<ID, E, D, C>>(
-    open var repository: RepositoryJdbc<E, ID>, open val factory: EntityFactory<ID, E>, open val clazzEntity: Class<E>, open val clazzDto: Class<D>, open val clazzController: Class<C>
+    open var repository: RepositoryJdbc<E, ID>,
+    open val factory: EntityFactory<ID, E>,
+    open val clazzEntity: Class<E>,
+    open val clazzDto: Class<D>,
+    open val clazzController: Class<C>
 ) {
 
     companion object {
         private val oLog: Logger = LoggerFactory.getLogger(ServiceJdbcBase::class.java)
     }
 
-    abstract val mapper : Mapper
+    abstract val mapper: Mapper
 
     fun getPage(pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
@@ -45,7 +50,7 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
     }
 
     open fun getLastSyncPage(updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
-        val dateTime : LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
+        val dateTime: LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
         val list = toDtoLink(repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable))
         val link = linkTo(clazzController).slash(ATUALIZACAO).slash(updateDate).withSelfRel()
         return assembler.toModel(list, link)
@@ -63,26 +68,41 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
 
     fun getAll(updateDate: LocalDateTime): List<D> = addLink(toDto(findAllByAtualizacaoGreaterThanEqual(updateDate)))
 
+    private fun saveOrUpdate(id: ID?, entity: E): E {
+        val idEntity = if (id != null)
+            id
+        else
+            (entity as Entity<ID, E>).getId()
+        val dbEntity = if (idEntity == null)
+            Optional.empty()
+        else
+            repository.select(idEntity)
+
+        val newEntity = if (dbEntity.isPresent)
+            dbEntity.get()
+        else
+            factory.create(idEntity)
+
+        (newEntity as Entity<ID, E>).merge(entity)
+        return if (dbEntity.isPresent)
+            repository.update(newEntity)
+        else
+            repository.insert(newEntity)
+    }
+
     @Transactional
-    open fun update(dto: D?): D {
+    open fun update(id: ID?, dto: D?): D {
         if (dto == null)
             throw RequiredObjectIsNullException()
-        
-        val entity = toEntity(dto)
-        val dbEntity = getById((entity as Entity<ID, E>).getId())
-        (dbEntity as Entity<ID, E>).merge(entity)
-        return addLink(toDto(repository.update(dbEntity)))
+        return addLink(toDto(saveOrUpdate(id, toEntity(dto))))
     }
 
     @Transactional
     open fun update(dtos: List<D>): List<D> {
-        
         val entities = toEntity(dtos)
         val saved = mutableListOf<D>()
         entities.forEach {
-            val dbEntity = getById((it as Entity<ID, E>).getId())
-            (dbEntity as Entity<ID, E>).merge(it)
-            saved.add(toDto(repository.update(dbEntity)))
+            saved.add(toDto(saveOrUpdate((it as Entity<ID, E>).getId(), it)))
         }
         return addLink(saved)
     }
@@ -150,8 +170,8 @@ abstract class ServiceJdbcBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : C
     open fun delete(delete: List<ID>) = delete.forEach { delete(it) }
     open fun delete(obj: D) = delete(obj.getId())
 
-    private fun addLink(obj : D) : D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it}
-    private fun addLink(list : List<D>) : List<D> = list.let { l -> l.parallelStream().forEach{ addLink(it) }; l }
+    private fun addLink(obj: D): D = obj.let { it.add(linkTo(clazzController).slash(obj.getId()).withSelfRel()); it }
+    private fun addLink(list: List<D>): List<D> = list.let { l -> l.parallelStream().forEach { addLink(it) }; l }
     private fun addLink(list: Page<D>): Page<D> = list.map { addLink(it) }
     private fun toDtoLink(list: Page<E>): Page<D> = list.map { addLink(toDto(it)) }
 

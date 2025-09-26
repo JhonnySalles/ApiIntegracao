@@ -8,6 +8,7 @@ import br.com.fenix.apiintegracao.service.api.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -22,10 +23,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
-class SecurityConfig(private var userDetailsService: UsuarioService, private val tokenFilter: JwtTokenFilter, private val customEntryPoint: CustomAuthenticationEntryPoint, private val exceptionHandlerFilter: FilterExceptionHandler) {
+class SecurityConfig(
+    private var userDetailsService: UsuarioService,
+    private val tokenFilter: JwtTokenFilter,
+    private val customEntryPoint: CustomAuthenticationEntryPoint,
+    private val exceptionHandlerFilter: FilterExceptionHandler
+) {
 
     companion object {
-        fun getPasswordEncoder() : PasswordEncoder = BCryptPasswordEncoder()
+        fun getPasswordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
         fun encodePassword(password: String): String = getPasswordEncoder().encode(password)
     }
 
@@ -50,29 +56,57 @@ class SecurityConfig(private var userDetailsService: UsuarioService, private val
     }
 
     @Bean
-    @Throws(java.lang.Exception::class)
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain? {
-        http.httpBasic { it.disable() }
-            .csrf { it.disable() }
+    @Order(1)
+    @Throws(Exception::class)
+    fun publicApiFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .securityMatcher(
+                "/error",
+                "/auth/signin",
+                "/auth/refresh/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**",
+                "/docs/**",
+                "/documentacao/**",
+                "/webjars/**",
+                "/health",
+            )
+            .authorizeHttpRequests { authorize ->
+                authorize.anyRequest().permitAll()
+            }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .csrf { it.disable() }
+            .cors { }
+            .httpBasic { it.disable() }
+
+        return http.build()
+    }
+
+    @Bean
+    @Order(2)
+    @Throws(java.lang.Exception::class)
+    fun privateApiFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .securityMatcher(
+                "/api/**",
+                "/users"
+            )
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers(
-                        "/auth/signin",
-                        "/auth/refresh/**",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/v3/api-docs/**"
-                    ).permitAll()
                     .requestMatchers("/api/**").authenticated()
                     .requestMatchers("/users").denyAll()
             }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .csrf { it.disable() }
+            .cors { }
+            .httpBasic { it.disable() }
             .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
                 it.authenticationEntryPoint(customEntryPoint)
             }
-            .cors { }
+
         return http.build()
     }
 }

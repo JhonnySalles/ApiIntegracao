@@ -16,7 +16,22 @@ class AuthController {
     @Autowired
     private lateinit var authServices: AuthService
 
-    @Operation(summary = "Authenticates a user and returns a token")
+    @Operation(
+        summary = "Authenticates a user and returns a token",
+        description = """Este endpoint realiza a autenticação de um usuário no sistema.
+
+**Corpo da Requisição:**
+* Aceita um objeto de credenciais (`CredencialDto`) contendo `username` e `password`.
+
+**Corpo da Resposta (Sucesso):**
+* Em caso de sucesso (`200 OK`), retorna um objeto contendo os tokens de acesso. A estrutura geralmente inclui:
+  * `accessToken`: O token JWT a ser usado para autenticar requisições subsequentes.
+  * `refreshToken`: O token a ser usado para renovar o `accessToken` quando ele expirar.
+  * Informações de data de criação e expiração.
+
+**Corpo da Resposta (Falha):**
+* Retorna um status `403 Forbidden` caso as credenciais sejam inválidas ou os parâmetros estejam ausentes."""
+    )
     @PostMapping(value = ["/signin"])
     fun signin(@RequestBody data: CredencialDto): ResponseEntity<*> {
         return if (checkIfParamsIsNotNull(data))
@@ -25,7 +40,22 @@ class AuthController {
             authServices.signin(data)
     }
 
-    @Operation(summary = "Refresh token for authenticated user and returns a token")
+    @Operation(
+        summary = "Refresh token for authenticated user and returns a token",
+        description = """Este endpoint é usado para renovar um `accessToken` expirado utilizando um `refreshToken` válido.
+                        
+**Parâmetros de Path:**
+* **`username`**: O nome de usuário para o qual o token deve ser renovado.
+
+**Cabeçalho da Requisição (Header):**
+* **`Authorization`**: Deve conter o `refreshToken` válido. Geralmente enviado no formato `Bearer [seu_refresh_token]`.
+
+**Corpo da Resposta (Sucesso):**
+* Em caso de sucesso (`200 OK`), retorna um novo conjunto de tokens (um novo `accessToken` e, opcionalmente, um novo `refreshToken`).
+
+**Corpo da Resposta (Falha):**
+* Retorna um status `403 Forbidden` se o `refreshToken` for inválido, expirado, ou se os parâmetros da requisição estiverem incorretos."""
+    )
     @PutMapping(value = ["/refresh/{username}"])
     fun refreshToken(@PathVariable("username") username: String?, @RequestHeader("Authorization") refreshToken: String?): ResponseEntity<*>? {
         return if (checkIfParamsIsNotNull(username, refreshToken))

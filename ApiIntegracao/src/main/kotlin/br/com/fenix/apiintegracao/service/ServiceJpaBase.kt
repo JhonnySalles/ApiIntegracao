@@ -21,14 +21,20 @@ import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.*
 
-abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(open val factory: EntityFactory<ID, E>, val clazzEntity: Class<E>, val clazzDto: Class<D>, val clazzController: Class<C>) {
+abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : ControllerJpaBase<ID, E, D, C, R>, R : RepositoryJpaBase<E, ID>>(
+    open val factory: EntityFactory<ID, E>,
+    val clazzEntity: Class<E>,
+    val clazzDto: Class<D>,
+    val clazzController: Class<C>
+) {
     companion object {
         val oLog = LoggerFactory.getLogger(ServiceJpaBase::class.java.name)
     }
 
     abstract val repository: RepositoryJpaBase<E, ID>
-    abstract val mapper : Mapper
+    abstract val mapper: Mapper
 
     fun getPage(pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
@@ -43,7 +49,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
 
     fun getLastSyncPage(updateDate: String, pageable: Pageable, assembler: PagedResourcesAssembler<D>): PagedModel<EntityModel<D>> {
         try {
-            val dateTime : LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
+            val dateTime: LocalDateTime = Utils.updateDateToLocalDateTime(updateDate)
             val list = toDtoLink(repository.findAllByAtualizacaoGreaterThanEqual(dateTime, pageable))
             val link = linkTo(clazzController).slash(ATUALIZACAO).slash(updateDate).withSelfRel()
             return assembler.toModel(list, link)
@@ -63,15 +69,32 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
 
     fun getAll(updateDate: LocalDateTime): List<D> = addLink(toDto(repository.findAllByAtualizacaoGreaterThanEqual(updateDate)))
 
+    private fun saveOrUpdate(id: ID?, entity: E): E {
+        val idEntity = if (id != null)
+            id
+        else
+            (entity as Entity<ID, E>).getId()
+
+        val dbEntity = if (idEntity == null)
+            Optional.empty()
+        else
+            repository.findById(idEntity)
+
+        val newEntity = if (dbEntity.isPresent)
+            dbEntity.get()
+        else
+            factory.create(idEntity)
+
+        (newEntity as Entity<ID, E>).merge(entity)
+        return repository.save(newEntity)
+    }
+
     @Transactional
-    open fun update(dto: D?): D {
+    open fun update(id: ID, dto: D?): D {
         if (dto == null)
             throw RequiredObjectIsNullException()
         try {
-            val entity = toEntity(dto)
-            val dbEntity = getById((entity as Entity<ID, E>).getId())
-            (dbEntity as Entity<ID, E>).merge(entity)
-            return addLink(toDto(repository.save(dbEntity)))
+            return addLink(toDto(saveOrUpdate(id, toEntity(dto))))
         } catch (e: Exception) {
             oLog.error("Error update item on jpa base", e)
             throw ServerErrorException(e.message)
@@ -84,9 +107,7 @@ abstract class ServiceJpaBase<ID, E : EntityBase<ID, E>, D : DtoBase<ID>, C : Co
             val entities = toEntity(dtos)
             val saved = mutableListOf<D>()
             entities.forEach {
-                val dbEntity = getById((it as Entity<ID, E>).getId())
-                (dbEntity as Entity<ID, E>).merge(it)
-                saved.add(toDto(repository.save(dbEntity)))
+                saved.add(toDto(saveOrUpdate((it as Entity<ID, E>).getId(), it)))
             }
             return addLink(saved)
         } catch (e: Exception) {
