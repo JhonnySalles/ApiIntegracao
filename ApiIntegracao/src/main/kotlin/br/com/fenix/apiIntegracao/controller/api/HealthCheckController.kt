@@ -38,7 +38,7 @@ class HealthCheckController {
     )
     @GetMapping(value = ["/health"], produces = [MediaType.TEXT_PLAIN_VALUE])
     fun healthCheck(): ResponseEntity<String> {
-        return ResponseEntity.ok("A API está funcionando! Acesse /swagger-ui para ver a documentação.")
+        return ResponseEntity.ok("A API está funcionando! Acesse /swagger-ui para ver a documentação, ou /v3/api-docs para o json.")
     }
 
 }
