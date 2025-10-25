@@ -54,7 +54,7 @@ abstract class ControllerJdbcBaseTabela<ID, E : EntityBase<ID, E>, D : DtoBase<I
 * Apresenta um array de strings, onde cada string é o nome de uma tabela válida que pode ser utilizada no parâmetro `{table}` dos outros endpoints."""
     )
     @GetMapping(
-        "/tables",
+        "/tabelas",
         consumes = arrayOf(
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
