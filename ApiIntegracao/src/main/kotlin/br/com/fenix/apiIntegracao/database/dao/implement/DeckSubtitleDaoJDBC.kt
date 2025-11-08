@@ -32,7 +32,7 @@ class DeckSubtitleDaoJDBC(private val conn: Connection, private val base: String
         private const val ORDER_BY = " ORDER BY %s"
         private const val LIMIT = " LIMIT %s OFFSET %s"
 
-        private const val CREATE_TABELA = "CALL create_table('%s');"
+        private const val CREATE_TABELA = "CALL sp_create_table('%s');"
         private const val CREATE_TRIGGER_INSERT = "CREATE TRIGGER %s_insert BEFORE INSERT ON %s" +
                 "  FOR EACH ROW BEGIN" +
                 "    IF (NEW.id IS NULL OR NEW.id = '') THEN" +

@@ -24,8 +24,8 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
     companion object {
         private val oLog = LoggerFactory.getLogger(NovelExtractorDaoJDBC::class.java)
 
-        private const val CREATE_TABELA = "CALL create_table('%s');"
-        private const val DROP_TABELA = "CALL drop_table('%s');"
+        private const val CREATE_TABELA = "CALL sp_create_table('%s');"
+        private const val DROP_TABELA = "CALL sp_drop_table('%s');"
 
         private const val TABELA_VOLUME = "_volumes"
         private const val TABELA_CAPITULO = "_capitulos"
@@ -63,8 +63,8 @@ class NovelExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         private const val INSERT_TEXTO = "INSERT INTO %s_textos (id, id_capitulo, sequencia, texto, atualizacao) VALUES (?,?,?,?,?)"
         private const val INSERT_CAPA = "INSERT INTO %s_capas (id, id_volume, novel, volume, linguagem, arquivo, extensao, capa, atualizacao) VALUES (?,?,?,?,?,?,?,?,?)"
 
-        private const val DELETE_VOLUMES = "CALL delete_volume('%s', '%s')"
-        private const val DELETE_CAPITULOS = "CALL delete_capitulos('%s', '%s')"
+        private const val DELETE_VOLUMES = "CALL sp_delete_volume('%s', '%s')"
+        private const val DELETE_CAPITULOS = "CALL sp_delete_capitulos('%s', '%s')"
 
         private const val SELECT_VOLUMES = "SELECT id, novel, titulo, titulo_alternativo, serie, descricao, editora, autor, volume, linguagem, arquivo, is_favorito, is_processado, atualizacao FROM %s_volumes"
         private const val SELECT_CAPITULOS = "SELECT id, novel, volume, capitulo, descricao, sequencia, linguagem, atualizacao FROM %s_capitulos WHERE id_volume = ?"

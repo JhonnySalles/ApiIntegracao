@@ -23,8 +23,8 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
     companion object {
         private val oLog = LoggerFactory.getLogger(MangaExtractorDaoJDBC::class.java)
 
-        private const val CREATE_TABELA = "CALL create_table('%s');"
-        private const val DROP_TABELA = "CALL drop_table('%s');"
+        private const val CREATE_TABELA = "CALL sp_create_table('%s');"
+        private const val DROP_TABELA = "CALL sp_drop_table('%s');"
 
         private const val TABELA_VOLUME = "_volumes"
         private const val TABELA_CAPITULO = "_capitulos"
@@ -44,8 +44,8 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
                 "    SET new.Atualizacao = NOW();" +
                 "  END"
 
-        private const val EXIST_TABELA_VOCABULARIO = "CALL vocabulary_exists('%s', '%s')"
-        private const val SELECT_LISTA_TABELAS = "CALL list_tables('%s')"
+        private const val EXIST_TABELA_VOCABULARIO = "SELECT fn_vocabulary_exists('%s', '%s')"
+        private const val SELECT_LISTA_TABELAS = "CALL sp_list_tables('%s')"
 
         private const val UPDATE_VOLUMES = "UPDATE %s_volumes SET manga = ?, volume = ?, linguagem = ?, arquivo = ?, is_processado = ?, atualizacao = ? WHERE id = ?"
         private const val UPDATE_CAPITULOS = "UPDATE %s_capitulos SET manga = ?, volume = ?, capitulo = ?, linguagem = ?, scan = ?, is_extra = ?, is_raw = ?, atualizacao = ? WHERE id = ?"
@@ -59,8 +59,8 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         private const val INSERT_TEXTO = "INSERT INTO %s_textos (id, id_pagina, sequencia, texto, posicao_x1, posicao_y1, posicao_x2, posicao_y2, atualizacao) VALUES (?,?,?,?,?,?,?,?,?)"
         private const val INSERT_CAPA = "INSERT INTO %s_capas (id, id_volume, manga, volume, linguagem, arquivo, extensao, capa, atualizacao) VALUES (?,?,?,?,?,?,?,?,?)"
 
-        private const val DELETE_VOLUMES = "CALL delete_volume('%s', '%s')"
-        private const val DELETE_CAPITULOS = "CALL delete_capitulos('%s', '%s')"
+        private const val DELETE_VOLUMES = "CALL sp_delete_volume('%s', '%s')"
+        private const val DELETE_CAPITULOS = "CALL sp_delete_capitulos('%s', '%s')"
 
         private const val SELECT_VOLUMES = "SELECT id, manga, volume, linguagem, arquivo, is_processado, atualizacao FROM %s_volumes"
         private const val SELECT_CAPITULOS = "SELECT id, manga, volume, capitulo, linguagem, scan, is_extra, is_raw, atualizacao FROM %s_capitulos WHERE id_volume = ?"
@@ -858,7 +858,7 @@ class MangaExtractorDaoJDBC(private val conn: Connection, private val base: Stri
         try {
             st = conn.prepareStatement(String.format(EXIST_TABELA_VOCABULARIO, base, nome))
             rs = st.executeQuery()
-            return rs.next()
+            return rs.next() && rs.getBoolean(1)
         } catch (e: SQLException) {
             oLog.error("Error ao executar o comando: " + st.toString(), e)
             throw ExceptionDb(Mensagens.BD_ERRO_CREATE_DATABASE)
