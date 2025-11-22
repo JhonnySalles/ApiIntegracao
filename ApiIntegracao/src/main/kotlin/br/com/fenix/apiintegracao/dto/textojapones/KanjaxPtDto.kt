@@ -57,11 +57,11 @@ data class KanjaxPtDto(
     @JsonView(Views.Detail::class)
     var isSinaliza: Boolean,
     @JsonView(Views.Detail::class)
-    var dataTraducao: LocalDateTime,
+    var dataTraducao: LocalDateTime?,
     @JsonView(Views.Detail::class)
-    var dataCorrecao: LocalDateTime,
+    var dataCorrecao: LocalDateTime?,
     @JsonView(Views.Detail::class)
-    var observacao: String,
+    var observacao: String?,
     @JsonView(Views.Detail::class)
     var kanjaxOriginal: Boolean,
     @JsonView(Views.Detail::class)
@@ -84,12 +84,15 @@ data class KanjaxPtDto(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (this === other)
+            return true
+        if (javaClass != other?.javaClass)
+            return false
 
         other as KanjaxPtDto
 
-        if (kanji != other.kanji) return false
+        if (kanji != other.kanji)
+            return false
 
         return true
     }

@@ -52,21 +52,21 @@ data class KanjaxPt(
     var utf8: String,
     @Column(length = 5, nullable = false)
     var sjis: String,
-    @Column(name = "traduzido")
+    @Column(name = "isTraduzido")
     var isTraduzido: Boolean,
-    @Column(name = "checado")
+    @Column(name = "isChecado")
     var isChecado: Boolean,
-    @Column(name = "revisado")
+    @Column(name = "isRevisado")
     var isRevisado: Boolean,
-    @Column(name = "sinalizado")
+    @Column(name = "sinaliza")
     var isSinaliza: Boolean,
     @Column(name = "data_traducao")
-    var dataTraducao: LocalDateTime,
+    var dataTraducao: LocalDateTime?,
     @Column(name = "data_correcao")
-    var dataCorrecao: LocalDateTime,
+    var dataCorrecao: LocalDateTime?,
     @Column(name = "obs", length = 100)
-    var observacao: String,
-    @Column(nullable = false)
+    var observacao: String?,
+    @Column(name = "isKanjax_original", nullable = false)
     var kanjaxOriginal: Boolean,
     @Column(length = 100, nullable = false)
     var palavra: String,
@@ -201,7 +201,7 @@ data class KanjaxPt(
         if (source.sjis.isNotEmpty())
             this.sjis = source.sjis
 
-        if (source.observacao.isNotEmpty())
+        if (source.observacao != null && source.observacao!!.isNotEmpty())
             this.observacao = source.observacao
 
         if (source.palavra.isNotEmpty())
@@ -220,12 +220,15 @@ data class KanjaxPt(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (this === other)
+            return true
+        if (javaClass != other?.javaClass)
+            return false
 
         other as KanjaxPt
 
-        if (kanji != other.kanji) return false
+        if (kanji != other.kanji)
+            return false
 
         return true
     }
